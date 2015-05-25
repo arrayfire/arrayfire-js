@@ -1,0 +1,13 @@
+{
+  "name": "arrayfire.js",
+  "version": "0.0.1",
+  "description": "ArrayFire for Node.js platform",
+  "dependencies": {
+    "bindings": "*",
+    "cmake-js": "unbornchikken/cmake-js",
+    "nan": "*"
+  },
+  "scripts": {
+    "install": "cmake-js rebuild"
+  }
+}
