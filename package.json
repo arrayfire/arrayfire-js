@@ -3,11 +3,17 @@
   "version": "0.0.1",
   "description": "ArrayFire for Node.js platform",
   "dependencies": {
+    "better-assert": "^1.0.2",
     "bindings": "*",
     "cmake-js": "unbornchikken/cmake-js",
+    "lodash": "^3.9.3",
     "nan": "*"
   },
   "scripts": {
     "install": "cmake-js rebuild"
+  },
+  "main": "lib/",
+  "devDependencies": {
+    "mocha": "^2.2.5"
   }
 }

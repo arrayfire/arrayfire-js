@@ -1,6 +1,8 @@
 #include "ext.h"
 #include "guard.h"
 
+uv_mutex_t Guard::lock;
+
 bool Guard::isInitialized(Guard::initialize());
 
 Guard::Guard()
