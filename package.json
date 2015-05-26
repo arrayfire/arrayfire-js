@@ -5,6 +5,7 @@
   "dependencies": {
     "better-assert": "^1.0.2",
     "bindings": "*",
+    "bluebird": "^2.9.26",
     "cmake-js": "unbornchikken/cmake-js",
     "lodash": "^3.9.3",
     "nan": "*"

@@ -35,6 +35,10 @@ struct Worker : public NanAsyncWorker
         {
             SetErrorMessage(ex.what());
         }
+        catch(...)
+        {
+            SetErrorMessage("Fatal error!");
+        }
     }
 
 protected:
@@ -73,6 +77,10 @@ struct Worker<void> : public NanAsyncWorker
         catch(exception& ex)
         {
             SetErrorMessage(ex.what());
+        }
+        catch(...)
+        {
+            SetErrorMessage("Fatal error!");
         }
     }
 

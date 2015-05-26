@@ -10,7 +10,11 @@ NAN_METHOD(getDeviceCount)
 {
     Guard();
     NanScope();
+#ifdef CPU
+    NanReturnValue(NanNew<Number>(1));
+#else
     NanReturnValue(NanNew<Number>(af::getDeviceCount()));
+#endif
 }
 
 NAN_METHOD(getDevice)
@@ -18,7 +22,11 @@ NAN_METHOD(getDevice)
     Guard();
     NanScope();
 
+#ifdef CPU
+    NanReturnValue(NanNew<Number>(0));
+#else
     NanReturnValue(NanNew<Number>(af::getDevice()));
+#endif
 }
 
 NAN_METHOD(setDevice)
@@ -26,7 +34,10 @@ NAN_METHOD(setDevice)
     Guard();
     NanScope();
 
+#ifndef CPU
     af::setDevice(args[0]->Uint32Value());
+#endif
+
     NanReturnUndefined();
 }
 
@@ -35,15 +46,24 @@ NAN_METHOD(getDeviceInfo)
     Guard();
     NanScope();
 
-    char name[256], platform[256], toolkit[256], compute[256];
-    af::deviceprop(name, platform, toolkit, compute);
     bool isDoubleAvailable = af::isDoubleAvailable(af::getDevice());
     auto info = NanNew<Object>();
+
+#ifdef CPU
+    info->Set(NanNew<String>("name"), NanNew<String>("CPU"));
+    info->Set(NanNew<String>("platform"), NanNew<String>("CPU"));
+    info->Set(NanNew<String>("toolkit"), NanNew<String>("CPU"));
+    info->Set(NanNew<String>("compute"), NanNew<String>("CPU"));
+    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(isDoubleAvailable));
+#else
+    char name[256], platform[256], toolkit[256], compute[256];
+    af::deviceprop(name, platform, toolkit, compute);
     info->Set(NanNew<String>("name"), NanNew<String>(name));
     info->Set(NanNew<String>("platform"), NanNew<String>(platform));
     info->Set(NanNew<String>("toolkit"), NanNew<String>(toolkit));
     info->Set(NanNew<String>("compute"), NanNew<String>(compute));
     info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(isDoubleAvailable));
+#endif
 
     NanReturnValue(info);
 }
@@ -69,6 +89,17 @@ NAN_METHOD(sync)
         if (args[idx]->IsNumber())
         {
             device = args[idx++]->Int32Value();
+#ifdef CPU
+            if (device > 1 || device < -1)
+            {
+                return NanThrowRangeError("Device is out of range.");
+            }
+#else
+            if (device >= af::getDeviceCount() || device < -1)
+            {
+                return NanThrowRangeError("Device is out of range.");
+            }
+#endif
         }
         if (idx < args.Length() && args[idx]->IsFunction())
         {

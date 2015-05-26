@@ -34,6 +34,8 @@ file(GLOB SOURCE_FILES "src/*.cpp" "src/*.h")
 
 add_library(${PROJECT_NAME}_CPU SHARED ${SOURCE_FILES};src/init/init_CPU.cpp)
 
+set_target_properties(${PROJECT_NAME}_CPU PROPERTIES COMPILE_FLAGS -DCPU)
+
 set_target_properties(${PROJECT_NAME}_CPU PROPERTIES PREFIX "" SUFFIX ".node")
 
 target_link_libraries(${PROJECT_NAME}_CPU ${CMAKE_JS_LIB};${ArrayFire_CPU_LIBRARIES})
