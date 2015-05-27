@@ -2,9 +2,11 @@
 #include "device.h"
 #include "guard.h"
 #include "worker.h"
+#include "helpers.h"
 
 using namespace v8;
 using namespace std;
+using namespace node;
 
 NAN_METHOD(getDeviceCount)
 {
@@ -117,6 +119,109 @@ NAN_METHOD(sync)
     NanReturnUndefined();
 }
 
+pair<af::dtype, unsigned> getAllocPars(unsigned elements, unsigned udtype)
+{
+    auto dtypeInfo = convDtype(udtype);
+    unsigned sizeOf = dtypeInfo.second;
+    af::dtype dtype = dtypeInfo.first;
+    unsigned size = sizeOf * elements;
+    return move(make_pair(dtype, size));
+}
+
+NAN_METHOD(alloc)
+{
+    NanScope();
+
+    try
+    {
+        unsigned elements = args[0]->Uint32Value();
+        unsigned udtype = args[1]->Uint32Value();
+        auto allocPars = getAllocPars(elements, udtype);
+
+        Guard();
+        char* ptr = (char*)af::alloc(elements, allocPars.first);
+        auto gcCallback = [](char* data, void* hint)
+        {
+            af::free(data);
+        };
+
+        NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
+    }
+    catch (exception& ex)
+    {
+        NanThrowError(ex.what());
+    }
+}
+
+NAN_METHOD(free)
+{
+    NanScope();
+
+    auto buff = args[0];
+    if (!Buffer::HasInstance(buff))
+    {
+        return NanThrowTypeError("Buffer argument expected.");
+    }
+
+    auto obj = buff.As<Object>();
+    if (!obj->Has(NanNew<String>("__deleted")))
+    {
+        char* data = Buffer::Data(obj);
+        Guard();
+        af::free(data);
+        obj->Set(NanNew<String>("__deleted"), NanNew<Boolean>(true));
+    }
+
+    NanReturnUndefined();
+}
+
+NAN_METHOD(pinned)
+{
+    NanScope();
+
+    try
+    {
+        unsigned elements = args[0]->Uint32Value();
+        unsigned udtype = args[1]->Uint32Value();
+        auto allocPars = getAllocPars(elements, udtype);
+
+        Guard();
+        char* ptr = (char*)af::pinned(elements, allocPars.first);
+        auto gcCallback = [](char* data, void* hint)
+        {
+            af::freePinned(data);
+        };
+
+        NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
+    }
+    catch (exception& ex)
+    {
+        NanThrowError(ex.what());
+    }
+}
+
+NAN_METHOD(freePinned)
+{
+    NanScope();
+
+    auto buff = args[0];
+    if (!Buffer::HasInstance(buff))
+    {
+        return NanThrowTypeError("Buffer argument expected.");
+    }
+
+    auto obj = buff.As<Object>();
+    if (!obj->Has(NanNew<String>("__deleted")))
+    {
+        char* data = Buffer::Data(obj);
+        Guard();
+        af::freePinned(data);
+        obj->Set(NanNew<String>("__deleted"), NanNew<Boolean>(true));
+    }
+
+    NanReturnUndefined();
+}
+
 void initDevice(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew<String>("getDeviceCount"), NanNew<FunctionTemplate>(getDeviceCount)->GetFunction());
@@ -125,4 +230,8 @@ void initDevice(v8::Handle<v8::Object> exports)
     exports->Set(NanNew<String>("getDeviceInfo"), NanNew<FunctionTemplate>(getDeviceInfo)->GetFunction());
     exports->Set(NanNew<String>("isDoubleAvailable"), NanNew<FunctionTemplate>(isDoubleAvailable)->GetFunction());
     exports->Set(NanNew<String>("sync"), NanNew<FunctionTemplate>(sync)->GetFunction());
+    exports->Set(NanNew<String>("alloc"), NanNew<FunctionTemplate>(alloc)->GetFunction());
+    exports->Set(NanNew<String>("free"), NanNew<FunctionTemplate>(free)->GetFunction());
+    exports->Set(NanNew<String>("pinned"), NanNew<FunctionTemplate>(pinned)->GetFunction());
+    exports->Set(NanNew<String>("freePinned"), NanNew<FunctionTemplate>(freePinned)->GetFunction());
 }

@@ -1,5 +1,5 @@
-#ifndef GUARD_H
-#define GUARD_H
+#ifndef ARRAY_FIRE_JS_GUARD_H
+#define ARRAY_FIRE_JS_GUARD_H
 
 #include <nan.h>
 
@@ -15,4 +15,4 @@ private:
     static bool initialize();
 };
 
-#endif // GUARD_H
+#endif // ARRAY_FIRE_JS_GUARD_H
