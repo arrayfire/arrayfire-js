@@ -5,7 +5,7 @@
 #include <nan.h>
 #include <exception>
 
-NAN_METHOD(noop)
+inline NAN_METHOD(Noop)
 {
     NanScope();
     NanReturnUndefined();
@@ -18,7 +18,7 @@ struct Worker : public NanAsyncWorker
     typedef std::function<v8::Handle<v8::Value>(T)> ResultConvFunc;
 
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(noop)->GetFunction())),
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
         resultConvFunc(resultConvFunc)
     {
@@ -62,7 +62,7 @@ struct Worker<void> : public NanAsyncWorker
     typedef std::function<void()> ExecuteFunc;
 
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(noop)->GetFunction())),
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc)
     {
     }

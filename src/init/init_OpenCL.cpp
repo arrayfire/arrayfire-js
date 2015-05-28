@@ -1,3 +1,3 @@
 #include "../af.h"
 
-NODE_MODULE(arrayfire_js_OpenCL, init)
+NODE_MODULE(arrayfire_js_OpenCL, Init)

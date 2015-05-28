@@ -15,6 +15,7 @@
   },
   "main": "lib/",
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "ref": "^1.0.2"
   }
 }

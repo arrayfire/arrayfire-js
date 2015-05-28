@@ -3,7 +3,7 @@
 
 uv_mutex_t Guard::lock;
 
-bool Guard::isInitialized(Guard::initialize());
+bool Guard::isInitialized(Guard::Initialize());
 
 Guard::Guard()
 {
@@ -15,7 +15,7 @@ Guard::~Guard()
     uv_mutex_unlock(&Guard::lock);
 }
 
-bool Guard::initialize()
+bool Guard::Initialize()
 {
     uv_mutex_init(&Guard::lock);
     return true;

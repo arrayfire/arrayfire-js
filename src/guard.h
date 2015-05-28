@@ -12,7 +12,7 @@ struct Guard
 private:
     static uv_mutex_t lock;
     static bool isInitialized;
-    static bool initialize();
+    static bool Initialize();
 };
 
 #endif // ARRAY_FIRE_JS_GUARD_H

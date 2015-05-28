@@ -3,6 +3,6 @@
 
 #include <nan.h>
 
-void initDevice(v8::Handle<v8::Object> exports);
+void InitDevice(v8::Handle<v8::Object> exports);
 
 #endif

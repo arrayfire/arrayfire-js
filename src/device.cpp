@@ -8,7 +8,7 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-NAN_METHOD(getDeviceCount)
+NAN_METHOD(GetDeviceCount)
 {
     Guard();
     NanScope();
@@ -19,7 +19,7 @@ NAN_METHOD(getDeviceCount)
 #endif
 }
 
-NAN_METHOD(getDevice)
+NAN_METHOD(GetDevice)
 {
     Guard();
     NanScope();
@@ -31,7 +31,7 @@ NAN_METHOD(getDevice)
 #endif
 }
 
-NAN_METHOD(setDevice)
+NAN_METHOD(SetDevice)
 {
     Guard();
     NanScope();
@@ -43,12 +43,12 @@ NAN_METHOD(setDevice)
     NanReturnUndefined();
 }
 
-NAN_METHOD(getDeviceInfo)
+NAN_METHOD(GetDeviceInfo)
 {
     Guard();
     NanScope();
 
-    bool isDoubleAvailable = af::isDoubleAvailable(af::getDevice());
+    bool IsDoubleAvailable = af::isDoubleAvailable(af::getDevice());
     auto info = NanNew<Object>();
 
 #ifdef CPU
@@ -56,7 +56,7 @@ NAN_METHOD(getDeviceInfo)
     info->Set(NanNew<String>("platform"), NanNew<String>("CPU"));
     info->Set(NanNew<String>("toolkit"), NanNew<String>("CPU"));
     info->Set(NanNew<String>("compute"), NanNew<String>("CPU"));
-    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(isDoubleAvailable));
+    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #else
     char name[256], platform[256], toolkit[256], compute[256];
     af::deviceprop(name, platform, toolkit, compute);
@@ -64,13 +64,13 @@ NAN_METHOD(getDeviceInfo)
     info->Set(NanNew<String>("platform"), NanNew<String>(platform));
     info->Set(NanNew<String>("toolkit"), NanNew<String>(toolkit));
     info->Set(NanNew<String>("compute"), NanNew<String>(compute));
-    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(isDoubleAvailable));
+    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #endif
 
     NanReturnValue(info);
 }
 
-NAN_METHOD(isDoubleAvailable)
+NAN_METHOD(IsDoubleAvailable)
 {
     Guard();
     NanScope();
@@ -78,7 +78,7 @@ NAN_METHOD(isDoubleAvailable)
     NanReturnValue(NanNew<Number>(af::isDoubleAvailable(args[0]->Uint32Value())));
 }
 
-NAN_METHOD(sync)
+NAN_METHOD(Sync)
 {
     NanScope();
 
@@ -121,14 +121,14 @@ NAN_METHOD(sync)
 
 pair<af::dtype, unsigned> getAllocPars(unsigned elements, unsigned udtype)
 {
-    auto dtypeInfo = convDtype(udtype);
+    auto dtypeInfo = ConvDtype(udtype);
     unsigned sizeOf = dtypeInfo.second;
     af::dtype dtype = dtypeInfo.first;
     unsigned size = sizeOf * elements;
     return move(make_pair(dtype, size));
 }
 
-NAN_METHOD(alloc)
+NAN_METHOD(Alloc)
 {
     NanScope();
 
@@ -145,7 +145,7 @@ NAN_METHOD(alloc)
             af::free(data);
         };
 
-        NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
+        NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr)); // void*
     }
     catch (exception& ex)
     {
@@ -153,29 +153,7 @@ NAN_METHOD(alloc)
     }
 }
 
-NAN_METHOD(free)
-{
-    NanScope();
-
-    auto buff = args[0];
-    if (!Buffer::HasInstance(buff))
-    {
-        return NanThrowTypeError("Buffer argument expected.");
-    }
-
-    auto obj = buff.As<Object>();
-    if (!obj->Has(NanNew<String>("__deleted")))
-    {
-        char* data = Buffer::Data(obj);
-        Guard();
-        af::free(data);
-        obj->Set(NanNew<String>("__deleted"), NanNew<Boolean>(true));
-    }
-
-    NanReturnUndefined();
-}
-
-NAN_METHOD(pinned)
+NAN_METHOD(Pinned)
 {
     NanScope();
 
@@ -200,38 +178,14 @@ NAN_METHOD(pinned)
     }
 }
 
-NAN_METHOD(freePinned)
+void InitDevice(v8::Handle<v8::Object> exports)
 {
-    NanScope();
-
-    auto buff = args[0];
-    if (!Buffer::HasInstance(buff))
-    {
-        return NanThrowTypeError("Buffer argument expected.");
-    }
-
-    auto obj = buff.As<Object>();
-    if (!obj->Has(NanNew<String>("__deleted")))
-    {
-        char* data = Buffer::Data(obj);
-        Guard();
-        af::freePinned(data);
-        obj->Set(NanNew<String>("__deleted"), NanNew<Boolean>(true));
-    }
-
-    NanReturnUndefined();
-}
-
-void initDevice(v8::Handle<v8::Object> exports)
-{
-    exports->Set(NanNew<String>("getDeviceCount"), NanNew<FunctionTemplate>(getDeviceCount)->GetFunction());
-    exports->Set(NanNew<String>("getDevice"), NanNew<FunctionTemplate>(getDevice)->GetFunction());
-    exports->Set(NanNew<String>("setDevice"), NanNew<FunctionTemplate>(setDevice)->GetFunction());
-    exports->Set(NanNew<String>("getDeviceInfo"), NanNew<FunctionTemplate>(getDeviceInfo)->GetFunction());
-    exports->Set(NanNew<String>("isDoubleAvailable"), NanNew<FunctionTemplate>(isDoubleAvailable)->GetFunction());
-    exports->Set(NanNew<String>("sync"), NanNew<FunctionTemplate>(sync)->GetFunction());
-    exports->Set(NanNew<String>("alloc"), NanNew<FunctionTemplate>(alloc)->GetFunction());
-    exports->Set(NanNew<String>("free"), NanNew<FunctionTemplate>(free)->GetFunction());
-    exports->Set(NanNew<String>("pinned"), NanNew<FunctionTemplate>(pinned)->GetFunction());
-    exports->Set(NanNew<String>("freePinned"), NanNew<FunctionTemplate>(freePinned)->GetFunction());
+    exports->Set(NanNew<String>("getDeviceCount"), NanNew<FunctionTemplate>(GetDeviceCount)->GetFunction());
+    exports->Set(NanNew<String>("getDevice"), NanNew<FunctionTemplate>(GetDevice)->GetFunction());
+    exports->Set(NanNew<String>("setDevice"), NanNew<FunctionTemplate>(SetDevice)->GetFunction());
+    exports->Set(NanNew<String>("getDeviceInfo"), NanNew<FunctionTemplate>(GetDeviceInfo)->GetFunction());
+    exports->Set(NanNew<String>("isDoubleAvailable"), NanNew<FunctionTemplate>(IsDoubleAvailable)->GetFunction());
+    exports->Set(NanNew<String>("sync"), NanNew<FunctionTemplate>(Sync)->GetFunction());
+    exports->Set(NanNew<String>("alloc"), NanNew<FunctionTemplate>(Alloc)->GetFunction());
+    exports->Set(NanNew<String>("pinned"), NanNew<FunctionTemplate>(Pinned)->GetFunction());
 }
