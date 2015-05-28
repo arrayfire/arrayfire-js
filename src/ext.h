@@ -8,7 +8,7 @@
 #include <arrayfire.h>
 #include <nan.h>
 #include <functional>
-#include <exception>
+#include <stdexcept>
 #include <utility>
 #include <string>
 #include <tuple>

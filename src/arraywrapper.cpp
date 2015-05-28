@@ -59,14 +59,16 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
 
 v8::Local<Object> ArrayWrapper::New(const af::array& array)
 {
-    Local<Value> args[] = { NanNewBufferHandle(reinterpret_cast<char*>(new ArrayWrapper(array)), sizeof(void*)) };
+    Local<Value> args[] = { NanNewBufferHandle(reinterpret_cast<char*>(new af::array(array)), 0, [](char*v1,void*v2) {}, nullptr) };
     auto c = NanNew(constructor);
     return c->NewInstance(1, args);
 }
 
 v8::Local<Object> ArrayWrapper::New(af::array&& array)
 {
-    Local<Value> args[] = { NanNewBufferHandle(reinterpret_cast<char*>(new ArrayWrapper(move(array))), sizeof(void*)) };
+    auto p1 = reinterpret_cast<char*>(new af::array(move(array)));
+    Local<Value> args[] = { NanNewBufferHandle(p1, 0, [](char*v1,void*v2) {}, nullptr) };
+    auto p2 = Buffer::Data(args[0]);
     auto c = NanNew(constructor);
     return c->NewInstance(1, args);
 }
@@ -87,7 +89,9 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
         {
             if (Buffer::HasInstance(args[0]))
             {
-                instance = reinterpret_cast<ArrayWrapper*>(Buffer::Data(args[0]));
+                auto arrayPtr = reinterpret_cast<af::array*>((uintptr_t)Buffer::Data(args[0]));
+                instance = new ArrayWrapper(move(*arrayPtr));
+                delete arrayPtr;
             }
         }
         else
@@ -168,7 +172,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                     }
                     if (err)
                     {
-                        return NanThrowError(ErrToString(err));
+                        return NanThrowError(ErrToString(err).c_str());
                     }
                     instance = new ArrayWrapper(af::array(handle));
                 }
@@ -306,8 +310,9 @@ NAN_METHOD(ArrayWrapper::Copy)
     Guard();
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
+    auto result = New(move(obj->array.copy()));
 
-    NanReturnValue(New(move(obj->array.copy())));
+    NanReturnValue(result);
 }
 
 NAN_METHOD(ArrayWrapper::IsEmpty)

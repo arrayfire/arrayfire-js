@@ -6,7 +6,7 @@
 
 std::pair<af::dtype, unsigned> ConvDtype(unsigned udtype);
 
-char* ErrToString(af_err);
+std::string ErrToString(af_err);
 
 #endif // ARRAY_FIRE_JS_HELPERS_H
 

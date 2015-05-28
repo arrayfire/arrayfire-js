@@ -52,12 +52,12 @@ pair<af::dtype, unsigned> ConvDtype(unsigned udtype)
             sizeOf = 64 / 8;
         break;
         default:
-            throw exception("DType is out of range.");
+            throw logic_error("DType is out of range.");
     }
     return move(make_pair(dtype, sizeOf));
 }
 
-char* ErrToString(af_err err)
+string ErrToString(af_err err)
 {
     switch (err)
     {

@@ -13,6 +13,7 @@ if(UNIX)
         # CUDA
         set(ArrayFire_CUDA_LIBRARIES "${ArrayFire_DIR}/lib/libafcuda.so")
     endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 elseif(WIN32)
     add_definitions("/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /wd4251 /nologo")
     set(ArrayFire_DIR $ENV{AF_PATH})

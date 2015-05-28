@@ -177,6 +177,10 @@ function testPlatform(id) {
                     }
 
                     let array = new AFArray(count, buff, af.types.dtype.s32);
+                    let array2 = array.copy();
+                    assert(array2 instanceof AFArray);
+                    assert(array2.bytes() === array.bytes());
+                    yield af.syncAsync();
                 });
                 f().nodeify(done);
             });
