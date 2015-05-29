@@ -3,11 +3,13 @@
 let assert = require("better-assert");
 let _ = require("lodash");
 let ref = require("ref");
+let Bluebird = require("bluebird");
+let async = Bluebird.coroutine;
 
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let af = require("..")(id);
+            let af = Bluebird.promisifyAll(require("../..")(id));
             let AFArray = af.AFArray;
 
             it("should export AFArray constructor", function() {
@@ -168,7 +170,7 @@ function testPlatform(id) {
             });
 
             it("should initialize from buffer, copyable, and readable", function(done) {
-                let f = af.async(function*() {
+                let f = async(function*() {
                     let int = ref.types.int;
                     const count = 10;
                     let buff = new Buffer(int.size * count);

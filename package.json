@@ -3,19 +3,24 @@
   "version": "0.0.1",
   "description": "ArrayFire for Node.js platform",
   "dependencies": {
-    "better-assert": "^1.0.2",
     "bindings": "*",
-    "bluebird": "^2.9.26",
     "cmake-js": "unbornchikken/cmake-js",
-    "lodash": "^3.9.3",
-    "nan": "*"
+    "lodash": "*",
+    "nan": "*",
+    "traceur-runtime": "0.0.59"
   },
   "scripts": {
     "install": "cmake-js rebuild"
   },
   "main": "lib/",
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "ref": "^1.0.2"
+    "better-assert": "*",
+    "bluebird": "*",
+    "gulp": "*",
+    "gulp-traceur": "*",
+    "merge2": "*",
+    "mocha": "*",
+    "ref": "*",
+    "traceur": "*"
   }
 }

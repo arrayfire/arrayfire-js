@@ -2,11 +2,12 @@
 
 let assert = require("better-assert");
 let _ = require("lodash");
+let Bluebird = require("bluebird");
 
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let af = require("..")(id);
+            let af = Bluebird.promisifyAll(require("../..")(id));
 
             it("should return available devices", function() {
                 let deviceCount = af.getDeviceCount();
