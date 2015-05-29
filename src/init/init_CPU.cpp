@@ -1,3 +1,3 @@
-#include "../af.h"
+#include "../fire.h"
 
 NODE_MODULE(arrayfire_js_CPU, Init)

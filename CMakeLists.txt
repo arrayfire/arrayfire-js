@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project (arrayfire_js)
+project (fire_js)
 
 if(UNIX)
     if(APPLE)
@@ -32,7 +32,7 @@ set(ArrayFire_INCLUDE_DIRS "${ArrayFire_DIR}/include")
 include_directories(${CMAKE_JS_INC};${ArrayFire_INCLUDE_DIRS})
 
 file(GLOB COMMON_SOURCE_FILES
-    "src/af.*"
+    "src/fire.*"
     "src/ext.*"
     "src/helpers.*"
     "src/guard.*"

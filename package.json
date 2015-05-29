@@ -1,7 +1,7 @@
 {
-  "name": "arrayfire.js",
+  "name": "fire-js",
   "version": "0.0.1",
-  "description": "ArrayFire for Node.js platform",
+  "description": "Fire.js - ArrayFire for Node.js platform",
   "dependencies": {
     "bindings": "*",
     "cmake-js": "unbornchikken/cmake-js",
