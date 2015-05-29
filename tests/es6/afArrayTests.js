@@ -9,8 +9,8 @@ let async = Bluebird.coroutine;
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let af = Bluebird.promisifyAll(require("../..")(id));
-            let AFArray = af.AFArray;
+            let fire = Bluebird.promisifyAll(require("../..")(id));
+            let AFArray = fire.AFArray;
 
             it("should export AFArray constructor", function() {
                 assert(_.isFunction(AFArray));
@@ -34,11 +34,11 @@ function testPlatform(id) {
             });
 
             it("should create new one dimensional", function() {
-                let array = new AFArray(10, af.types.dtype.s32);
+                let array = new AFArray(10, fire.types.dtype.s32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 4);
                 assert(array.elements() === 10);
-                assert(array.type() === af.types.dtype.s32);
+                assert(array.type() === fire.types.dtype.s32);
                 assert(array.numdims() === 1);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 1);
@@ -68,11 +68,11 @@ function testPlatform(id) {
             });
 
             it("should create new two dimensional", function() {
-                let array = new AFArray(10, 20, af.types.dtype.f32);
+                let array = new AFArray(10, 20, fire.types.dtype.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 4);
                 assert(array.elements() === 10 * 20);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === fire.types.dtype.f32);
                 assert(array.numdims() === 2);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -102,11 +102,11 @@ function testPlatform(id) {
             });
 
             it("should create new three dimensional", function() {
-                let array = new AFArray(10, 20, 30, af.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, fire.types.dtype.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 4);
                 assert(array.elements() === 10 * 20 * 30);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === fire.types.dtype.f32);
                 assert(array.numdims() === 3);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -136,11 +136,11 @@ function testPlatform(id) {
             });
 
             it("should create new four dimensional", function() {
-                let array = new AFArray(10, 20, 30, 40, af.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, 40, fire.types.dtype.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 40 * 4);
                 assert(array.elements() === 10 * 20 * 30 * 40);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === fire.types.dtype.f32);
                 assert(array.numdims() === 4);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -181,9 +181,10 @@ function testPlatform(id) {
                     assert(_.isFunction(AFArray.create));
                     assert(_.isFunction(AFArray.createAsync));
 
-                    let array = yield AFArray.createAsync(count, buff, af.types.dtype.s32);
+                    let array = yield AFArray.createAsync(count, buff, fire.types.dtype.s32);
                     assert(array.bytes() === count * int.size);
-                    assert(array.type() === af.types.dtype.s32);
+                    assert(array.type() === fire.types.dtype.s32);
+
                     let buff2 = new Buffer(int.size * count);
                     yield array.hostAsync(buff2);
                     for (let v = 0; v < count; v++) {
@@ -191,6 +192,7 @@ function testPlatform(id) {
                         let v2 = int.get(buff2, v * int.size);
                         assert(v1 === v2);
                     }
+
                     let array2 = array.copy();
                     assert(array2 instanceof AFArray);
                     assert(array2.bytes() === array.bytes());

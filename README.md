@@ -2,7 +2,7 @@
 
 ## About
 
-Fire.js - [ArrayFire](http://arrayfire.com/) for Node.js platform.
+Fire.js - [ArrayFire](http://arrayfire.com/) for Node.js platform. It uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system.
 
 ## Requirements
 
