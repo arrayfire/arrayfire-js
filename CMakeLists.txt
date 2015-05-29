@@ -2,10 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 project (fire_js)
 
+set(ArrayFire_DIR $ENV{AF_PATH})
+
 if(UNIX)
     if(APPLE)
+        # CPU
+        set(ArrayFire_CPU_LIBRARIES "${ArrayFire_DIR}/lib/libafcpu.dylib")
+        # OpenCL
+        set(ArrayFire_OpenCL_LIBRARIES "${ArrayFire_DIR}/lib/libafopencl.dylib")
+        # CUDA
+        set(ArrayFire_CUDA_LIBRARIES "${ArrayFire_DIR}/lib/libafcuda.dylib")
     else()
-        set(ArrayFire_DIR "${CMAKE_CURRENT_LIST_DIR}/deps/arrayfire/arrayfire-3.0beta-Linux")
         # CPU
         set(ArrayFire_CPU_LIBRARIES "${ArrayFire_DIR}/lib/libafcpu.so")
         # OpenCL
@@ -16,7 +23,6 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 elseif(WIN32)
     add_definitions("/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /wd4251 /nologo")
-    set(ArrayFire_DIR $ENV{AF_PATH})
     # CPU
     set(ArrayFire_CPU_LIBRARIES "${ArrayFire_DIR}/lib/afcpu.lib")
     # OpenCL
