@@ -4,7 +4,7 @@
 #include "arraywrapper.h"
 
 using namespace v8;
-using namespace af;
+using namespace std;
 
 void Init(v8::Handle<v8::Object> exports)
 {

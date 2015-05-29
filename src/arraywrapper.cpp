@@ -10,18 +10,15 @@ using namespace node;
 
 Persistent<Function> ArrayWrapper::constructor;
 
-ArrayWrapper::ArrayWrapper()
+ArrayWrapper::ArrayWrapper(af::array* array) :
+array(array)
 {
+    assert(array);
 }
 
-ArrayWrapper::ArrayWrapper(const af::array &array) :
-    array(array)
+ArrayWrapper::~ArrayWrapper()
 {
-}
-
-ArrayWrapper::ArrayWrapper(af::array &&array) :
-    array(move(array))
-{
+    delete array;
 }
 
 void ArrayWrapper::Init(v8::Local<v8::Object> exports)
@@ -53,24 +50,43 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("isbool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::ReadOnly);
 
-    NanAssignPersistent<Function>(constructor, tmpl->GetFunction());
-    exports->Set(NanNew("AFArray"), tmpl->GetFunction());
+    auto f = tmpl->GetFunction();
+    f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
+    NanAssignPersistent<Function>(constructor, f);
+    exports->Set(NanNew("AFArray"), f);
 }
 
-v8::Local<Object> ArrayWrapper::New(const af::array& array)
+v8::Local<Object> ArrayWrapper::New(af::array* array)
 {
-    Local<Value> args[] = { NanNewBufferHandle(reinterpret_cast<char*>(new af::array(array)), 0, [](char*v1,void*v2) {}, nullptr) };
+    Local<Value> args[] = { WrapPointer(array) };
     auto c = NanNew(constructor);
-    return c->NewInstance(1, args);
+    auto inst = c->NewInstance(1, args);
+    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->array == array);    
+    return inst;
 }
 
-v8::Local<Object> ArrayWrapper::New(af::array&& array)
+template<typename T>
+af::array* ArrayWrapper::CreateArray(void* ptr, af::af_source_t src, int dimensions, const vector<dim_type> &dims)
 {
-    auto p1 = reinterpret_cast<char*>(new af::array(move(array)));
-    Local<Value> args[] = { NanNewBufferHandle(p1, 0, [](char*v1,void*v2) {}, nullptr) };
-    auto p2 = Buffer::Data(args[0]);
-    auto c = NanNew(constructor);
-    return c->NewInstance(1, args);
+    Guard();
+    switch (dimensions)
+    {
+        case 1:
+            return new af::array(dims[0], (T*)ptr, src);
+            break;
+        case 2:
+            return new af::array(dims[0], dims[1], (T*)ptr, src);
+            break;
+        case 3:
+            return new af::array(dims[0], dims[1], dims[2], (T*)ptr, src);
+            break;
+        case 4:
+            {
+                return new af::array(af::dim4(dims[0], dims[1], dims[2], dims[3]), (T*)ptr, src);
+            }
+            break;
+    }
+    return nullptr;
 }
 
 void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -83,15 +99,13 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
     {
         if (args.Length() == 0)
         {
-            instance = new ArrayWrapper();
+            instance = new ArrayWrapper(new af::array());
         }
         else if (args.Length() == 1)
         {
             if (Buffer::HasInstance(args[0]))
             {
-                auto arrayPtr = reinterpret_cast<af::array*>((uintptr_t)Buffer::Data(args[0]));
-                instance = new ArrayWrapper(move(*arrayPtr));
-                delete arrayPtr;
+                instance = new ArrayWrapper(reinterpret_cast<af::array*>(Buffer::Data(args[0])));
             }
         }
         else
@@ -110,79 +124,31 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 // Creating new
                 int dimensions = args.Length() - 1;
                 af::dtype type = ConvDtype(args[args.Length() - 1]->Uint32Value()).first;
-                switch(dimensions)
+                switch (dimensions)
                 {
                     case 1:
-                        instance = new ArrayWrapper(af::array((dim_type)args[0]->Int32Value(), type));
+                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), type));
                         break;
                     case 2:
-                        instance = new ArrayWrapper(af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), type));
+                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), type));
                         break;
                     case 3:
-                        instance = new ArrayWrapper(af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), type));
+                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), type));
                         break;
                     case 4:
                         {
                             af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
-                            instance = new ArrayWrapper(af::array(d, type));
+                            instance = new ArrayWrapper(new af::array(d, type));
                         }
                         break;
                 }
             }
-            else if (buffIdx + 1 < args.Length())
-            {
-                // Copy / wrap ptr
-                // args: dim0..dimn, ptr, dtype[, source]
-                af::af_source_t src = af::afHost;
-                if (buffIdx + 2 < args.Length())
-                {
-                    src = (af::af_source_t)(args[buffIdx + 2]->Int32Value());
-                }
-                int dimensions = buffIdx;
-                af::dtype type = ConvDtype(args[buffIdx + 1]->Uint32Value()).first;
-                auto buffObj = args[buffIdx]->ToObject();
-                char* ptr = Buffer::Data(buffObj);
-                af_array handle;
-                af_err err;
-                vector<dim_type> dims;
-                switch(dimensions)
-                {
-                    case 1:
-                        dims = { (dim_type)args[0]->Int32Value() };
-                        break;
-                    case 2:
-                        dims = { (dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value() };
-                        break;
-                    case 3:
-                        dims = { (dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value() };
-                        break;
-                    case 4:
-                        dims = { (dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value() };
-                        break;
-                }
-                if (dims.size())
-                {
-                    if (src == af::afHost)
-                    {
-                        err = af_device_array(&handle, ptr, dimensions, &dims[0], type);
-                    }
-                    else
-                    {
-                        err = af_create_array(&handle, ptr, dimensions, &dims[0], type);
-                    }
-                    if (err)
-                    {
-                        return NanThrowError(ErrToString(err).c_str());
-                    }
-                    instance = new ArrayWrapper(af::array(handle));
-                }
-            }
         }
     }
-    catch(exception& ex)
+    catch (exception& ex)
     {
         delete instance;
-        NanThrowError(ex.what());
+        return NanThrowError(ex.what());
     }
 
     if (!instance)
@@ -197,6 +163,105 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
     NanReturnValue(args.Holder());
 }
 
+NAN_METHOD(ArrayWrapper::Create)
+{
+    NanScope();
+
+    int buffIdx = -1;
+    function<af::array*()> factory;
+
+    for (int i = 0; i < args.Length(); i++)
+    {
+        if (Buffer::HasInstance(args[i]))
+        {
+            buffIdx = i;
+            break;
+        }
+    }
+
+    if (buffIdx == -1)
+    {
+        return NanThrowError("Buffer argument expected.");
+    }
+    else if (buffIdx + 1 < args.Length())
+    {
+        // Copy / wrap ptr
+        // args: dim0..dimn, ptr, dtype[, source]
+        af::af_source_t src = af::afHost;
+        if (buffIdx + 2 < args.Length() && args[buffIdx + 2]->IsNumber())
+        {
+            src = (af::af_source_t)(args[buffIdx + 2]->Int32Value());
+        }
+        int dimensions = buffIdx;
+        af::dtype type = ConvDtype(args[buffIdx + 1]->Uint32Value()).first;
+        auto buffObj = args[buffIdx]->ToObject();
+        char* ptr = Buffer::Data(buffObj);
+        vector<dim_type> dims = { args[0]->Int32Value() };
+        if (dimensions > 1)  dims.push_back(args[1]->Int32Value());
+        if (dimensions > 2)  dims.push_back(args[2]->Int32Value());
+        if (dimensions > 3)  dims.push_back(args[3]->Int32Value());
+        switch (type)
+        {
+            case f32:
+                factory = [=]() { return CreateArray<float>(ptr, src, dimensions, dims); };
+                break;
+            case f64:
+                factory = [=]() { return CreateArray<double>(ptr, src, dimensions, dims); };
+                break;
+            case s32:
+                factory = [=]() { return CreateArray<int>(ptr, src, dimensions, dims); };
+                break;
+            case u32:
+                factory = [=]() { return CreateArray<unsigned>(ptr, src, dimensions, dims); };
+                break;
+            case u8:
+                factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimensions, dims); };
+                break;
+            case c32:
+                factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimensions, dims); };
+                break;
+            case c64:
+                factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimensions, dims); };
+                break;
+            case b8:
+                factory = [=]() { return CreateArray<char>(ptr, src, dimensions, dims); };
+                break;
+            case s64:
+                factory = [=]() { return CreateArray<int64_t>(ptr, src, dimensions, dims); };
+                break;
+            case u64:
+                factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimensions, dims); };
+                break;
+        }
+    }
+
+    if (!factory)
+    {
+        return NanThrowError("Invalid arguments.");
+    }
+
+    NanCallback *callback = nullptr;
+    if (args[args.Length() - 1]->IsFunction())
+    {
+        callback = new NanCallback(args[args.Length() - 1].As<Function>());
+    }
+
+    if (!callback)
+    {
+        return NanThrowError("Callback argument expected.");
+    }
+
+    auto worker = new Worker<af::array*>(callback, factory, 
+    [](af::array* w)
+    { 
+        return New(w);
+    });
+    worker->SaveToPersistent("data", args[buffIdx]->ToObject());
+
+    NanAsyncQueueWorker(worker);
+    NanReturnUndefined();
+}
+
 NAN_METHOD(ArrayWrapper::Elements)
 {
     NanScope();
@@ -204,7 +269,7 @@ NAN_METHOD(ArrayWrapper::Elements)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.elements()));
+    NanReturnValue(NanNew(obj->array->elements()));
 }
 
 NAN_METHOD(ArrayWrapper::Host)
@@ -220,7 +285,7 @@ NAN_METHOD(ArrayWrapper::Host)
     auto buffData = Buffer::Data(args[0]);
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-    if (buffSize < obj->array.bytes())
+    if (buffSize < obj->array->bytes())
     {
         return NanThrowError("Buffer is too small to hold values.");
     }
@@ -240,7 +305,7 @@ NAN_METHOD(ArrayWrapper::Host)
     auto exec = [=]()
     {
         Guard();
-        array.host(buffData);
+        array->host(buffData);
     };
     auto worker = new Worker<void>(callback, exec);
     worker->SaveToPersistent("data", args[0]->ToObject());
@@ -256,7 +321,7 @@ NAN_METHOD(ArrayWrapper::Type)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(obj->array.type());
+    NanReturnValue(obj->array->type());
 }
 
 NAN_METHOD(ArrayWrapper::Dims)
@@ -267,7 +332,7 @@ NAN_METHOD(ArrayWrapper::Dims)
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
     if (!args.Length())
     {
-        auto dims = obj->array.dims();
+        auto dims = obj->array->dims();
         auto jsDims = NanNew<Object>();
         jsDims->Set(NanNew("elements"), NanNew(dims.elements()));
         jsDims->Set(NanNew("ndims"), NanNew(dims.ndims()));
@@ -280,7 +345,7 @@ NAN_METHOD(ArrayWrapper::Dims)
     }
     else
     {
-        NanReturnValue(obj->array.dims(args[0]->Uint32Value()));
+        NanReturnValue(obj->array->dims(args[0]->Uint32Value()));
     }
 }
 
@@ -291,7 +356,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.numdims()));
+    NanReturnValue(NanNew(obj->array->numdims()));
 }
 
 NAN_METHOD(ArrayWrapper::Bytes)
@@ -301,7 +366,7 @@ NAN_METHOD(ArrayWrapper::Bytes)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew<Number>((unsigned)obj->array.bytes()));
+    NanReturnValue(NanNew<Number>((unsigned)obj->array->bytes()));
 }
 
 NAN_METHOD(ArrayWrapper::Copy)
@@ -310,7 +375,7 @@ NAN_METHOD(ArrayWrapper::Copy)
     Guard();
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-    auto result = New(move(obj->array.copy()));
+    auto result = New(new af::array(obj->array->copy()));
 
     NanReturnValue(result);
 }
@@ -322,7 +387,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isempty()));
+    NanReturnValue(NanNew(obj->array->isempty()));
 }
 
 NAN_METHOD(ArrayWrapper::IsScalar)
@@ -332,7 +397,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isscalar()));
+    NanReturnValue(NanNew(obj->array->isscalar()));
 }
 
 NAN_METHOD(ArrayWrapper::IsVector)
@@ -342,7 +407,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isvector()));
+    NanReturnValue(NanNew(obj->array->isvector()));
 }
 
 NAN_METHOD(ArrayWrapper::IsRow)
@@ -352,7 +417,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isrow()));
+    NanReturnValue(NanNew(obj->array->isrow()));
 }
 
 NAN_METHOD(ArrayWrapper::IsColumn)
@@ -362,7 +427,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.iscolumn()));
+    NanReturnValue(NanNew(obj->array->iscolumn()));
 }
 
 NAN_METHOD(ArrayWrapper::IsComplex)
@@ -372,7 +437,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.iscomplex()));
+    NanReturnValue(NanNew(obj->array->iscomplex()));
 }
 
 NAN_METHOD(ArrayWrapper::IsReal)
@@ -382,7 +447,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isreal()));
+    NanReturnValue(NanNew(obj->array->isreal()));
 }
 
 NAN_METHOD(ArrayWrapper::IsDouble)
@@ -392,7 +457,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isdouble()));
+    NanReturnValue(NanNew(obj->array->isdouble()));
 }
 
 NAN_METHOD(ArrayWrapper::IsSingle)
@@ -402,7 +467,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.issingle()));
+    NanReturnValue(NanNew(obj->array->issingle()));
 }
 
 NAN_METHOD(ArrayWrapper::IsRealFloating)
@@ -412,7 +477,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isrealfloating()));
+    NanReturnValue(NanNew(obj->array->isrealfloating()));
 }
 
 NAN_METHOD(ArrayWrapper::IsFloating)
@@ -422,7 +487,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isfloating()));
+    NanReturnValue(NanNew(obj->array->isfloating()));
 }
 
 NAN_METHOD(ArrayWrapper::IsInteger)
@@ -432,7 +497,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.isinteger()));
+    NanReturnValue(NanNew(obj->array->isinteger()));
 }
 
 NAN_METHOD(ArrayWrapper::IsBool)
@@ -442,7 +507,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
 
-    NanReturnValue(NanNew(obj->array.type() == b8));
+    NanReturnValue(NanNew(obj->array->type() == b8));
 }
 
 NAN_METHOD(ArrayWrapper::Eval)
@@ -451,7 +516,7 @@ NAN_METHOD(ArrayWrapper::Eval)
     Guard();
 
     auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-    obj->array.eval();
+    obj->array->eval();
 
     NanReturnUndefined();
 }

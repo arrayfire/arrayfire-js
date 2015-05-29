@@ -15,7 +15,7 @@ template<typename T>
 struct Worker : public NanAsyncWorker
 {
     typedef std::function<T()> ExecuteFunc;
-    typedef std::function<v8::Handle<v8::Value>(T)> ResultConvFunc;
+    typedef std::function<v8::Local<v8::Value>(T)> ResultConvFunc;
 
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),

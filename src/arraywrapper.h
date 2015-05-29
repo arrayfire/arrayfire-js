@@ -6,10 +6,13 @@
 
 struct ArrayWrapper : public node::ObjectWrap
 {
-    static void Init(v8::Local<v8::Object> exports);
-    static v8::Local<v8::Object> New(const af::array& array);
-    static v8::Local<v8::Object> New(af::array&& array);
+    ArrayWrapper(const ArrayWrapper&) = delete;
+    ~ArrayWrapper();
 
+    static void Init(v8::Local<v8::Object> exports);
+    static v8::Local<v8::Object> New(af::array* array);
+
+    static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
     static NAN_METHOD(Host);
     static NAN_METHOD(Type);
@@ -33,15 +36,15 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Eval);
 
 private:
-    explicit ArrayWrapper();
-    explicit ArrayWrapper(const af::array& array);
-    explicit ArrayWrapper(af::array&& array);
+    explicit ArrayWrapper(af::array* array);
 
+    template<typename T>
+    static af::array* CreateArray(void* ptr, af::af_source_t src, int dimensions, const std::vector<dim_type> &args);
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     static v8::Persistent<v8::Function> constructor;
 
-    af::array array;
+    af::array* array;
 };
 
 #endif // ARRAY_FIRE_JS_ARRAYWRAPPER_H

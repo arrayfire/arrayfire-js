@@ -176,11 +176,29 @@ function testPlatform(id) {
                         int.set(buff, v * int.size, v * v);
                     }
 
-                    let array = new AFArray(count, buff, af.types.dtype.s32);
+                    assert(_.isFunction(AFArray.create));
+                    assert(_.isFunction(AFArray.createAsync));
+
+                    let array = yield AFArray.createAsync(count, buff, af.types.dtype.s32);
+                    assert(array.bytes() === count * int.size);
+                    assert(array.type() === af.types.dtype.s32);
+                    let buff2 = new Buffer(int.size * count);
+                    yield array.hostAsync(buff2);
+                    for (let v = 0; v < count; v++) {
+                        let v1 = int.get(buff, v * int.size);
+                        let v2 = int.get(buff2, v * int.size);
+                        assert(v1 === v2);
+                    }
                     let array2 = array.copy();
                     assert(array2 instanceof AFArray);
                     assert(array2.bytes() === array.bytes());
-                    yield af.syncAsync();
+                    let buff3 = new Buffer(int.size * count);
+                    yield array2.hostAsync(buff3);
+                    for (let v = 0; v < count; v++) {
+                        let v1 = int.get(buff, v * int.size);
+                        let v2 = int.get(buff3, v * int.size);
+                        assert(v1 === v2);
+                    }
                 });
                 f().nodeify(done);
             });

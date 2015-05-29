@@ -12,5 +12,6 @@
 #include <utility>
 #include <string>
 #include <tuple>
+#include <cassert>
 
 #endif
