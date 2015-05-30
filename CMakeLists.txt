@@ -4,6 +4,10 @@ project (fire_js)
 
 set(ArrayFire_DIR $ENV{AF_PATH})
 
+if (NOT ArrayFire_DIR)
+    message(FATAL_ERROR "Cannot locate ArrayFire installation. Please set AF_PATH!" )
+endif()
+
 if(UNIX)
     if(APPLE)
         # CPU
