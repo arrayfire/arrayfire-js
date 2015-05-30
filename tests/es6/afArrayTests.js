@@ -191,6 +191,7 @@ function testPlatform(id) {
                         let v1 = int.get(buff, v * int.size);
                         let v2 = int.get(buff2, v * int.size);
                         assert(v1 === v2);
+                        assert(v1 === v * v);
                     }
 
                     let array2 = array.copy();
@@ -202,6 +203,7 @@ function testPlatform(id) {
                         let v1 = int.get(buff, v * int.size);
                         let v2 = int.get(buff3, v * int.size);
                         assert(v1 === v2);
+                        assert(v1 === v * v);
                     }
                 });
                 f().nodeify(done);
