@@ -1,4 +1,4 @@
-# Fire.js
+# Fire.js v0.0.1-PROTOTYPE
 
 ## About
 
@@ -30,3 +30,7 @@ var fire = require("fire-js")("CUDA");
 ## Docs
 
 Don't have yet, sorry. See the unit tests they are pretty obvious.
+
+## License
+
+[MIT](https://github.com/unbornchikken/fire-js/blob/master/LICENSE)
