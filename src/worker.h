@@ -4,6 +4,7 @@
 #include <functional>
 #include <nan.h>
 #include <exception>
+#include "helpers.h"
 
 inline NAN_METHOD(Noop)
 {
@@ -20,7 +21,7 @@ struct Worker : public NanAsyncWorker
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
-        resultConvFunc(resultConvFunc)
+        resultConvFunc(ConvResult(resultConvFunc))
     {
     }
 
@@ -31,14 +32,7 @@ struct Worker : public NanAsyncWorker
         {
             result = executeFunc();
         }
-        catch(exception& ex)
-        {
-            SetErrorMessage(ex.what());
-        }
-        catch(...)
-        {
-            SetErrorMessage("Fatal error!");
-        }
+        FIRE_CATCH
     }
 
 protected:
@@ -46,14 +40,42 @@ protected:
     {
         using namespace v8;
         NanScope();
-        Local<Value> args[] = { NanNull(), resultConvFunc(result) };
-        callback->Call(2, args);
+        auto convertedResult = resultConvFunc(result);
+        if (convertedResult->IsNativeError())
+        {
+            Local<Value> args[] = { convertedResult };
+            callback->Call(1, args);
+        }
+        else
+        {
+            Local<Value> args[] = { NanNull(), convertedResult };
+            callback->Call(2, args);
+        }
     }
 
 private:
     ExecuteFunc executeFunc;
     ResultConvFunc resultConvFunc;
     T result;
+
+    ResultConvFunc ConvResult(const ResultConvFunc& resultConvFunc)
+    {
+        return [=](T result)
+        {
+            try
+            {
+                return resultConvFunc(result);
+            }
+            catch(std::exception& ex)
+            {
+                return NanError(ex.what());
+            }
+            catch(...)
+            {
+                return NanError("Unknown error!");
+            }
+        };
+    }
 };
 
 template<>

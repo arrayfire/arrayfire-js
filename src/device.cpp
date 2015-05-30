@@ -8,115 +8,143 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
+
 NAN_METHOD(GetDeviceCount)
 {
-    Guard();
     NanScope();
+    try
+    {
+        Guard();
 #ifdef CPU
-    NanReturnValue(NanNew<Number>(1));
+        NanReturnValue(NanNew<Number>(1));
 #else
-    NanReturnValue(NanNew<Number>(af::getDeviceCount()));
+        NanReturnValue(NanNew<Number>(af::getDeviceCount()));
 #endif
+    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(GetDevice)
 {
-    Guard();
-    NanScope();
+    try
+    {
+        Guard();
+        NanScope();
 
 #ifdef CPU
-    NanReturnValue(NanNew<Number>(0));
+        NanReturnValue(NanNew<Number>(0));
 #else
-    NanReturnValue(NanNew<Number>(af::getDevice()));
+        NanReturnValue(NanNew<Number>(af::getDevice()));
 #endif
+    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(SetDevice)
 {
-    Guard();
     NanScope();
 
+    try
+    {
+        Guard();
+
 #ifndef CPU
-    af::setDevice(args[0]->Uint32Value());
+        af::setDevice(args[0]->Uint32Value());
 #endif
 
-    NanReturnUndefined();
+        NanReturnUndefined();
+    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(GetDeviceInfo)
 {
-    Guard();
     NanScope();
 
-    bool IsDoubleAvailable = af::isDoubleAvailable(af::getDevice());
-    auto info = NanNew<Object>();
+    try
+    {
+        Guard();
+
+        bool IsDoubleAvailable = af::isDoubleAvailable(af::getDevice());
+        auto info = NanNew<Object>();
 
 #ifdef CPU
-    info->Set(NanNew<String>("name"), NanNew<String>("CPU"));
-    info->Set(NanNew<String>("platform"), NanNew<String>("CPU"));
-    info->Set(NanNew<String>("toolkit"), NanNew<String>("CPU"));
-    info->Set(NanNew<String>("compute"), NanNew<String>("CPU"));
-    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        info->Set(NanNew<String>("name"), NanNew<String>("CPU"));
+        info->Set(NanNew<String>("platform"), NanNew<String>("CPU"));
+        info->Set(NanNew<String>("toolkit"), NanNew<String>("CPU"));
+        info->Set(NanNew<String>("compute"), NanNew<String>("CPU"));
+        info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #else
-    char name[256], platform[256], toolkit[256], compute[256];
-    af::deviceprop(name, platform, toolkit, compute);
-    info->Set(NanNew<String>("name"), NanNew<String>(name));
-    info->Set(NanNew<String>("platform"), NanNew<String>(platform));
-    info->Set(NanNew<String>("toolkit"), NanNew<String>(toolkit));
-    info->Set(NanNew<String>("compute"), NanNew<String>(compute));
-    info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        char name[256], platform[256], toolkit[256], compute[256];
+        af::deviceprop(name, platform, toolkit, compute);
+        info->Set(NanNew<String>("name"), NanNew<String>(name));
+        info->Set(NanNew<String>("platform"), NanNew<String>(platform));
+        info->Set(NanNew<String>("toolkit"), NanNew<String>(toolkit));
+        info->Set(NanNew<String>("compute"), NanNew<String>(compute));
+        info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #endif
 
-    NanReturnValue(info);
+        NanReturnValue(info);
+    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(IsDoubleAvailable)
 {
-    Guard();
     NanScope();
 
-    NanReturnValue(NanNew<Number>(af::isDoubleAvailable(args[0]->Uint32Value())));
+    try
+    {
+        Guard();
+
+        NanReturnValue(NanNew<Number>(af::isDoubleAvailable(args[0]->Uint32Value())));
+    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(Sync)
 {
     NanScope();
 
-    int device = -1;
-    NanCallback *callback = nullptr;
-
-    if (args.Length() > 0)
+    try
     {
-        int idx = 0;
-        if (args[idx]->IsNumber())
+        int device = -1;
+        NanCallback *callback = nullptr;
+
+        if (args.Length() > 0)
         {
-            device = args[idx++]->Int32Value();
+            int idx = 0;
+            if (args[idx]->IsNumber())
+            {
+                device = args[idx++]->Int32Value();
 #ifdef CPU
-            if (device > 1 || device < -1)
-            {
-                return NanThrowRangeError("Device is out of range.");
-            }
+                if (device > 1 || device < -1)
+                {
+                    return NanThrowRangeError("Device is out of range.");
+                }
 #else
-            if (device >= af::getDeviceCount() || device < -1)
-            {
-                return NanThrowRangeError("Device is out of range.");
-            }
+                if (device >= af::getDeviceCount() || device < -1)
+                {
+                    return NanThrowRangeError("Device is out of range.");
+                }
 #endif
+            }
+            if (idx < args.Length() && args[idx]->IsFunction())
+            {
+                callback = new NanCallback(args[idx].As<Function>());
+            }
         }
-        if (idx < args.Length() && args[idx]->IsFunction())
+
+        auto exec = [=]()
         {
-            callback = new NanCallback(args[idx].As<Function>());
-        }
+            Guard();
+            af::sync(device);
+        };
+
+        NanAsyncQueueWorker(new Worker<void>(callback, move(exec)));
+        NanReturnUndefined();
     }
-
-    auto exec = [=]()
-    {
-        Guard();
-        af::sync(device);
-    };
-
-    NanAsyncQueueWorker(new Worker<void>(callback, exec));
-    NanReturnUndefined();
+    FIRE_CATCH
 }
 
 pair<af::dtype, unsigned> getAllocPars(unsigned elements, unsigned udtype)
@@ -147,10 +175,7 @@ NAN_METHOD(Alloc)
 
         NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr)); // void*
     }
-    catch (exception& ex)
-    {
-        NanThrowError(ex.what());
-    }
+    FIRE_CATCH
 }
 
 NAN_METHOD(Pinned)
@@ -172,10 +197,7 @@ NAN_METHOD(Pinned)
 
         NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
     }
-    catch (exception& ex)
-    {
-        NanThrowError(ex.what());
-    }
+    FIRE_CATCH
 }
 
 void InitDevice(v8::Handle<v8::Object> exports)
