@@ -17,6 +17,7 @@
     "better-assert": "*",
     "bluebird": "*",
     "gulp": "*",
+    "gulp-sequence": "^0.3.2",
     "gulp-traceur": "*",
     "merge2": "*",
     "mocha": "*",
