@@ -1,4 +1,4 @@
-# Fire.js v0.0.1-PROTOTYPEgul
+# Fire.js v0.0.2-PROTOTYPE
 
 ## About
 
