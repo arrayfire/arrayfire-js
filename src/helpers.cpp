@@ -106,3 +106,45 @@ v8::Local<v8::Object> WrapPointer(void* ptr)
 {
     return NanNewBufferHandle(reinterpret_cast<char*>(ptr), 0, [](char*v1, void*v2) {}, nullptr);
 }
+
+af::dim4 ToDim4(v8::Local<v8::Object> obj)
+{
+    Local<Array> dims;
+    if (obj->IsArray())
+    {
+        dims = obj.As<Array>();
+    }
+    else
+    {
+        auto member = obj->Get(NanNew("dims"));
+        if (member->IsArray())
+        {
+            dims = member.As<Array>();
+        }
+        else
+        {
+            throw logic_error("Argument is not a dim4 object.");
+        }
+    }
+    int dim0 = 1;
+    int dim1 = 1;
+    int dim2 = 1;
+    int dim3 = 1;
+    if (dims->Length() > 0)
+    {
+        dim0 = dims->Get(0)->Uint32Value();
+    }
+    if (dims->Length() > 1)
+    {
+        dim1 = dims->Get(1)->Uint32Value();
+    }
+    if (dims->Length() > 2)
+    {
+        dim2 = dims->Get(2)->Uint32Value();
+    }
+    if (dims->Length() > 3)
+    {
+        dim3 = dims->Get(3)->Uint32Value();
+    }
+    return move(af::dim4(dim0, dim1, dim2, dim3));
+}

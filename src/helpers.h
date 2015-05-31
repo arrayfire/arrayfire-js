@@ -13,4 +13,6 @@ std::string ErrToString(af_err);
 
 v8::Local<v8::Object> WrapPointer(void* ptr);
 
+af::dim4 ToDim4(v8::Local<v8::Object> obj);
+
 #endif // FIRE_JS_HELPERS_H

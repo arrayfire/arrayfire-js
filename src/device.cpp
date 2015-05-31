@@ -173,7 +173,7 @@ NAN_METHOD(Alloc)
             af::free(data);
         };
 
-        NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr)); // void*
+        NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr));
     }
     FIRE_CATCH
 }

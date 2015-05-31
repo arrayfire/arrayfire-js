@@ -135,8 +135,7 @@ function testPlatform(id) {
                 assert(array.isbool() === false);
             });
 
-            it("should create new four dimensional", function() {
-                let array = new AFArray(10, 20, 30, 40, fire.types.dtype.f32);
+            function verify4(array) {
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 40 * 4);
                 assert(array.elements() === 10 * 20 * 30 * 40);
@@ -167,6 +166,21 @@ function testPlatform(id) {
                 assert(array.isfloating() === true);
                 assert(array.isinteger() === false);
                 assert(array.isbool() === false);
+            }
+
+            it("should create new four dimensional", function() {
+                let array = new AFArray(10, 20, 30, 40, fire.types.dtype.f32);
+                verify4(array);
+            });
+
+            it("should create new four dimensional from dim4", function() {
+                let array = new AFArray({ dims: [10, 20, 30, 40] }, fire.types.dtype.f32);
+                verify4(array);
+            });
+
+            it("should create new four dimensional from dim4 array", function() {
+                let array = new AFArray([10, 20, 30, 40], fire.types.dtype.f32);
+                verify4(array);
             });
 
             it("should initialize from buffer, copyable, and readable", function(done) {

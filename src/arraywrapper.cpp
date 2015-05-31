@@ -86,20 +86,20 @@ af::array* ArrayWrapper::CreateArray(void* ptr, af::af_source_t src, int dimensi
     Guard();
     switch (dimensions)
     {
-    case 1:
-        return new af::array(dims[0], (T*)ptr, src);
-        break;
-    case 2:
-        return new af::array(dims[0], dims[1], (T*)ptr, src);
-        break;
-    case 3:
-        return new af::array(dims[0], dims[1], dims[2], (T*)ptr, src);
-        break;
-    case 4:
-    {
-        return new af::array(af::dim4(dims[0], dims[1], dims[2], dims[3]), (T*)ptr, src);
-    }
-        break;
+        case 1:
+            return new af::array(dims[0], (T*)ptr, src);
+            break;
+        case 2:
+            return new af::array(dims[0], dims[1], (T*)ptr, src);
+            break;
+        case 3:
+            return new af::array(dims[0], dims[1], dims[2], (T*)ptr, src);
+            break;
+        case 4:
+            {
+                return new af::array(af::dim4(dims[0], dims[1], dims[2], dims[3]), (T*)ptr, src);
+            }
+            break;
     }
     return nullptr;
 }
@@ -139,25 +139,32 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 if (buffIdx == -1)
                 {
                     // Creating new
-                    int dimensions = args.Length() - 1;
                     af::dtype type = ConvDtype(args[args.Length() - 1]->Uint32Value()).first;
-                    switch (dimensions)
+                    if (args.Length() == 2 && args[0]->IsObject())
                     {
-                    case 1:
-                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), type));
-                        break;
-                    case 2:
-                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), type));
-                        break;
-                    case 3:
-                        instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), type));
-                        break;
-                    case 4:
-                    {
-                        af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
-                        instance = new ArrayWrapper(new af::array(d, type));
+                        instance = new ArrayWrapper(new af::array(ToDim4(args[0].As<Object>()), type));
                     }
-                        break;
+                    else
+                    {
+                        int dimensions = args.Length() - 1;
+                        switch (dimensions)
+                        {
+                            case 1:
+                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), type));
+                                break;
+                            case 2:
+                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), type));
+                                break;
+                            case 3:
+                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), type));
+                                break;
+                            case 4:
+                                {
+                                    af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
+                                    instance = new ArrayWrapper(new af::array(d, type));
+                                }
+                                break;
+                        }
                     }
                 }
             }
@@ -223,36 +230,36 @@ NAN_METHOD(ArrayWrapper::Create)
             if (dimensions > 3)  dims.push_back(args[3]->Int32Value());
             switch (type)
             {
-            case f32:
-                factory = [=]() { return CreateArray<float>(ptr, src, dimensions, dims); };
-                break;
-            case f64:
-                factory = [=]() { return CreateArray<double>(ptr, src, dimensions, dims); };
-                break;
-            case s32:
-                factory = [=]() { return CreateArray<int>(ptr, src, dimensions, dims); };
-                break;
-            case u32:
-                factory = [=]() { return CreateArray<unsigned>(ptr, src, dimensions, dims); };
-                break;
-            case u8:
-                factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimensions, dims); };
-                break;
-            case c32:
-                factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimensions, dims); };
-                break;
-            case c64:
-                factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimensions, dims); };
-                break;
-            case b8:
-                factory = [=]() { return CreateArray<char>(ptr, src, dimensions, dims); };
-                break;
-            case s64:
-                factory = [=]() { return CreateArray<int64_t>(ptr, src, dimensions, dims); };
-                break;
-            case u64:
-                factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimensions, dims); };
-                break;
+                case f32:
+                    factory = [=]() { return CreateArray<float>(ptr, src, dimensions, dims); };
+                    break;
+                case f64:
+                    factory = [=]() { return CreateArray<double>(ptr, src, dimensions, dims); };
+                    break;
+                case s32:
+                    factory = [=]() { return CreateArray<int>(ptr, src, dimensions, dims); };
+                    break;
+                case u32:
+                    factory = [=]() { return CreateArray<unsigned>(ptr, src, dimensions, dims); };
+                    break;
+                case u8:
+                    factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimensions, dims); };
+                    break;
+                case c32:
+                    factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimensions, dims); };
+                    break;
+                case c64:
+                    factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimensions, dims); };
+                    break;
+                case b8:
+                    factory = [=]() { return CreateArray<char>(ptr, src, dimensions, dims); };
+                    break;
+                case s64:
+                    factory = [=]() { return CreateArray<int64_t>(ptr, src, dimensions, dims); };
+                    break;
+                case u64:
+                    factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimensions, dims); };
+                    break;
             }
         }
 
@@ -380,6 +387,12 @@ NAN_METHOD(ArrayWrapper::Dims)
             jsDims->Set(NanNew("dim1"), NanNew(dims[1]));
             jsDims->Set(NanNew("dim2"), NanNew(dims[2]));
             jsDims->Set(NanNew("dim3"), NanNew(dims[3]));
+            auto pDims = NanNew<Array>(4);
+            pDims->Set(0, NanNew(dims[0]));
+            pDims->Set(1, NanNew(dims[1]));
+            pDims->Set(2, NanNew(dims[2]));
+            pDims->Set(3, NanNew(dims[3]));
+            jsDims->Set(NanNew("dims"), pDims);
 
             NanReturnValue(jsDims);
         }
