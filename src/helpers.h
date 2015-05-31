@@ -15,6 +15,6 @@ v8::Local<v8::Object> WrapPointer(void* ptr);
 
 af::dim4 ToDim4(v8::Local<v8::Object> obj);
 
-std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length = -1);
+std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length = -1, int skip = -1);
 
 #endif // FIRE_JS_HELPERS_H

@@ -149,13 +149,13 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     return move(af::dim4(dim0, dim1, dim2, dim3));
 }
 
-std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length)
+std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length, int skip)
 {
     if (args.Length() > 1)
     {
         if (length == -1) length = args.Length();
         af::dtype type = ConvDtype(args[length - 1]->Uint32Value()).first;
-        int dimensions = length - 1;
+        int dimensions = length - 1 - skip;
         if (dimensions == 1 && args[0]->IsObject())
         {
             return move(make_pair(ToDim4(args[0].As<Object>()), type));
