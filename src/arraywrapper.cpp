@@ -140,13 +140,13 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 {
                     // Creating new
                     af::dtype type = ConvDtype(args[args.Length() - 1]->Uint32Value()).first;
-                    if (args.Length() == 2 && args[0]->IsObject())
+                    int dimensions = args.Length() - 1;
+                    if (dimensions == 1 && args[0]->IsObject())
                     {
                         instance = new ArrayWrapper(new af::array(ToDim4(args[0].As<Object>()), type));
                     }
                     else
                     {
-                        int dimensions = args.Length() - 1;
                         switch (dimensions)
                         {
                             case 1:
@@ -224,10 +224,20 @@ NAN_METHOD(ArrayWrapper::Create)
             af::dtype type = ConvDtype(args[buffIdx + 1]->Uint32Value()).first;
             auto buffObj = args[buffIdx]->ToObject();
             char* ptr = Buffer::Data(buffObj);
-            vector<dim_type> dims = { args[0]->Int32Value() };
-            if (dimensions > 1)  dims.push_back(args[1]->Int32Value());
-            if (dimensions > 2)  dims.push_back(args[2]->Int32Value());
-            if (dimensions > 3)  dims.push_back(args[3]->Int32Value());
+            vector<dim_type> dims;
+            if (dimensions == 1 && args[0]->IsObject())
+            {
+                auto dim4 = ToDim4(args[0].As<Object>());
+                dims = { dim4[0], dim4[1], dim4[2], dim4[3] };
+                dimensions = 4;
+            }
+            else
+            {
+                dims = { args[0]->Int32Value() };
+                if (dimensions > 1)  dims.push_back(args[1]->Int32Value());
+                if (dimensions > 2)  dims.push_back(args[2]->Int32Value());
+                if (dimensions > 3)  dims.push_back(args[3]->Int32Value());
+            }
             switch (type)
             {
                 case f32:
