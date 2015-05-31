@@ -148,3 +148,39 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     return move(af::dim4(dim0, dim1, dim2, dim3));
 }
+
+std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length)
+{
+    if (args.Length() > 1)
+    {
+        if (length == -1) length = args.Length();
+        af::dtype type = ConvDtype(args[length - 1]->Uint32Value()).first;
+        int dimensions = length - 1;
+        if (dimensions == 1 && args[0]->IsObject())
+        {
+            return move(make_pair(ToDim4(args[0].As<Object>()), type));
+        }
+        else
+        {
+            switch (dimensions)
+            {
+                case 1:
+                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value()), type));
+                    break;
+                case 2:
+                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value()), type));
+                    break;
+                case 3:
+                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value()), type));
+                    break;
+                case 4:
+                    {
+                        af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
+                        return move(make_pair(d, type));
+                    }
+                    break;
+            }
+        }
+    }
+    throw logic_error("Cannot extract dimensions and dtype from argumens.");
+}

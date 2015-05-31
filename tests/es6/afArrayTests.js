@@ -195,7 +195,7 @@ function testPlatform(id) {
                     assert(_.isFunction(AFArray.create));
                     assert(_.isFunction(AFArray.createAsync));
 
-                    let array = yield AFArray.createAsync(count, buff, fire.types.dtype.s32);
+                    let array = yield AFArray.createAsync(count, fire.types.dtype.s32, buff);
                     assert(array.bytes() === count * int.size);
                     assert(array.type() === fire.types.dtype.s32);
 

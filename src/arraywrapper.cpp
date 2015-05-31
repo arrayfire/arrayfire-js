@@ -80,30 +80,6 @@ v8::Local<Object> ArrayWrapper::New(af::array* array)
     return inst;
 }
 
-template<typename T>
-af::array* ArrayWrapper::CreateArray(void* ptr, af::af_source_t src, int dimensions, const vector<dim_type> &dims)
-{
-    Guard();
-    switch (dimensions)
-    {
-        case 1:
-            return new af::array(dims[0], (T*)ptr, src);
-            break;
-        case 2:
-            return new af::array(dims[0], dims[1], (T*)ptr, src);
-            break;
-        case 3:
-            return new af::array(dims[0], dims[1], dims[2], (T*)ptr, src);
-            break;
-        case 4:
-            {
-                return new af::array(af::dim4(dims[0], dims[1], dims[2], dims[3]), (T*)ptr, src);
-            }
-            break;
-    }
-    return nullptr;
-}
-
 void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     NanScope();
@@ -139,33 +115,8 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 if (buffIdx == -1)
                 {
                     // Creating new
-                    af::dtype type = ConvDtype(args[args.Length() - 1]->Uint32Value()).first;
-                    int dimensions = args.Length() - 1;
-                    if (dimensions == 1 && args[0]->IsObject())
-                    {
-                        instance = new ArrayWrapper(new af::array(ToDim4(args[0].As<Object>()), type));
-                    }
-                    else
-                    {
-                        switch (dimensions)
-                        {
-                            case 1:
-                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), type));
-                                break;
-                            case 2:
-                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), type));
-                                break;
-                            case 3:
-                                instance = new ArrayWrapper(new af::array((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), type));
-                                break;
-                            case 4:
-                                {
-                                    af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
-                                    instance = new ArrayWrapper(new af::array(d, type));
-                                }
-                                break;
-                        }
-                    }
+                    auto dimAndType = ParseArrayConstructorDimAndTypeArgs(args);
+                    instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
                 }
             }
         }
@@ -187,6 +138,13 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
         NanReturnValue(args.Holder());
     }
     FIRE_CATCH
+}
+
+template<typename T>
+af::array* ArrayWrapper::CreateArray(void* ptr, af::af_source_t src, const af::dim4& dim4)
+{
+    Guard();
+    return new af::array(dim4, (T*)ptr, src);
 }
 
 NAN_METHOD(ArrayWrapper::Create)
@@ -214,61 +172,46 @@ NAN_METHOD(ArrayWrapper::Create)
         else if (buffIdx + 1 < args.Length())
         {
             // Copy / wrap ptr
-            // args: dim0..dimn, ptr, dtype[, source]
+            // args: dim0..dimn, dtype, ptr[, source]
             af::af_source_t src = af::afHost;
-            if (buffIdx + 2 < args.Length() && args[buffIdx + 2]->IsNumber())
+            if (buffIdx + 1 < args.Length() && args[buffIdx + 1]->IsNumber())
             {
                 src = (af::af_source_t)(args[buffIdx + 2]->Int32Value());
             }
-            int dimensions = buffIdx;
-            af::dtype type = ConvDtype(args[buffIdx + 1]->Uint32Value()).first;
             auto buffObj = args[buffIdx]->ToObject();
             char* ptr = Buffer::Data(buffObj);
-            vector<dim_type> dims;
-            if (dimensions == 1 && args[0]->IsObject())
-            {
-                auto dim4 = ToDim4(args[0].As<Object>());
-                dims = { dim4[0], dim4[1], dim4[2], dim4[3] };
-                dimensions = 4;
-            }
-            else
-            {
-                dims = { args[0]->Int32Value() };
-                if (dimensions > 1)  dims.push_back(args[1]->Int32Value());
-                if (dimensions > 2)  dims.push_back(args[2]->Int32Value());
-                if (dimensions > 3)  dims.push_back(args[3]->Int32Value());
-            }
-            switch (type)
+            auto dimAndType = ParseArrayConstructorDimAndTypeArgs(args, buffIdx);
+            switch (dimAndType.second)
             {
                 case f32:
-                    factory = [=]() { return CreateArray<float>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<float>(ptr, src, dimAndType.first); };
                     break;
                 case f64:
-                    factory = [=]() { return CreateArray<double>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<double>(ptr, src, dimAndType.first); };
                     break;
                 case s32:
-                    factory = [=]() { return CreateArray<int>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<int>(ptr, src, dimAndType.first); };
                     break;
                 case u32:
-                    factory = [=]() { return CreateArray<unsigned>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<unsigned>(ptr, src, dimAndType.first); };
                     break;
                 case u8:
-                    factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimAndType.first ); };
                     break;
                 case c32:
-                    factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimAndType.first); };
                     break;
                 case c64:
-                    factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimAndType.first); };
                     break;
                 case b8:
-                    factory = [=]() { return CreateArray<char>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<char>(ptr, src, dimAndType.first); };
                     break;
                 case s64:
-                    factory = [=]() { return CreateArray<int64_t>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<int64_t>(ptr, src, dimAndType.first); };
                     break;
                 case u64:
-                    factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimensions, dims); };
+                    factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimAndType.first); };
                     break;
             }
         }
