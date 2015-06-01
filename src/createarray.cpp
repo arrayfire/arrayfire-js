@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "arraywrapper.h"
 #include "errors.h"
+#include "guard.h"
 
 using namespace v8;
 using namespace std;
@@ -17,7 +18,7 @@ NAN_METHOD(RandU)
     try
     {
         auto dimAndType = ParseDimAndTypeArgs(args);
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::randu(dimAndType.first, dimAndType.second))); });
+        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randu(dimAndType.first, dimAndType.second))); });
     }
     FIRE_CATCH
 }
@@ -31,9 +32,9 @@ NAN_METHOD(RandN)
         auto dimAndType = ParseDimAndTypeArgs(args);
         if (dimAndType.second == f32 || dimAndType.second == f64)
         {
-            return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
+            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
         }
-        return NanThrowError("Invalid dtype argument!");
+        return NanThrowInvalidDTypeArgumentError();
     }
     FIRE_CATCH
 }
@@ -45,7 +46,7 @@ NAN_METHOD(Identity)
     try
     {
         auto dimAndType = ParseDimAndTypeArgs(args);
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::identity(dimAndType.first, dimAndType.second))); });
+        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::identity(dimAndType.first, dimAndType.second))); });
     }
     FIRE_CATCH
 }
@@ -62,7 +63,7 @@ NAN_METHOD(Range)
         }
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 1);
         dim_type seqDim = args[args.Length() - 3]->Uint32Value();
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::range(dimAndType.first, seqDim, dimAndType.second))); });
+        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::range(dimAndType.first, seqDim, dimAndType.second))); });
     }
     FIRE_CATCH
 }
@@ -80,7 +81,7 @@ NAN_METHOD(Iota)
         auto dims = ToDim4(args[0]);
         auto titleDims = ToDim4(args[1]);
         auto type = ConvDtype(args[3]->Uint32Value());
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::iota(dims, titleDims, type.first))); });
+        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::iota(dims, titleDims, type.first))); });
     }
     FIRE_CATCH
 }
@@ -107,7 +108,7 @@ NAN_METHOD(Diag)
             extract = args[2]->BooleanValue();
         }
         af::array array(*pArray);
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::diag(array, num, extract))); });
+        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::diag(array, num, extract))); });
     }
     FIRE_CATCH
 }
@@ -131,12 +132,12 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 double v = value->NumberValue();
-                return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
             }
             else
             {
                 float v = (float)value->NumberValue();
-                return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
             }
         }
         else if (value->IsObject())
@@ -144,19 +145,19 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 auto v = ToDComplex(value);
-                return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
             }
             else
             {
                 auto v = ToFComplex(value);
-                return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
             }
         }
         else if (value->IsString())
         {
             String::Utf8Value str(value);
             intl val = strtoll(*str, nullptr, 10);
-            return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::constant(val, dimAndType.first, dimAndType.second))); });
+            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(val, dimAndType.first, dimAndType.second))); });
         }
         else
         {

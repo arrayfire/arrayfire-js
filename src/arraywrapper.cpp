@@ -65,6 +65,8 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("isbool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("isBool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("at"), NanNew<FunctionTemplate>(At), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
 
     auto f = tmpl->GetFunction();
     f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
@@ -99,6 +101,22 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
 
 af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
+    auto array = TryGetArray(value);
+    if (array) return array;
+    throw logic_error("Argument is not an AFArray instance.");
+}
+
+af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+{
+    auto array = TryGetArrayAt(args, index);
+    if (array) return array;
+    stringstream ss;
+    ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
+    throw logic_error(ss.str().c_str());
+}
+
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
+{
     try
     {
         if (value->IsObject())
@@ -110,18 +128,16 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
     catch (...)
     {
     }
-    throw logic_error("Argument is not an AFArray instance.");
+    return nullptr;
 }
 
-af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
 {
     if (index < args.Length())
     {
         return GetArray(args[index]);
     }
-    stringstream ss;
-    ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
-    throw logic_error(ss.str().c_str());
+    return nullptr;
 }
 
 void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -331,7 +347,7 @@ NAN_METHOD(ArrayWrapper::Host)
             }
             if (!callback)
             {
-                return NanThrowCallbackArgumentExpected();
+                return NanThrowCallbackArgumentExpectedError();
             }
 
             af::array array(*pArray);
@@ -355,7 +371,7 @@ NAN_METHOD(ArrayWrapper::Host)
             }
             if (!callback)
             {
-                return NanThrowCallbackArgumentExpected();
+                return NanThrowCallbackArgumentExpectedError();
             }
 
             size_t size = pArray->elements() * ConvDtype(pArray->type()).second;
@@ -637,6 +653,158 @@ NAN_METHOD(ArrayWrapper::Eval)
     {
         Guard();
         GetArray(args.This())->eval();
+        NanReturnUndefined();
+    }
+    FIRE_CATCH
+}
+
+NAN_METHOD(ArrayWrapper::At)
+{
+    // Aka "indexing"
+    NanScope();
+
+    try
+    {
+        Guard();
+
+        if (args.Length() == 0)
+        {
+            return NanThrowInvalidNumberOfArgumentsError();
+        }
+
+        auto s = [&](int idx)
+        {
+            return ToSeq(args[idx]);
+        };
+
+        auto n = [&](int idx)
+        {
+            return args[idx]->Int32Value();
+        };
+
+        auto aIdx = TryGetArrayAt(args, 0);
+        if (aIdx)
+        {
+            NanReturnValue(New(new af::array((*GetArray(args.This()))(*aIdx))));
+        }
+        else if (args.Length() == 1)
+        {
+            if (args[0]->IsNumber())
+            {
+                NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0)))));
+            }
+            else
+            {
+                NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0)))));
+            }
+        }
+        else if (args.Length() == 2)
+        {
+            if (args[0]->IsNumber())
+            {
+                if (args[0]->IsNumber())
+                {
+                    // n n
+                    NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1)))));
+                }
+                else
+                {
+                    // n s
+                    NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1)))));
+                }
+            }
+            else
+            {
+                if (args[0]->IsNumber())
+                {
+                    // s n
+                    NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1)))));
+                }
+                else
+                {
+                    // s s
+                    NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1)))));
+                }
+            }
+        }
+        else if (args.Length() == 3)
+        {
+            if (args[0]->IsNumber())
+            {
+                if (args[0]->IsNumber())
+                {
+                    if (args[0]->IsNumber())
+                    {
+                        // n n n
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1), n(2)))));
+                    }
+                    else
+                    {
+                        // n n s
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1), s(2)))));
+                    }
+                }
+                else
+                {
+                    if (args[0]->IsNumber())
+                    {
+                        // n s n
+                        return NanThrowError("This combination is not implemented at ArrayFire side somehow. (?!)");
+                        // TODO: NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), n(2)))));
+                    }
+                    else
+                    {
+                        // n s s
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), s(2)))));
+                    }
+                }
+            }
+            else
+            {
+                if (args[0]->IsNumber())
+                {
+                    if (args[0]->IsNumber())
+                    {
+                        // s n n
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1), n(2)))));
+                    }
+                    else
+                    {
+                        // s n s
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1), s(2)))));
+                    }
+                }
+                else
+                {
+                    if (args[0]->IsNumber())
+                    {
+                        // s s n
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1), n(2)))));
+                    }
+                    else
+                    {
+                        // s s s
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1), s(2)))));
+                    }
+                }
+            }
+        }
+        else if (args.Length() == 4)
+        {
+            throw logic_error("TODO");
+        }
+    }
+    FIRE_CATCH
+}
+
+NAN_METHOD(ArrayWrapper::Set)
+{
+    // Aka "assign"
+    NanScope();
+
+    try
+    {
+        Guard();
         NanReturnUndefined();
     }
     FIRE_CATCH

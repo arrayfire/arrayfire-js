@@ -15,6 +15,8 @@ struct ArrayWrapper : public node::ObjectWrap
     static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
     static af::array* GetArray(v8::Local<v8::Value> value);
     static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
+    static af::array* TryGetArray(v8::Local<v8::Value> value);
+    static af::array* TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
 
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
@@ -38,6 +40,8 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(IsInteger);
     static NAN_METHOD(IsBool);
     static NAN_METHOD(Eval);
+    static NAN_METHOD(At);
+    static NAN_METHOD(Set);
 
 private:
     explicit ArrayWrapper(af::array* array);

@@ -6,12 +6,17 @@
 
 inline void NanThrowInvalidNumberOfArgumentsError()
 {
-    return NanThrowError("Invalid number of arguments.");
+    NanThrowError("Invalid number of arguments.");
 }
 
-inline void NanThrowCallbackArgumentExpected()
+inline void NanThrowCallbackArgumentExpectedError()
 {
-    return NanThrowError("Callback argument expected.");
+    NanThrowError("Callback argument expected.");
+}
+
+inline void NanThrowInvalidDTypeArgumentError()
+{
+    NanThrowError("Invalid dtype argument!");;
 }
 
 inline std::logic_error GetArgumentIsNotAnObjectException()
@@ -22,6 +27,11 @@ inline std::logic_error GetArgumentIsNotAnObjectException()
 inline std::logic_error GetArgumentIsNotAComplexException()
 {
     return std::logic_error("Argument is not a Complex object instance.");
+}
+
+inline std::logic_error GetArgumentIsNotASeqException()
+{
+    return std::logic_error("Argument is not a Seq object instance.");
 }
 
 #endif // FIRE_ERRORS_H

@@ -159,6 +159,32 @@ af::dim4 ToDim4(v8::Local<v8::Value> value)
     throw GetArgumentIsNotAnObjectException();
 }
 
+af::seq ToSeq(v8::Local<v8::Object> obj)
+{
+    auto begin = obj->Get(NanNew("begin")); // TODO: Create symbol table on init
+    auto end = obj->Get(NanNew("end")); // TODO: Create symbol table on init
+    auto step = obj->Get(NanNew("step")); // TODO: Create symbol table on init
+    if (begin->IsNumber() && begin->IsNumber())
+    {
+        double stepValue = 1;
+        if (step->IsNumber())
+        {
+            stepValue = step->NumberValue();
+        }
+        return move(af::seq(begin->NumberValue(), end->NumberValue(), stepValue));
+    }
+    throw GetArgumentIsNotASeqException();
+}
+
+af::seq ToSeq(v8::Local<v8::Value> value)
+{
+    if (value->IsObject())
+    {
+        return ToSeq(value.As<Object>());
+    }
+    throw GetArgumentIsNotAnObjectException();
+}
+
 std::complex<double> ToDComplex(v8::Local<v8::Object> obj)
 {
     auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init

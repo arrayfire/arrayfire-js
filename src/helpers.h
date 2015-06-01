@@ -18,6 +18,10 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj);
 
 af::dim4 ToDim4(v8::Local<v8::Value> obj);
 
+af::seq ToSeq(v8::Local<v8::Object> obj);
+
+af::seq ToSeq(v8::Local<v8::Value> obj);
+
 std::complex<double> ToDComplex(v8::Local<v8::Object> obj);
 
 std::complex<double> ToDComplex(v8::Local<v8::Value> obj);
