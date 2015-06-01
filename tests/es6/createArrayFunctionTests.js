@@ -17,7 +17,7 @@ function testPlatform (id) {
                 it("should yield uniform random int array with 2 dimensions", function (done) {
                     let f = async(function*() {
                         let array = yield fire.randuAsync(2, 4, fire.types.dtype.s32);
-                        let data = yield array.hostAsync();
+                        let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * int.size);
 
@@ -32,7 +32,7 @@ function testPlatform (id) {
                 it("should yield uniform random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
                         let array = yield fire.randuAsync([2, 4], fire.types.dtype.f32);
-                        let data = yield array.hostAsync();
+                        let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);
 
@@ -43,6 +43,9 @@ function testPlatform (id) {
                     });
                     f().nodeify(done);
                 });
+            });
+
+            describe("randf", function () {
                 it("should throw error when invoking normal random int array with 2 dimensions", function (done) {
                     let f = async(function*() {
                         let array = yield fire.randnAsync(2, 4, fire.types.dtype.s32);
@@ -64,7 +67,7 @@ function testPlatform (id) {
                 it("should yield normal random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
                         let array = yield fire.randnAsync([2, 4], fire.types.dtype.f32);
-                        let data = yield array.hostAsync();
+                        let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);
 
@@ -74,6 +77,36 @@ function testPlatform (id) {
                         }
                     });
                     f().nodeify(done);
+                });
+            });
+
+            describe("identity", function () {
+                it("should be implemented", function() {
+                    console.log(`TODO: implement identity test for ${id}\n`);
+                });
+            });
+
+            describe("range", function () {
+                it("should be implemented", function() {
+                    console.log(`TODO: implement range test for ${id}\n`);
+                });
+            });
+
+            describe("iota", function () {
+                it("should be implemented", function() {
+                    console.log(`TODO: implement iota test for ${id}\n`);
+                });
+            });
+
+            describe("diag", function () {
+                it("should be implemented", function() {
+                    console.log(`TODO: implement diag test for ${id}\n`);
+                });
+            });
+
+            describe("constant", function () {
+                it("should be implemented", function() {
+                    console.log(`TODO: implement constant test for ${id}\n`);
                 });
             });
         });
