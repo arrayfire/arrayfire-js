@@ -4,6 +4,11 @@
 #include <nan.h>
 #include <stdexcept>
 
+inline void NanThrowInvalidArgumentsError()
+{
+    NanThrowError("Invalid arguments.");
+}
+
 inline void NanThrowInvalidNumberOfArgumentsError()
 {
     NanThrowError("Invalid number of arguments.");

@@ -89,7 +89,7 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     if (args.Length() >= 1 && args[args.Length() - 1]->IsFunction())
     {
         auto callback = new NanCallback(args[args.Length() - 1].As<Function>());
-        auto worker = new Worker<af::array*>(callback, arrayFactory, [](af::array* a){ return ArrayWrapper::New(a); });
+        auto worker = new Worker<af::array*>(callback, arrayFactory, [](Worker<af::array*>* w, af::array* a){ return ArrayWrapper::New(a); });
         NanAsyncQueueWorker(worker);
         NanReturnUndefined();
     }
@@ -292,9 +292,9 @@ NAN_METHOD(ArrayWrapper::Create)
             return NanThrowError("Callback argument expected.");
         }
 
-        auto conv = [](af::array* w)
+        auto conv = [](Worker<af::array*>* w, af::array* a)
         {
-            return New(w);
+            return New(a);
         };
         auto worker = new Worker<af::array*>(callback, move(factory), move(conv));
         worker->SaveToPersistent("data", args[buffIdx]->ToObject());
@@ -385,7 +385,7 @@ NAN_METHOD(ArrayWrapper::Host)
                     array.host(buffData);
                     return buffData;
                 };
-                auto conv = [=](char* data)
+                auto conv = [=](Worker<char*>* w, char* data)
                 {
                     return NanNewBufferHandle(data, size, [](char* data, void* hint) { delete[] data; }, nullptr);
                 };
@@ -749,8 +749,7 @@ NAN_METHOD(ArrayWrapper::At)
                     if (args[0]->IsNumber())
                     {
                         // n s n
-                        return NanThrowError("This combination is not implemented at ArrayFire side somehow. (?!)");
-                        // TODO: NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), n(2)))));
+                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), af::seq(n(2), n(2))))));
                     }
                     else
                     {
@@ -791,7 +790,7 @@ NAN_METHOD(ArrayWrapper::At)
         }
         else if (args.Length() == 4)
         {
-            throw logic_error("TODO");
+            throw logic_error("Not supported since API's gonna be changed in RTM 3.0.");
         }
     }
     FIRE_CATCH
@@ -802,10 +801,106 @@ NAN_METHOD(ArrayWrapper::Set)
     // Aka "assign"
     NanScope();
 
+    // Notice: In v8 we can go for double, complex, and int64 as a string, because v8 numbers are doubles.
+
     try
     {
-        Guard();
+        auto& array = *GetArray(args.This());
+        if (args.Length() < 2)
+        {
+            return NanThrowInvalidNumberOfArgumentsError();
+        }
+        auto value = args[0];
+        auto pOtherArray = TryGetArray(value);
+        function<int()> doSet;
+        if (pOtherArray)
+        {
+            auto otherArray = *pOtherArray;
+            doSet = [=]() mutable
+            {
+                Guard();
+                array = otherArray;
+                return 0;
+            };
+        }
+        else if (value->IsNumber())
+        {
+            if (af::isDoubleAvailable(af::getDevice()))
+            {
+                double v = value->NumberValue();
+                doSet = [=]() mutable
+                {
+                    Guard();
+                    array = v;
+                    return 0;
+                };
+            }
+            else
+            {
+                float v = (float)value->NumberValue();
+                doSet = [=]() mutable
+                {
+                    Guard();
+                    array = v;
+                    return 0;
+                };
+            }
+        }
+        else if (value->IsObject())
+        {
+            if (af::isDoubleAvailable(af::getDevice()))
+            {
+                auto v = ToDComplex(value);
+                doSet = [=]() mutable
+                {
+                    Guard();
+                    array = v;
+                    return 0;
+                };
+            }
+            else
+            {
+                auto v = ToFComplex(value);
+                doSet = [=]() mutable
+                {
+                    Guard();
+                    return 0;
+                };
+            }
+        }
+        else if (value->IsString())
+        {
+            String::Utf8Value str(value);
+            intl v = strtoll(*str, nullptr, 10);
+            doSet = [=]() mutable
+            {
+                Guard();
+                return 0;
+            };
+        }
+        else
+        {
+            return NanThrowInvalidArgumentsError();
+        }
+
+        NanCallback *callback = nullptr;
+        if (args[1]->IsFunction())
+        {
+            callback = new NanCallback(args[1].As<Function>());
+        }
+        if (!callback)
+        {
+            return NanThrowCallbackArgumentExpectedError();
+        }
+        auto conv = [=](Worker<int>* worker, int dummy)
+        {
+            return worker->GetFromPersistent("_this");
+        };
+        auto worker = new Worker<int>(callback, move(doSet), move(conv));
+        worker->SaveToPersistent("_this", args.This());
+        NanAsyncQueueWorker(worker);
         NanReturnUndefined();
+
     }
     FIRE_CATCH
 }

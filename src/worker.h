@@ -16,7 +16,7 @@ template<typename T>
 struct Worker : public NanAsyncWorker
 {
     typedef std::function<T()> ExecuteFunc;
-    typedef std::function<v8::Local<v8::Value>(T)> ResultConvFunc;
+    typedef std::function<v8::Local<v8::Value>(Worker<T>*, T)> ResultConvFunc;
 
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
@@ -47,7 +47,7 @@ protected:
     {
         using namespace v8;
         NanScope();
-        auto convertedResult = resultConvFunc(result);
+        auto convertedResult = resultConvFunc(this, result);
         if (convertedResult->IsNativeError())
         {
             Local<Value> args[] = { convertedResult };
@@ -67,11 +67,11 @@ private:
 
     ResultConvFunc ConvResult(const ResultConvFunc& resultConvFunc)
     {
-        return [=](T result)
+        return [=](Worker<T>* i, T result)
         {
             try
             {
-                return resultConvFunc(result);
+                return resultConvFunc(i, result);
             }
             catch(std::exception& ex)
             {
