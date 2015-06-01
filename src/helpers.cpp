@@ -117,7 +117,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     else
     {
-        auto member = obj->Get(NanNew("dims"));
+        auto member = obj->Get(NanNew("dims")); // TODO: Create symbol table on init
         if (member->IsArray())
         {
             dims = member.As<Array>();
@@ -201,10 +201,18 @@ std::complex<float> ToFComplex(v8::Local<v8::Value> value)
 
 std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength, int argsFollowingDims, int dimsStartAt)
 {
-    if (assumedArgsLength == -1) assumedArgsLength = args.Length();
+    if (assumedArgsLength == -1)
+    {
+        assumedArgsLength = args.Length();
+        if (args[assumedArgsLength - 1]->IsFunction())
+        {
+            // Async
+            assumedArgsLength--;
+        }
+    }
     af::dim4 dims(1, 1, 1, 1);
     bool any = false;
-    for (int idx = dimsStartAt; idx < assumedArgsLength + dimsStartAt - 1 - argsFollowingDims; idx++)
+    for (int idx = dimsStartAt; idx < ((assumedArgsLength - 1) - argsFollowingDims) + dimsStartAt; idx++)
     {
         int dimIdx = idx - dimsStartAt;
         assert(dimIdx < 4);

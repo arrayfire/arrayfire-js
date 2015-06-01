@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "guard.h"
 #include "worker.h"
+#include "errors.h"
 
 using namespace v8;
 using namespace std;
@@ -81,7 +82,7 @@ v8::Local<Object> ArrayWrapper::New(af::array* array)
     return inst;
 }
 
-void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, std::function<af::array*()> arrayFactory)
+void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory)
 {
     if (args.Length() >= 1 && args[args.Length() - 1]->IsFunction())
     {
@@ -306,42 +307,82 @@ NAN_METHOD(ArrayWrapper::Host)
 
     try
     {
-        if (!(args.Length() && Buffer::HasInstance(args[0])))
+        if (!args.Length())
         {
-            return NanThrowError("Buffer argument expected.");
+            return NanThrowInvalidNumberOfArgumentsError();
         }
 
-        auto buffSize = Buffer::Length(args[0]);
-        auto buffData = Buffer::Data(args[0]);
-
+        char* buffData;
         auto pArray = GetArray(args.This());
-        if (buffSize < pArray->bytes())
+
+        if (Buffer::HasInstance(args[0]))
         {
-            return NanThrowError("Buffer is too small to hold values.");
+            buffData = Buffer::Data(args[0]);
+
+            if (Buffer::Length(args[0]) < pArray->bytes())
+            {
+                return NanThrowError("Buffer is too small to hold values.");
+            }
+
+            NanCallback *callback = nullptr;
+            if (args.Length() > 1 && args[1]->IsFunction())
+            {
+                callback = new NanCallback(args[1].As<Function>());
+            }
+            if (!callback)
+            {
+                return NanThrowCallbackArgumentExpected();
+            }
+
+            af::array array(*pArray);
+            auto exec = [=]()
+            {
+                Guard();
+                array.host(buffData);
+            };
+            auto worker = new Worker<void>(callback, move(exec));
+            worker->SaveToPersistent("data", args[0]->ToObject());
+
+            NanAsyncQueueWorker(worker);
+            NanReturnUndefined();
         }
-
-        NanCallback *callback = nullptr;
-        if (args.Length() > 1 && args[1]->IsFunction())
+        else
         {
-            callback = new NanCallback(args[1].As<Function>());
+            NanCallback *callback = nullptr;
+            if (args[0]->IsFunction())
+            {
+                callback = new NanCallback(args[0].As<Function>());
+            }
+            if (!callback)
+            {
+                return NanThrowCallbackArgumentExpected();
+            }
+
+            size_t size = pArray->elements() * ConvDtype(pArray->type()).second;
+            buffData = new char[size];
+            try
+            {
+                af::array array(*pArray);
+                auto exec = [=]()
+                {
+                    Guard();
+                    array.host(buffData);
+                    return buffData;
+                };
+                auto conv = [=](char* data)
+                {
+                    return NanNewBufferHandle(data, size, [](char* data, void* hint) { delete[] data; }, nullptr);
+                };
+                auto worker = new Worker<char*>(callback, move(exec), move(conv));
+                NanAsyncQueueWorker(worker);
+                NanReturnUndefined();
+            }
+            catch (...)
+            {
+                delete[] buffData;
+                throw;
+            }
         }
-
-        if (!callback)
-        {
-            return NanThrowError("Callback argument expected.");
-        }
-
-        af::array array(*pArray);
-        auto exec = [=]()
-        {
-            Guard();
-            array.host(buffData);
-        };
-        auto worker = new Worker<void>(callback, move(exec));
-        worker->SaveToPersistent("data", args[0]->ToObject());
-
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
     }
     FIRE_CATCH
 }

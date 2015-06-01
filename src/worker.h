@@ -32,7 +32,14 @@ struct Worker : public NanAsyncWorker
         {
             result = executeFunc();
         }
-        FIRE_CATCH
+        catch(std::exception& ex)
+        {
+            SetErrorMessage(ex.what());
+        }
+        catch(...)
+        {
+           SetErrorMessage("Unknown error!");
+        }
     }
 
 protected:

@@ -211,8 +211,9 @@ function testPlatform(id) {
                     let array2 = array.copy();
                     assert(array2 instanceof AFArray);
                     assert(array2.bytes() === array.bytes());
-                    let buff3 = new Buffer(int.size * count);
-                    yield array2.hostAsync(buff3);
+                    let buff3 = yield array2.hostAsync();
+                    assert(buff3 instanceof Buffer);
+                    assert(buff3.length === int.size * count);
                     for (let v = 0; v < count; v++) {
                         let v1 = int.get(buff, v * int.size);
                         let v2 = int.get(buff3, v * int.size);

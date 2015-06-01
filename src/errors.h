@@ -9,6 +9,11 @@ inline void NanThrowInvalidNumberOfArgumentsError()
     return NanThrowError("Invalid number of arguments.");
 }
 
+inline void NanThrowCallbackArgumentExpected()
+{
+    return NanThrowError("Callback argument expected.");
+}
+
 inline std::logic_error GetArgumentIsNotAnObjectException()
 {
     return std::logic_error("Argument is not an object.");

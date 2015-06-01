@@ -1,2 +1,3 @@
-require("./afArrayTests");
 require("./deviceTests");
+require("./afArrayTests");
+require("./createArrayFunctionTests");

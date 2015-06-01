@@ -8,6 +8,8 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
+// TODO: RND seed functions, when 3.0 gets released
+
 NAN_METHOD(RandU)
 {
     NanScope();
@@ -27,7 +29,11 @@ NAN_METHOD(RandN)
     try
     {
         auto dimAndType = ParseDimAndTypeArgs(args);
-        return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
+        if (dimAndType.second == f32 || dimAndType.second == f64)
+        {
+            return ArrayWrapper::NewAsync(args, [=]() { return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
+        }
+        return NanThrowError("Invalid dtype argument!");
     }
     FIRE_CATCH
 }
@@ -163,5 +169,13 @@ NAN_METHOD(Constant)
 
 void InitCreateArray(v8::Handle<v8::Object> exports)
 {
-    //exports->Set(NanNew<String>("getDeviceCount"), NanNew<FunctionTemplate>(GetDeviceCount)->GetFunction());
+    exports->Set(NanNew<String>("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
+    exports->Set(NanNew<String>("randU"), NanNew<FunctionTemplate>(RandU)->GetFunction());
+    exports->Set(NanNew<String>("randn"), NanNew<FunctionTemplate>(RandN)->GetFunction());
+    exports->Set(NanNew<String>("randN"), NanNew<FunctionTemplate>(RandN)->GetFunction());
+    exports->Set(NanNew<String>("identity"), NanNew<FunctionTemplate>(Identity)->GetFunction());
+    exports->Set(NanNew<String>("range"), NanNew<FunctionTemplate>(Range)->GetFunction());
+    exports->Set(NanNew<String>("iota"), NanNew<FunctionTemplate>(Iota)->GetFunction());
+    exports->Set(NanNew<String>("diag"), NanNew<FunctionTemplate>(Diag)->GetFunction());
+    exports->Set(NanNew<String>("constant"), NanNew<FunctionTemplate>(Constant)->GetFunction());
 }
