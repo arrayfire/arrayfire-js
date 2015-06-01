@@ -32,6 +32,10 @@ struct Worker : public NanAsyncWorker
         {
             result = executeFunc();
         }
+        catch(af::exception& ex)
+        {
+            SetErrorMessage(ex.what());
+        }
         catch(std::exception& ex)
         {
             SetErrorMessage(ex.what());
@@ -73,6 +77,10 @@ private:
             {
                 return resultConvFunc(i, result);
             }
+            catch(af::exception& ex)
+            {
+                return NanError(ex.what());
+            }
             catch(std::exception& ex)
             {
                 return NanError(ex.what());
@@ -103,13 +111,17 @@ struct Worker<void> : public NanAsyncWorker
         {
             executeFunc();
         }
+        catch(af::exception& ex)
+        {
+            SetErrorMessage(ex.what());
+        }
         catch(exception& ex)
         {
             SetErrorMessage(ex.what());
         }
         catch(...)
         {
-            SetErrorMessage("Fatal error!");
+            SetErrorMessage("Unknown error!");
         }
     }
 
