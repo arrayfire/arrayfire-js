@@ -1,5 +1,6 @@
 #include "ext.h"
 #include "helpers.h"
+#include "errors.h"
 
 using namespace std;
 using namespace v8;
@@ -149,38 +150,76 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     return move(af::dim4(dim0, dim1, dim2, dim3));
 }
 
-std::pair<af::dim4, af::dtype> ParseArrayConstructorDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int length, int skip)
+af::dim4 ToDim4(v8::Local<v8::Value> value)
 {
-    if (args.Length() > 1)
+    if (value->IsObject())
     {
-        if (length == -1) length = args.Length();
-        af::dtype type = ConvDtype(args[length - 1]->Uint32Value()).first;
-        int dimensions = length - 1 - skip;
-        if (dimensions == 1 && args[0]->IsObject())
+        return ToDim4(value.As<Object>());
+    }
+    throw GetArgumentIsNotAnObjectException();
+}
+
+std::complex<double> ToDComplex(v8::Local<v8::Object> obj)
+{
+    auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
+    auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
+    if (imag->IsNumber() && real->IsNumber())
+    {
+        return move(complex<double>(real->NumberValue(), imag->NumberValue()));
+    }
+    throw GetArgumentIsNotAComplexException();
+}
+
+std::complex<double> ToDComplex(v8::Local<v8::Value> value)
+{
+    if (value->IsObject())
+    {
+        return ToDComplex(value.As<Object>());
+    }
+    throw GetArgumentIsNotAnObjectException();
+}
+
+std::complex<float> ToFComplex(v8::Local<v8::Object> obj)
+{
+    auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
+    auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
+    if (imag->IsNumber() && real->IsNumber())
+    {
+        return move(complex<float>((float)real->NumberValue(), (float)imag->NumberValue()));
+    }
+    throw GetArgumentIsNotAComplexException();
+}
+
+std::complex<float> ToFComplex(v8::Local<v8::Value> value)
+{
+    if (value->IsObject())
+    {
+        return ToFComplex(value.As<Object>());
+    }
+    throw GetArgumentIsNotAnObjectException();
+}
+
+std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength, int argsFollowingDims, int dimsStartAt)
+{
+    if (assumedArgsLength == -1) assumedArgsLength = args.Length();
+    af::dim4 dims(1, 1, 1, 1);
+    bool any = false;
+    for (int idx = dimsStartAt; idx < assumedArgsLength + dimsStartAt - 1 - argsFollowingDims; idx++)
+    {
+        int dimIdx = idx - dimsStartAt;
+        assert(dimIdx < 4);
+        any = true;
+        if (dimIdx == 0 && args[0]->IsObject())
         {
-            return move(make_pair(ToDim4(args[0].As<Object>()), type));
+            dims = move(ToDim4(args[0].As<Object>()));
+            break;
         }
-        else
-        {
-            switch (dimensions)
-            {
-                case 1:
-                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value()), type));
-                    break;
-                case 2:
-                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value()), type));
-                    break;
-                case 3:
-                    return move(make_pair(af::dim4((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value()), type));
-                    break;
-                case 4:
-                    {
-                        af::dim4 d((dim_type)args[0]->Int32Value(), (dim_type)args[1]->Int32Value(), (dim_type)args[2]->Int32Value(), (dim_type)args[3]->Int32Value());
-                        return move(make_pair(d, type));
-                    }
-                    break;
-            }
-        }
+        dims[dimIdx] = args[idx]->Int32Value();
+    }
+    if (any)
+    {
+        af::dtype type = ConvDtype(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
+        return move(make_pair(move(dims), type));
     }
     throw logic_error("Cannot extract dimensions and dtype from argumens.");
 }

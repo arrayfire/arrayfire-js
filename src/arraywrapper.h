@@ -3,6 +3,7 @@
 
 #include <nan.h>
 #include <arrayfire.h>
+#include <functional>
 
 struct ArrayWrapper : public node::ObjectWrap
 {
@@ -11,6 +12,9 @@ struct ArrayWrapper : public node::ObjectWrap
 
     static void Init(v8::Local<v8::Object> exports);
     static v8::Local<v8::Object> New(af::array* array);
+    static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, std::function<af::array*()> arrayFactory);
+    static af::array* GetArray(v8::Local<v8::Value> value);
+    static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
 
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);

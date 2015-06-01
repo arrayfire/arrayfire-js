@@ -73,11 +73,54 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
 
 v8::Local<Object> ArrayWrapper::New(af::array* array)
 {
+    assert(array);
     Local<Value> args[] = { WrapPointer(array) };
     auto c = NanNew(constructor);
     auto inst = c->NewInstance(1, args);
     assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->array == array);
     return inst;
+}
+
+void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, std::function<af::array*()> arrayFactory)
+{
+    if (args.Length() >= 1 && args[args.Length() - 1]->IsFunction())
+    {
+        auto callback = new NanCallback(args[args.Length() - 1].As<Function>());
+        auto worker = new Worker<af::array*>(callback, arrayFactory, [](af::array* a){ return ArrayWrapper::New(a); });
+        NanAsyncQueueWorker(worker);
+        NanReturnUndefined();
+    }
+    else
+    {
+        NanThrowError("Last argument have to be a callback!");
+    }
+}
+
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
+{
+    try
+    {
+        if (value->IsObject())
+        {
+            auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
+            if (wrapper) return wrapper->array;
+        }
+    }
+    catch (...)
+    {
+    }
+    throw logic_error("Argument is not an AFArray instance.");
+}
+
+af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+{
+    if (index < args.Length())
+    {
+        return GetArray(args[index]);
+    }
+    stringstream ss;
+    ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
+    throw logic_error(ss.str().c_str());
 }
 
 void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -115,7 +158,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 if (buffIdx == -1)
                 {
                     // Creating new
-                    auto dimAndType = ParseArrayConstructorDimAndTypeArgs(args);
+                    auto dimAndType = ParseDimAndTypeArgs(args);
                     instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
                 }
             }
@@ -180,7 +223,7 @@ NAN_METHOD(ArrayWrapper::Create)
             }
             auto buffObj = args[buffIdx]->ToObject();
             char* ptr = Buffer::Data(buffObj);
-            auto dimAndType = ParseArrayConstructorDimAndTypeArgs(args, buffIdx);
+            auto dimAndType = ParseDimAndTypeArgs(args, buffIdx);
             switch (dimAndType.second)
             {
                 case f32:
@@ -252,10 +295,7 @@ NAN_METHOD(ArrayWrapper::Elements)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->elements()));
+        NanReturnValue(NanNew(GetArray(args.This())->elements()));
     }
     FIRE_CATCH
 }
@@ -274,8 +314,8 @@ NAN_METHOD(ArrayWrapper::Host)
         auto buffSize = Buffer::Length(args[0]);
         auto buffData = Buffer::Data(args[0]);
 
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-        if (buffSize < obj->array->bytes())
+        auto pArray = GetArray(args.This());
+        if (buffSize < pArray->bytes())
         {
             return NanThrowError("Buffer is too small to hold values.");
         }
@@ -291,11 +331,11 @@ NAN_METHOD(ArrayWrapper::Host)
             return NanThrowError("Callback argument expected.");
         }
 
-        auto array = obj->array;
+        af::array array(*pArray);
         auto exec = [=]()
         {
             Guard();
-            array->host(buffData);
+            array.host(buffData);
         };
         auto worker = new Worker<void>(callback, move(exec));
         worker->SaveToPersistent("data", args[0]->ToObject());
@@ -313,10 +353,7 @@ NAN_METHOD(ArrayWrapper::Type)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(obj->array->type());
+        NanReturnValue(GetArray(args.This())->type());
     }
     FIRE_CATCH
 }
@@ -329,10 +366,10 @@ NAN_METHOD(ArrayWrapper::Dims)
     {
         Guard();
 
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
+        auto pArray = GetArray(args.This());
         if (!args.Length())
         {
-            auto dims = obj->array->dims();
+            auto dims = pArray->dims();
             auto jsDims = NanNew<Object>();
             jsDims->Set(NanNew("elements"), NanNew(dims.elements()));
             jsDims->Set(NanNew("ndims"), NanNew(dims.ndims()));
@@ -351,7 +388,7 @@ NAN_METHOD(ArrayWrapper::Dims)
         }
         else
         {
-            NanReturnValue(obj->array->dims(args[0]->Uint32Value()));
+            NanReturnValue(pArray->dims(args[0]->Uint32Value()));
         }
     }
     FIRE_CATCH
@@ -364,10 +401,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->numdims()));
+        NanReturnValue(NanNew(GetArray(args.This())->numdims()));
     }
     FIRE_CATCH
 }
@@ -379,10 +413,7 @@ NAN_METHOD(ArrayWrapper::Bytes)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew<Number>((unsigned)obj->array->bytes()));
+        NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
     }
     FIRE_CATCH
 }
@@ -394,9 +425,7 @@ NAN_METHOD(ArrayWrapper::Copy)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-        auto result = New(new af::array(obj->array->copy()));
+        auto result = New(new af::array(move(GetArray(args.This())->copy())));
 
         NanReturnValue(result);
     }
@@ -410,10 +439,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isempty()));
+        NanReturnValue(NanNew(GetArray(args.This())->isempty()));
     }
     FIRE_CATCH
 }
@@ -425,10 +451,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isscalar()));
+        NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
     }
     FIRE_CATCH
 }
@@ -440,10 +463,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isvector()));
+        NanReturnValue(NanNew(GetArray(args.This())->isvector()));
     }
     FIRE_CATCH
 }
@@ -455,10 +475,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isrow()));
+        NanReturnValue(NanNew(GetArray(args.This())->isrow()));
     }
     FIRE_CATCH
 }
@@ -470,10 +487,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->iscolumn()));
+        NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
     }
     FIRE_CATCH
 }
@@ -485,10 +499,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->iscomplex()));
+        NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
     }
     FIRE_CATCH
 }
@@ -500,10 +511,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isreal()));
+        NanReturnValue(NanNew(GetArray(args.This())->isreal()));
     }
     FIRE_CATCH
 }
@@ -515,10 +523,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isdouble()));
+        NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
     }
     FIRE_CATCH
 }
@@ -530,10 +535,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->issingle()));
+        NanReturnValue(NanNew(GetArray(args.This())->issingle()));
     }
     FIRE_CATCH
 }
@@ -545,10 +547,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isrealfloating()));
+        NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
     }
     FIRE_CATCH
 }
@@ -560,10 +559,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isfloating()));
+        NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
     }
     FIRE_CATCH
 }
@@ -575,10 +571,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->isinteger()));
+        NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
     }
     FIRE_CATCH
 }
@@ -590,10 +583,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-
-        NanReturnValue(NanNew(obj->array->type() == b8));
+        NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
     }
     FIRE_CATCH
 }
@@ -605,10 +595,7 @@ NAN_METHOD(ArrayWrapper::Eval)
     try
     {
         Guard();
-
-        auto obj = ObjectWrap::Unwrap<ArrayWrapper>(args.This());
-        obj->array->eval();
-
+        GetArray(args.This())->eval();
         NanReturnUndefined();
     }
     FIRE_CATCH

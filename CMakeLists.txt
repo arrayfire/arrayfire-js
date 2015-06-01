@@ -48,7 +48,8 @@ file(GLOB COMMON_SOURCE_FILES
     "src/guard.*"
     "src/worker.*"
     "src/arraywrapper.*"
-    "src/createarray.*")
+    "src/createarray.*"
+    "src/errors.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")
