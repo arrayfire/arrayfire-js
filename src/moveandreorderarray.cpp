@@ -15,9 +15,9 @@ NAN_METHOD(Join)
 
     try
     {
-        if (args.Length() < 3) return NAN_THROW_INVALID_NO_OF_ARGS();
+        ARGS_LEN(3);
 
-        af::dtype dim = GetDTypeInfo(args[0]->Uint32Value()).first;
+        af::dtype dim = GetDTypeInfo(args[0]).first;
         af::array array1 = *ArrayWrapper::GetArrayAt(args, 1);
         af::array array2 = *ArrayWrapper::GetArrayAt(args, 2);
 
@@ -33,7 +33,7 @@ NAN_METHOD(F)\
     \
     try\
     {\
-        if (args.Length() < 2) return NAN_THROW_INVALID_NO_OF_ARGS();\
+        ARGS_LEN(2);\
         \
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
         unsigned x, y, z, w;\
@@ -84,7 +84,7 @@ NAN_METHOD(Flat)
 
     try
     {
-        if (args.Length() < 1) return NAN_THROW_INVALID_NO_OF_ARGS();
+        ARGS_LEN(1);
 
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);
 
@@ -99,10 +99,10 @@ NAN_METHOD(Flip)
 
     try
     {
-        if (args.Length() < 2) return NAN_THROW_INVALID_NO_OF_ARGS();
+        ARGS_LEN(2);
 
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);
-        af::dtype dim = GetDTypeInfo(args[1]->Uint32Value()).first;
+        af::dtype dim = GetDTypeInfo(args[1]).first;
 
         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::flip(array, dim))); });
     }
@@ -115,7 +115,7 @@ NAN_METHOD(Transpose)
 
     try
     {
-        if (args.Length() < 1) return NAN_THROW_INVALID_NO_OF_ARGS();
+        ARGS_LEN(1);
 
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);
         bool conjugate = args.Length() != 1 ? args[1]->BooleanValue() : false;

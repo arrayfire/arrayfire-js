@@ -236,7 +236,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
 }
 
 template<typename T>
-af::array* ArrayWrapper::CreateArray(void* ptr, af::af_source_t src, const af::dim4& dim4)
+af::array* ArrayWrapper::CreateArray(void* ptr, af_source src, const af::dim4& dim4)
 {
     Guard();
     return new af::array(dim4, (T*)ptr, src);
@@ -268,10 +268,10 @@ NAN_METHOD(ArrayWrapper::Create)
         {
             // Copy / wrap ptr
             // args: dim0..dimn, dtype, ptr[, source]
-            af::af_source_t src = af::afHost;
+            af_source src = afHost;
             if (buffIdx + 1 < args.Length() && args[buffIdx + 1]->IsNumber())
             {
-                src = (af::af_source_t)(args[buffIdx + 2]->Int32Value());
+                src = (af_source)(args[buffIdx + 2]->Int32Value());
             }
             auto buffObj = args[buffIdx]->ToObject();
             char* ptr = Buffer::Data(buffObj);
@@ -294,10 +294,10 @@ NAN_METHOD(ArrayWrapper::Create)
                     factory = [=]() { return CreateArray<unsigned char>(ptr, src, dimAndType.first ); };
                     break;
                 case c32:
-                    factory = [=]() { return CreateArray<af_cfloat>(ptr, src, dimAndType.first); };
+                    factory = [=]() { return CreateArray<af::cfloat>(ptr, src, dimAndType.first); };
                     break;
                 case c64:
-                    factory = [=]() { return CreateArray<af_cdouble>(ptr, src, dimAndType.first); };
+                    factory = [=]() { return CreateArray<af::cdouble>(ptr, src, dimAndType.first); };
                     break;
                 case b8:
                     factory = [=]() { return CreateArray<char>(ptr, src, dimAndType.first); };
@@ -313,7 +313,7 @@ NAN_METHOD(ArrayWrapper::Create)
 
         if (!factory)
         {
-            return NAN_THROW("Invalid arguments.");
+            return NAN_THROW_INVALID_ARGS();
         }
 
         NanCallback *callback = nullptr;
@@ -324,7 +324,7 @@ NAN_METHOD(ArrayWrapper::Create)
 
         if (!callback)
         {
-            return NAN_THROW("Callback argument expected.");
+            return NAN_THROW_CB_EXPECTED();
         }
 
         auto conv = [](Worker<af::array*>* w, af::array* a)
@@ -347,7 +347,7 @@ NAN_METHOD(ArrayWrapper::Elements)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->elements()));
+        NanReturnValue(NanNew<Number>(GetArray(args.This())->elements()));
     }
     FIRE_CATCH
 }
@@ -358,10 +358,7 @@ NAN_METHOD(ArrayWrapper::Host)
 
     try
     {
-        if (!args.Length())
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(1);
 
         char* buffData;
         auto pArray = GetArray(args.This());
@@ -463,24 +460,24 @@ NAN_METHOD(ArrayWrapper::Dims)
         {
             auto dims = pArray->dims();
             auto jsDims = NanNew<Object>();
-            jsDims->Set(NanNew("elements"), NanNew(dims.elements()));
-            jsDims->Set(NanNew("ndims"), NanNew(dims.ndims()));
-            jsDims->Set(NanNew("dim0"), NanNew(dims[0]));
-            jsDims->Set(NanNew("dim1"), NanNew(dims[1]));
-            jsDims->Set(NanNew("dim2"), NanNew(dims[2]));
-            jsDims->Set(NanNew("dim3"), NanNew(dims[3]));
+            jsDims->Set(NanNew("elements"), NanNew<Number>(dims.elements()));
+            jsDims->Set(NanNew("ndims"), NanNew<Number>(dims.ndims()));
+            jsDims->Set(NanNew("dim0"), NanNew<Number>(dims[0]));
+            jsDims->Set(NanNew("dim1"), NanNew<Number>(dims[1]));
+            jsDims->Set(NanNew("dim2"), NanNew<Number>(dims[2]));
+            jsDims->Set(NanNew("dim3"), NanNew<Number>(dims[3]));
             auto pDims = NanNew<Array>(4);
-            pDims->Set(0, NanNew(dims[0]));
-            pDims->Set(1, NanNew(dims[1]));
-            pDims->Set(2, NanNew(dims[2]));
-            pDims->Set(3, NanNew(dims[3]));
+            pDims->Set(0, NanNew<Number>(dims[0]));
+            pDims->Set(1, NanNew<Number>(dims[1]));
+            pDims->Set(2, NanNew<Number>(dims[2]));
+            pDims->Set(3, NanNew<Number>(dims[3]));
             jsDims->Set(NanNew("dims"), pDims);
 
             NanReturnValue(jsDims);
         }
         else
         {
-            NanReturnValue(pArray->dims(args[0]->Uint32Value()));
+            NanReturnValue(NanNew<Number>(pArray->dims(args[0]->Uint32Value())));
         }
     }
     FIRE_CATCH
@@ -702,10 +699,7 @@ NAN_METHOD(ArrayWrapper::At)
     {
         Guard();
 
-        if (args.Length() == 0)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(1);
 
         auto s = [&](int idx)
         {
@@ -837,7 +831,7 @@ NAN_METHOD(ArrayWrapper::F)\
     NanScope();\
     try\
     {\
-        if (args.Length() < 1) NAN_THROW_INVALID_NO_OF_ARGS();\
+        ARGS_LEN(1);\
         NanReturnValue(New(new af::array(GetArray(args.This())->f(args[0]->Int32Value()))));\
     }\
     FIRE_CATCH\
@@ -853,7 +847,7 @@ NAN_METHOD(ArrayWrapper::F)\
     NanScope();\
     try\
     {\
-        if (args.Length() < 2) NAN_THROW_INVALID_NO_OF_ARGS();\
+        ARGS_LEN(2);\
         NanReturnValue(New(new af::array(GetArray(args.This())->f(args[0]->Int32Value(), args[1]->Int32Value()))));\
     }\
     FIRE_CATCH\
@@ -868,7 +862,7 @@ NAN_METHOD(ArrayWrapper::As)
     NanScope();
     try
     {
-        if (args.Length() < 1) NAN_THROW_INVALID_NO_OF_ARGS();
+        ARGS_LEN(1);
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
         NanReturnValue(New(new af::array(GetArray(args.This())->as(type))));
     }
@@ -883,10 +877,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
-        if (args.Length() < 1)\
-        {\
-            return NAN_THROW_INVALID_NO_OF_ARGS();\
-        }\
+        ARGS_LEN(1);\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
         if (pOtherArray)\
@@ -960,10 +951,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
-        if (args.Length() < 1)\
-        {\
-            return NAN_THROW_INVALID_NO_OF_ARGS();\
-        }\
+        ARGS_LEN(1);\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\

@@ -57,12 +57,9 @@ NAN_METHOD(Range)
 
     try
     {
-        if (args.Length() < 4)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(4);
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 1);
-        dim_type seqDim = args[args.Length() - 3]->Uint32Value();
+        af_dtype seqDim = (af_dtype)args[args.Length() - 3]->Uint32Value();
         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::range(dimAndType.first, seqDim, dimAndType.second))); });
     }
     FIRE_CATCH
@@ -74,10 +71,7 @@ NAN_METHOD(Iota)
 
     try
     {
-        if (args.Length() < 4)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(4);
         auto dims = ToDim4(args[0]);
         auto titleDims = ToDim4(args[1]);
         auto type = GetDTypeInfo(args[3]->Uint32Value());
@@ -92,10 +86,7 @@ NAN_METHOD(Diag)
 
     try
     {
-        if (args.Length() < 2)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(1);
         auto pArray = ArrayWrapper::GetArrayAt(args, 0);
         int num = 0;
         bool extract = true;
@@ -121,10 +112,7 @@ NAN_METHOD(Constant)
 
     try
     {
-        if (args.Length() < 3)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
+        ARGS_LEN(3);
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 0, 1);
         auto value = args[0];
         if (value->IsNumber())

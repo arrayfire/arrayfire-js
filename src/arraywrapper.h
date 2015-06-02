@@ -79,7 +79,7 @@ private:
     explicit ArrayWrapper(af::array* array);
 
     template<typename T>
-    static af::array* CreateArray(void* ptr, af::af_source_t src, const af::dim4& dim4);
+    static af::array* CreateArray(void* ptr, af_source src, const af::dim4& dim4);
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     static v8::Persistent<v8::Function> constructor;

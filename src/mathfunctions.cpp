@@ -1,5 +1,4 @@
 #include "ext.h"
-#include "functionhelpers.h"
 #include "mathfunctions.h"
 #include "helpers.h"
 #include "arraywrapper.h"

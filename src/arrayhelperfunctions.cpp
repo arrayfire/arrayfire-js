@@ -16,7 +16,7 @@ NAN_METHOD(F)\
     \
     try\
     {\
-        if (args.Length() < 1) return NAN_THROW_INVALID_NO_OF_ARGS();\
+        ARGS_LEN(1);\
         \
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
         \

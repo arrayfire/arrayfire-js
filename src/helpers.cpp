@@ -58,6 +58,15 @@ pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype)
     return move(make_pair(dtype, sizeOf));
 }
 
+std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value)
+{
+    if (value->IsNumber())
+    {
+        return GetDTypeInfo(value->Uint32Value());
+    }
+    FIRE_THROW("Value is not a number.");
+}
+
 string ErrToString(af_err err)
 {
     switch (err)
@@ -65,8 +74,8 @@ string ErrToString(af_err err)
         case AF_ERR_INTERNAL:
             return "Internal error (AF_ERR_INTERNAL).";
             break;
-        case AF_ERR_NOMEM:
-            return "Not enough memory error (AF_ERR_NOMEM).";
+        case AF_ERR_NO_MEM:
+            return "Not enough memory error (AF_ERR_NO_MEM).";
             break;
         case AF_ERR_DRIVER:
             return "Driver error (AF_ERR_DRIVER).";
@@ -91,12 +100,6 @@ string ErrToString(af_err err)
             break;
         case AF_ERR_NOT_CONFIGURED:
             return "Not configured error (AF_ERR_NOT_CONFIGURED).";
-            break;
-        case AF_ERR_INVALID_TYPE:
-            return "Invalid type error (AF_ERR_INVALID_TYPE).";
-            break;
-        case AF_ERR_INVALID_ARG:
-            return "Invalid argument error (AF_ERR_INVALID_ARG).";
             break;
         default:
             return "Uknown ArrayFire error (AF_ERR_UNKNOWN).";
@@ -185,18 +188,18 @@ af::seq ToSeq(v8::Local<v8::Value> value)
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
-std::complex<double> ToDComplex(v8::Local<v8::Object> obj)
+af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
 {
     auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
     auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
     if (imag->IsNumber() && real->IsNumber())
     {
-        return move(complex<double>(real->NumberValue(), imag->NumberValue()));
+        return { real->NumberValue(), imag->NumberValue() };
     }
     FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
-std::complex<double> ToDComplex(v8::Local<v8::Value> value)
+af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {
@@ -205,18 +208,18 @@ std::complex<double> ToDComplex(v8::Local<v8::Value> value)
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
-std::complex<float> ToFComplex(v8::Local<v8::Object> obj)
+af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
 {
     auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
     auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
     if (imag->IsNumber() && real->IsNumber())
     {
-        return move(complex<float>((float)real->NumberValue(), (float)imag->NumberValue()));
+        return { (float)real->NumberValue(), (float)imag->NumberValue() };
     }
     FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
-std::complex<float> ToFComplex(v8::Local<v8::Value> value)
+af::af_cfloat ToFComplex(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {
