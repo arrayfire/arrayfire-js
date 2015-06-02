@@ -3,7 +3,7 @@
 #include "guard.h"
 #include "worker.h"
 #include "helpers.h"
-
+#include "errors.h"
 using namespace v8;
 using namespace std;
 using namespace node;

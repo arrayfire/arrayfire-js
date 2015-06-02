@@ -14,5 +14,6 @@
 #include <tuple>
 #include <cassert>
 #include <complex>
+#include <sstream>
 
 #endif

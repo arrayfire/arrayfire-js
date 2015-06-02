@@ -17,6 +17,7 @@ NAN_METHOD(RandU)
 
     try
     {
+        FIRE_THROW("anyad");
         auto dimAndType = ParseDimAndTypeArgs(args);
         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randu(dimAndType.first, dimAndType.second))); });
     }
@@ -34,7 +35,7 @@ NAN_METHOD(RandN)
         {
             return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
         }
-        return NanThrowInvalidDTypeArgumentError();
+        return NAN_THROW_INVALID_DTYPE();
     }
     FIRE_CATCH
 }
@@ -59,7 +60,7 @@ NAN_METHOD(Range)
     {
         if (args.Length() < 4)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 1);
         dim_type seqDim = args[args.Length() - 3]->Uint32Value();
@@ -76,7 +77,7 @@ NAN_METHOD(Iota)
     {
         if (args.Length() < 4)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
         auto dims = ToDim4(args[0]);
         auto titleDims = ToDim4(args[1]);
@@ -94,7 +95,7 @@ NAN_METHOD(Diag)
     {
         if (args.Length() < 2)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
         auto pArray = ArrayWrapper::GetArrayAt(args, 0);
         int num = 0;
@@ -121,9 +122,9 @@ NAN_METHOD(Constant)
 
     try
     {
-        if (args.Length() < 4)
+        if (args.Length() < 3)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 0, 1);
         auto value = args[0];
@@ -132,12 +133,12 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 double v = value->NumberValue();
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
             }
             else
             {
                 float v = (float)value->NumberValue();
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
             }
         }
         else if (value->IsObject())
@@ -145,19 +146,19 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 auto v = ToDComplex(value);
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
             }
             else
             {
                 auto v = ToFComplex(value);
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(v, dimAndType.first, dimAndType.second))); });
+                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
             }
         }
         else if (value->IsString())
         {
             String::Utf8Value str(value);
             intl val = strtoll(*str, nullptr, 10);
-            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant(val, dimAndType.first, dimAndType.second))); });
+            NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(val, dimAndType.first, dimAndType.second)))));
         }
         else
         {

@@ -6,11 +6,6 @@
 #include <nan.h>
 #include <complex>
 
-#define FIRE_CATCH \
-    catch(af::exception &ex) { return NanThrowError(ex.what()); } \
-    catch(std::exception &ex) { return NanThrowError(ex.what()); } \
-    catch(...) { return NanThrowError("Unknown error!"); }
-
 std::pair<af::dtype, unsigned> ConvDtype(unsigned udtype);
 
 std::string ErrToString(af_err);

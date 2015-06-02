@@ -53,7 +53,7 @@ pair<af::dtype, unsigned> ConvDtype(unsigned udtype)
             sizeOf = 64 / 8;
             break;
         default:
-            throw logic_error("DType is out of range.");
+            FIRE_THROW("DType is out of range.");
     }
     return move(make_pair(dtype, sizeOf));
 }
@@ -124,7 +124,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
         }
         else
         {
-            throw logic_error("Argument is not a dim4 object.");
+            FIRE_THROW("Argument is not a dim4 object.");
         }
     }
     int dim0 = 1;
@@ -156,7 +156,7 @@ af::dim4 ToDim4(v8::Local<v8::Value> value)
     {
         return ToDim4(value.As<Object>());
     }
-    throw GetArgumentIsNotAnObjectException();
+    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 af::seq ToSeq(v8::Local<v8::Object> obj)
@@ -173,7 +173,7 @@ af::seq ToSeq(v8::Local<v8::Object> obj)
         }
         return move(af::seq(begin->NumberValue(), end->NumberValue(), stepValue));
     }
-    throw GetArgumentIsNotASeqException();
+    FIRE_THROW_ARG_IS_NOT_A_SEQ();
 }
 
 af::seq ToSeq(v8::Local<v8::Value> value)
@@ -182,7 +182,7 @@ af::seq ToSeq(v8::Local<v8::Value> value)
     {
         return ToSeq(value.As<Object>());
     }
-    throw GetArgumentIsNotAnObjectException();
+    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 std::complex<double> ToDComplex(v8::Local<v8::Object> obj)
@@ -193,7 +193,7 @@ std::complex<double> ToDComplex(v8::Local<v8::Object> obj)
     {
         return move(complex<double>(real->NumberValue(), imag->NumberValue()));
     }
-    throw GetArgumentIsNotAComplexException();
+    FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
 std::complex<double> ToDComplex(v8::Local<v8::Value> value)
@@ -202,7 +202,7 @@ std::complex<double> ToDComplex(v8::Local<v8::Value> value)
     {
         return ToDComplex(value.As<Object>());
     }
-    throw GetArgumentIsNotAnObjectException();
+    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 std::complex<float> ToFComplex(v8::Local<v8::Object> obj)
@@ -213,7 +213,7 @@ std::complex<float> ToFComplex(v8::Local<v8::Object> obj)
     {
         return move(complex<float>((float)real->NumberValue(), (float)imag->NumberValue()));
     }
-    throw GetArgumentIsNotAComplexException();
+    FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
 std::complex<float> ToFComplex(v8::Local<v8::Value> value)
@@ -222,7 +222,7 @@ std::complex<float> ToFComplex(v8::Local<v8::Value> value)
     {
         return ToFComplex(value.As<Object>());
     }
-    throw GetArgumentIsNotAnObjectException();
+    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength, int argsFollowingDims, int dimsStartAt)
@@ -255,5 +255,5 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
         af::dtype type = ConvDtype(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
         return move(make_pair(move(dims), type));
     }
-    throw logic_error("Cannot extract dimensions and dtype from argumens.");
+    FIRE_THROW("Cannot extract dimensions and dtype from argumens.");
 }

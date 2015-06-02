@@ -67,6 +67,7 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("at"), NanNew<FunctionTemplate>(At), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("assign"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
 
     auto f = tmpl->GetFunction();
     f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
@@ -95,7 +96,7 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     }
     else
     {
-        NanThrowError("Last argument have to be a callback!");
+        NAN_THROW("Last argument have to be a callback!");
     }
 }
 
@@ -103,7 +104,7 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
-    throw logic_error("Argument is not an AFArray instance.");
+    FIRE_THROW("Argument is not an AFArray instance.");
 }
 
 af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
@@ -112,7 +113,7 @@ af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& a
     if (array) return array;
     stringstream ss;
     ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
-    throw logic_error(ss.str().c_str());
+    FIRE_THROW(ss.str().c_str());
 }
 
 af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
@@ -188,7 +189,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
 
         if (!instance)
         {
-            return NanThrowError("Invalid arguments.");
+            return NAN_THROW("Invalid arguments.");
         }
 
         instance->Wrap(args.Holder());
@@ -227,7 +228,7 @@ NAN_METHOD(ArrayWrapper::Create)
 
         if (buffIdx == -1)
         {
-            return NanThrowError("Buffer argument expected.");
+            return NAN_THROW("Buffer argument expected.");
         }
         else if (buffIdx + 1 < args.Length())
         {
@@ -278,7 +279,7 @@ NAN_METHOD(ArrayWrapper::Create)
 
         if (!factory)
         {
-            return NanThrowError("Invalid arguments.");
+            return NAN_THROW("Invalid arguments.");
         }
 
         NanCallback *callback = nullptr;
@@ -289,7 +290,7 @@ NAN_METHOD(ArrayWrapper::Create)
 
         if (!callback)
         {
-            return NanThrowError("Callback argument expected.");
+            return NAN_THROW("Callback argument expected.");
         }
 
         auto conv = [](Worker<af::array*>* w, af::array* a)
@@ -325,7 +326,7 @@ NAN_METHOD(ArrayWrapper::Host)
     {
         if (!args.Length())
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
 
         char* buffData;
@@ -337,7 +338,7 @@ NAN_METHOD(ArrayWrapper::Host)
 
             if (Buffer::Length(args[0]) < pArray->bytes())
             {
-                return NanThrowError("Buffer is too small to hold values.");
+                return NAN_THROW("Buffer is too small to hold values.");
             }
 
             NanCallback *callback = nullptr;
@@ -347,7 +348,7 @@ NAN_METHOD(ArrayWrapper::Host)
             }
             if (!callback)
             {
-                return NanThrowCallbackArgumentExpectedError();
+                return NAN_THROW_CB_EXPECTED();
             }
 
             af::array array(*pArray);
@@ -371,7 +372,7 @@ NAN_METHOD(ArrayWrapper::Host)
             }
             if (!callback)
             {
-                return NanThrowCallbackArgumentExpectedError();
+                return NAN_THROW_CB_EXPECTED();
             }
 
             size_t size = pArray->elements() * ConvDtype(pArray->type()).second;
@@ -669,7 +670,7 @@ NAN_METHOD(ArrayWrapper::At)
 
         if (args.Length() == 0)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
 
         auto s = [&](int idx)
@@ -790,7 +791,7 @@ NAN_METHOD(ArrayWrapper::At)
         }
         else if (args.Length() == 4)
         {
-            throw logic_error("Not supported since API's gonna be changed in RTM 3.0.");
+            FIRE_THROW("Not supported since API's gonna be changed in RTM 3.0.");
         }
     }
     FIRE_CATCH
@@ -808,42 +809,29 @@ NAN_METHOD(ArrayWrapper::Set)
         auto& array = *GetArray(args.This());
         if (args.Length() < 2)
         {
-            return NanThrowInvalidNumberOfArgumentsError();
+            return NAN_THROW_INVALID_NO_OF_ARGS();
         }
         auto value = args[0];
         auto pOtherArray = TryGetArray(value);
-        function<int()> doSet;
         if (pOtherArray)
         {
             auto otherArray = *pOtherArray;
-            doSet = [=]() mutable
-            {
-                Guard();
-                array = otherArray;
-                return 0;
-            };
+            Guard();
+            array = otherArray;
         }
         else if (value->IsNumber())
         {
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 double v = value->NumberValue();
-                doSet = [=]() mutable
-                {
-                    Guard();
-                    array = v;
-                    return 0;
-                };
+                Guard();
+                array = v;
             }
             else
             {
                 float v = (float)value->NumberValue();
-                doSet = [=]() mutable
-                {
-                    Guard();
-                    array = v;
-                    return 0;
-                };
+                Guard();
+                array = v;
             }
         }
         else if (value->IsObject())
@@ -851,56 +839,29 @@ NAN_METHOD(ArrayWrapper::Set)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 auto v = ToDComplex(value);
-                doSet = [=]() mutable
-                {
-                    Guard();
-                    array = v;
-                    return 0;
-                };
+                Guard();
+                array = v;
             }
             else
             {
                 auto v = ToFComplex(value);
-                doSet = [=]() mutable
-                {
-                    Guard();
-                    return 0;
-                };
+                Guard();
+                array = v;
             }
         }
         else if (value->IsString())
         {
             String::Utf8Value str(value);
             intl v = strtoll(*str, nullptr, 10);
-            doSet = [=]() mutable
-            {
-                Guard();
-                return 0;
-            };
+            Guard();
+            array = v;
         }
         else
         {
-            return NanThrowInvalidArgumentsError();
+            return NAN_THROW_INVALID_ARGS();
         }
 
-        NanCallback *callback = nullptr;
-        if (args[1]->IsFunction())
-        {
-            callback = new NanCallback(args[1].As<Function>());
-        }
-        if (!callback)
-        {
-            return NanThrowCallbackArgumentExpectedError();
-        }
-        auto conv = [=](Worker<int>* worker, int dummy)
-        {
-            return worker->GetFromPersistent("_this");
-        };
-        auto worker = new Worker<int>(callback, move(doSet), move(conv));
-        worker->SaveToPersistent("_this", args.This());
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
-
+       NanReturnValue(args.This());
     }
     FIRE_CATCH
 }
