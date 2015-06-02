@@ -50,7 +50,8 @@ file(GLOB COMMON_SOURCE_FILES
     "src/arraywrapper.*"
     "src/createarray.*"
     "src/errors.*"
-    "src/moveandreorderarray.*")
+    "src/moveandreorderarray.*"
+    "src/arrayhelperfunctions.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")

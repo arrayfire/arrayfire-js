@@ -6,7 +6,7 @@ using namespace std;
 using namespace v8;
 using namespace node;
 
-pair<af::dtype, unsigned> ConvDtype(unsigned udtype)
+pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype)
 {
     unsigned sizeOf;
     af::dtype dtype;
@@ -252,7 +252,7 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
     }
     if (any)
     {
-        af::dtype type = ConvDtype(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
+        af::dtype type = GetDTypeInfo(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
         return move(make_pair(move(dims), type));
     }
     FIRE_THROW("Cannot extract dimensions and dtype from argumens.");

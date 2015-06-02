@@ -17,7 +17,6 @@ NAN_METHOD(RandU)
 
     try
     {
-        FIRE_THROW("anyad");
         auto dimAndType = ParseDimAndTypeArgs(args);
         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randu(dimAndType.first, dimAndType.second))); });
     }
@@ -81,7 +80,7 @@ NAN_METHOD(Iota)
         }
         auto dims = ToDim4(args[0]);
         auto titleDims = ToDim4(args[1]);
-        auto type = ConvDtype(args[3]->Uint32Value());
+        auto type = GetDTypeInfo(args[3]->Uint32Value());
         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::iota(dims, titleDims, type.first))); });
     }
     FIRE_CATCH

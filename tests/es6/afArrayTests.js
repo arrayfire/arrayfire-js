@@ -223,6 +223,42 @@ function testPlatform(id) {
                 });
                 f().nodeify(done);
             });
+
+            it("should be tests for assignment operators", function() {
+                console.log(`TODO: implement array assignment operator tests for ${id}\n`);
+            });
+
+            it("should be tests for indexing operators", function() {
+                console.log(`TODO: implement array indexing operator tests for ${id}\n`);
+            });
+
+            it("should be tests for row", function() {
+                console.log(`TODO: implement array row test for ${id}\n`);
+            });
+
+            it("should be tests for col", function() {
+                console.log(`TODO: implement array col test for ${id}\n`);
+            });
+
+            it("should be tests for slice", function() {
+                console.log(`TODO: implement array slice test for ${id}\n`);
+            });
+
+            it("should be tests for rows", function() {
+                console.log(`TODO: implement array rows test for ${id}\n`);
+            });
+
+            it("should be tests for cols", function() {
+                console.log(`TODO: implement array cols test for ${id}\n`);
+            });
+
+            it("should be tests for slices", function() {
+                console.log(`TODO: implement array slices test for ${id}\n`);
+            });
+
+            it("should be tests for as", function() {
+                console.log(`TODO: implement array as test for ${id}\n`);
+            });
         });
     }
 }

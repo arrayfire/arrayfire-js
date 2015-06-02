@@ -375,7 +375,7 @@ NAN_METHOD(ArrayWrapper::Host)
                 return NAN_THROW_CB_EXPECTED();
             }
 
-            size_t size = pArray->elements() * ConvDtype(pArray->type()).second;
+            size_t size = pArray->elements() * GetDTypeInfo(pArray->type()).second;
             buffData = new char[size];
             try
             {

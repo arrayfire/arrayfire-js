@@ -149,7 +149,7 @@ NAN_METHOD(Sync)
 
 pair<af::dtype, unsigned> getAllocPars(unsigned elements, unsigned udtype)
 {
-    auto dtypeInfo = ConvDtype(udtype);
+    auto dtypeInfo = GetDTypeInfo(udtype);
     unsigned sizeOf = dtypeInfo.second;
     af::dtype dtype = dtypeInfo.first;
     unsigned size = sizeOf * elements;

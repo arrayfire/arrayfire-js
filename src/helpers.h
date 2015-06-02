@@ -6,7 +6,7 @@
 #include <nan.h>
 #include <complex>
 
-std::pair<af::dtype, unsigned> ConvDtype(unsigned udtype);
+std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 
 std::string ErrToString(af_err);
 
