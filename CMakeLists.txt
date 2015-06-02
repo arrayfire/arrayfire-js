@@ -51,7 +51,9 @@ file(GLOB COMMON_SOURCE_FILES
     "src/createarray.*"
     "src/errors.*"
     "src/moveandreorderarray.*"
-    "src/arrayhelperfunctions.*")
+    "src/arrayhelperfunctions.*"
+    "src/functionhelpers.*"
+    "src/mathfunctions.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")
