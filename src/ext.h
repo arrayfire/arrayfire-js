@@ -15,5 +15,6 @@
 #include <cassert>
 #include <complex>
 #include <sstream>
+#include <math.h>
 
 #endif

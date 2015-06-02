@@ -48,7 +48,32 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Cols);
     static NAN_METHOD(Slices);
     static NAN_METHOD(As);
-    static NAN_METHOD(Set);
+    static NAN_METHOD(Assign);
+
+    static NAN_METHOD(Add);
+    static NAN_METHOD(AddAssign);
+    static NAN_METHOD(Sub);
+    static NAN_METHOD(SubAssign);
+    static NAN_METHOD(Mul);
+    static NAN_METHOD(MulAssign);
+    static NAN_METHOD(Div);
+    static NAN_METHOD(DivAssign);
+    static NAN_METHOD(BitShiftL);
+    static NAN_METHOD(BitShiftR);
+
+    static NAN_METHOD(Lt);
+    static NAN_METHOD(Gt);
+    static NAN_METHOD(Le);
+    static NAN_METHOD(Ge);
+    static NAN_METHOD(Eq);
+    static NAN_METHOD(Neq);
+    static NAN_METHOD(And);
+    static NAN_METHOD(Or);
+    static NAN_METHOD(Not);
+    static NAN_METHOD(Neg);
+    static NAN_METHOD(BitAnd);
+    static NAN_METHOD(BitOr);
+    static NAN_METHOD(BitXor);
 
 private:
     explicit ArrayWrapper(af::array* array);

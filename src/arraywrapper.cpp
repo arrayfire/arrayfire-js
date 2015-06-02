@@ -73,8 +73,35 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("cols"), NanNew<FunctionTemplate>(Cols), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("slices"), NanNew<FunctionTemplate>(Slices), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("as"), NanNew<FunctionTemplate>(As), v8::ReadOnly);
-    NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
-    NanSetPrototypeTemplate(tmpl, NanNew("assign"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("assign"), NanNew<FunctionTemplate>(Assign), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Assign), v8::ReadOnly);
+
+    NanSetPrototypeTemplate(tmpl, NanNew("add"), NanNew<FunctionTemplate>(Add), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("addAssign"), NanNew<FunctionTemplate>(AddAssign), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("sub"), NanNew<FunctionTemplate>(Sub), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("subAssign"), NanNew<FunctionTemplate>(SubAssign), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("mul"), NanNew<FunctionTemplate>(Mul), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("mulAssign"), NanNew<FunctionTemplate>(MulAssign), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("div"), NanNew<FunctionTemplate>(Div), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("divAssign"), NanNew<FunctionTemplate>(DivAssign), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitshiftl"), NanNew<FunctionTemplate>(BitShiftL), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitShiftL"), NanNew<FunctionTemplate>(BitShiftL), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitshiftr"), NanNew<FunctionTemplate>(BitShiftR), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitShiftR"), NanNew<FunctionTemplate>(BitShiftR), v8::ReadOnly);
+
+    NanSetPrototypeTemplate(tmpl, NanNew("lt"), NanNew<FunctionTemplate>(Lt), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("gt"), NanNew<FunctionTemplate>(Gt), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("le"), NanNew<FunctionTemplate>(Le), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("ge"), NanNew<FunctionTemplate>(Ge), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("eq"), NanNew<FunctionTemplate>(Eq), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("neq"), NanNew<FunctionTemplate>(Neq), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("and"), NanNew<FunctionTemplate>(And), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("or"), NanNew<FunctionTemplate>(Or), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("neg"), NanNew<FunctionTemplate>(Neg), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("not"), NanNew<FunctionTemplate>(Not), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitAnd"), NanNew<FunctionTemplate>(BitAnd), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitOr"), NanNew<FunctionTemplate>(BitOr), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("bitXor"), NanNew<FunctionTemplate>(BitXor), v8::ReadOnly);
 
     auto f = tmpl->GetFunction();
     f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
@@ -848,71 +875,186 @@ NAN_METHOD(ArrayWrapper::As)
     FIRE_CATCH
 }
 
-NAN_METHOD(ArrayWrapper::Set)
-{
-    // Aka "assign"
-    NanScope();
-
-    // Notice: In v8 we can go for double, complex, and int64 as a string, because v8 numbers are doubles.
-
-    try
-    {
-        auto& array = *GetArray(args.This());
-        if (args.Length() < 2)
-        {
-            return NAN_THROW_INVALID_NO_OF_ARGS();
-        }
-        auto value = args[0];
-        auto pOtherArray = TryGetArray(value);
-        if (pOtherArray)
-        {
-            auto& otherArray = *pOtherArray;
-            Guard();
-            array = otherArray;
-        }
-        else if (value->IsNumber())
-        {
-            if (af::isDoubleAvailable(af::getDevice()))
-            {
-                double v = value->NumberValue();
-                Guard();
-                array = v;
-            }
-            else
-            {
-                float v = (float)value->NumberValue();
-                Guard();
-                array = v;
-            }
-        }
-        else if (value->IsObject())
-        {
-            if (af::isDoubleAvailable(af::getDevice()))
-            {
-                auto v = ToDComplex(value);
-                Guard();
-                array = v;
-            }
-            else
-            {
-                auto v = ToFComplex(value);
-                Guard();
-                array = v;
-            }
-        }
-        else if (value->IsString())
-        {
-            String::Utf8Value str(value);
-            intl v = strtoll(*str, nullptr, 10);
-            Guard();
-            array = v;
-        }
-        else
-        {
-            return NAN_THROW_INVALID_ARGS();
-        }
-
-       NanReturnValue(args.This());
-    }
-    FIRE_CATCH
+#define AFARRAY_IMPL_ASSIGN(F, Op)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        auto& array = *GetArray(args.This());\
+        if (args.Length() < 1)\
+        {\
+            return NAN_THROW_INVALID_NO_OF_ARGS();\
+        }\
+        auto value = args[0];\
+        auto pOtherArray = TryGetArray(value);\
+        if (pOtherArray)\
+        {\
+            auto& otherArray = *pOtherArray;\
+            Guard();\
+            array Op otherArray;\
+        }\
+        else if (value->IsNumber())\
+        {\
+            double v = value->NumberValue();\
+            if (floor(v) == v)\
+            {\
+                Guard();\
+                array Op value->Int32Value();\
+            }\
+            else if (af::isDoubleAvailable(af::getDevice()))\
+            {\
+                Guard();\
+                array Op v;\
+            }\
+            else\
+            {\
+                Guard();\
+                array Op (float)v;\
+            }\
+        }\
+        else if (value->IsObject())\
+        {\
+            if (af::isDoubleAvailable(af::getDevice()))\
+            {\
+                auto v = ToDComplex(value);\
+                Guard();\
+                array Op v;\
+            }\
+            else\
+            {\
+                auto v = ToFComplex(value);\
+                Guard();\
+                array Op v;\
+            }\
+        }\
+        else if (value->IsString())\
+        {\
+            String::Utf8Value str(value);\
+            intl v = strtoll(*str, nullptr, 10);\
+            Guard();\
+            array Op v;\
+        }\
+        else\
+        {\
+            return NAN_THROW_INVALID_ARGS();\
+        }\
+        \
+        NanReturnValue(args.This());\
+    }\
+    FIRE_CATCH\
 }
+
+AFARRAY_IMPL_ASSIGN(Assign, =)
+AFARRAY_IMPL_ASSIGN(AddAssign, +=)
+AFARRAY_IMPL_ASSIGN(SubAssign, -=)
+AFARRAY_IMPL_ASSIGN(MulAssign, *=)
+AFARRAY_IMPL_ASSIGN(DivAssign, /=)
+
+#define AFARRAY_IMPL_BINOP(F, Op)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        auto& array = *GetArray(args.This());\
+        if (args.Length() < 1)\
+        {\
+            return NAN_THROW_INVALID_NO_OF_ARGS();\
+        }\
+        auto value = args[0];\
+        auto pOtherArray = TryGetArray(value);\
+        af::array* result = nullptr;\
+        if (pOtherArray)\
+        {\
+            auto& otherArray = *pOtherArray;\
+            Guard();\
+            result = new af::array(array Op otherArray);\
+        }\
+        else if (value->IsNumber())\
+        {\
+            double v = value->NumberValue();\
+            if (floor(v) == v)\
+            {\
+                Guard();\
+                result = new af::array(array Op value->Int32Value());\
+            }\
+            else if (af::isDoubleAvailable(af::getDevice()))\
+            {\
+                Guard();\
+                result = new af::array(array Op v);\
+            }\
+            else\
+            {\
+                Guard();\
+                result = new af::array(array Op (float)v);\
+            }\
+        }\
+        else if (value->IsObject())\
+        {\
+            if (af::isDoubleAvailable(af::getDevice()))\
+            {\
+                auto v = ToDComplex(value);\
+                Guard();\
+                result = new af::array(array Op v);\
+            }\
+            else\
+            {\
+                auto v = ToFComplex(value);\
+                Guard();\
+                result = new af::array(array Op v);\
+            }\
+        }\
+        else if (value->IsString())\
+        {\
+            String::Utf8Value str(value);\
+            intl v = strtoll(*str, nullptr, 10);\
+            Guard();\
+            result = new af::array(array Op v);\
+        }\
+        else\
+        {\
+            return NAN_THROW_INVALID_ARGS();\
+        }\
+        \
+        NanReturnValue(New(result));\
+    }\
+    FIRE_CATCH\
+}
+
+AFARRAY_IMPL_BINOP(Add, +)
+AFARRAY_IMPL_BINOP(Sub, -)
+AFARRAY_IMPL_BINOP(Mul, *)
+AFARRAY_IMPL_BINOP(Div, /)
+AFARRAY_IMPL_BINOP(BitShiftL, <<)
+AFARRAY_IMPL_BINOP(BitShiftR, >>)
+
+AFARRAY_IMPL_BINOP(Lt, <)
+AFARRAY_IMPL_BINOP(Gt, >)
+AFARRAY_IMPL_BINOP(Le, <=)
+AFARRAY_IMPL_BINOP(Ge, >=)
+AFARRAY_IMPL_BINOP(Eq, ==)
+AFARRAY_IMPL_BINOP(Neq, !=)
+AFARRAY_IMPL_BINOP(And, &&)
+AFARRAY_IMPL_BINOP(Or, ||)
+AFARRAY_IMPL_BINOP(BitAnd, &)
+AFARRAY_IMPL_BINOP(BitOr, |)
+AFARRAY_IMPL_BINOP(BitXor, ^)
+
+#define AFARRAY_IMPL_UNOP(F, Op)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        auto& array = *GetArray(args.This());\
+        NanReturnValue(New(new af::array(array.operator Op())));\
+    }\
+    FIRE_CATCH\
+}
+
+AFARRAY_IMPL_UNOP(Neg, -)
+AFARRAY_IMPL_UNOP(Not, !)

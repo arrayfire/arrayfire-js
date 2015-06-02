@@ -259,6 +259,14 @@ function testPlatform(id) {
             it("should be tests for as", function() {
                 console.log(`TODO: implement array as test for ${id}\n`);
             });
+
+            it("should be tests for arithmetic operators", function() {
+                console.log(`TODO: implement array arithmetic operator tests for ${id}\n`);
+            });
+
+            it("should be tests for logical operators", function() {
+                console.log(`TODO: implement array logical operator tests for ${id}\n`);
+            });
         });
     }
 }
