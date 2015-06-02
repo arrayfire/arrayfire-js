@@ -41,6 +41,13 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(IsBool);
     static NAN_METHOD(Eval);
     static NAN_METHOD(At);
+    static NAN_METHOD(Row);
+    static NAN_METHOD(Col);
+    static NAN_METHOD(Slice);
+    static NAN_METHOD(Rows);
+    static NAN_METHOD(Cols);
+    static NAN_METHOD(Slices);
+    static NAN_METHOD(As);
     static NAN_METHOD(Set);
 
 private:

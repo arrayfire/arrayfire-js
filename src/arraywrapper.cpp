@@ -66,6 +66,13 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("isBool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("at"), NanNew<FunctionTemplate>(At), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("row"), NanNew<FunctionTemplate>(Row), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("col"), NanNew<FunctionTemplate>(Col), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("slice"), NanNew<FunctionTemplate>(Slice), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rows"), NanNew<FunctionTemplate>(Rows), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("cols"), NanNew<FunctionTemplate>(Cols), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("slices"), NanNew<FunctionTemplate>(Slices), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("as"), NanNew<FunctionTemplate>(As), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("assign"), NanNew<FunctionTemplate>(Set), v8::ReadOnly);
 
@@ -797,6 +804,50 @@ NAN_METHOD(ArrayWrapper::At)
     FIRE_CATCH
 }
 
+#define AFARRAY_IMPL_IDX1(F, f)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    try\
+    {\
+        if (args.Length() < 1) NAN_THROW_INVALID_NO_OF_ARGS();\
+        NanReturnValue(New(new af::array(GetArray(args.This())->f(args[0]->Int32Value()))));\
+    }\
+    FIRE_CATCH\
+}
+
+AFARRAY_IMPL_IDX1(Row, row)
+AFARRAY_IMPL_IDX1(Col, col)
+AFARRAY_IMPL_IDX1(Slice, slice)
+
+#define AFARRAY_IMPL_IDX2(F, f)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    try\
+    {\
+        if (args.Length() < 2) NAN_THROW_INVALID_NO_OF_ARGS();\
+        NanReturnValue(New(new af::array(GetArray(args.This())->f(args[0]->Int32Value(), args[1]->Int32Value()))));\
+    }\
+    FIRE_CATCH\
+}
+
+AFARRAY_IMPL_IDX2(Rows, rows)
+AFARRAY_IMPL_IDX2(Cols, cols)
+AFARRAY_IMPL_IDX2(Slices, slices)
+
+NAN_METHOD(ArrayWrapper::As)
+{
+    NanScope();
+    try
+    {
+        if (args.Length() < 1) NAN_THROW_INVALID_NO_OF_ARGS();
+        af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
+        NanReturnValue(New(new af::array(GetArray(args.This())->as(type))));
+    }
+    FIRE_CATCH
+}
+
 NAN_METHOD(ArrayWrapper::Set)
 {
     // Aka "assign"
@@ -815,7 +866,7 @@ NAN_METHOD(ArrayWrapper::Set)
         auto pOtherArray = TryGetArray(value);
         if (pOtherArray)
         {
-            auto otherArray = *pOtherArray;
+            auto& otherArray = *pOtherArray;
             Guard();
             array = otherArray;
         }
