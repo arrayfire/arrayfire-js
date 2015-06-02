@@ -4,10 +4,10 @@
   "description": "Fire.js - ArrayFire for Node.js platform",
   "dependencies": {
     "bindings": "*",
-    "cmake-js": "unbornchikken/cmake-js",
+    "cmake-js": "1.x",
     "lodash": "*",
     "nan": "*",
-    "traceur-runtime": "0.0.59"
+    "traceur-runtime": "*"
   },
   "scripts": {
     "install": "cmake-js rebuild"
