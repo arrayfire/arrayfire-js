@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 
 project (fire_js)
 
-set(ArrayFire_DIR $ENV{AF_PATH})
-
+set(ArrayFire_DIR "${AF_PATH}")
 if (NOT ArrayFire_DIR)
-    message(FATAL_ERROR "Cannot locate ArrayFire installation. Please set AF_PATH!" )
+    set(ArrayFire_DIR "$ENV{AF_PATH}")
+    if (NOT ArrayFire_DIR)
+        message(FATAL_ERROR "Cannot locate ArrayFire installation. Please set cmake_af_path npm config value or AF_PATH environment variable pointing to your ArrayFire installation directory!" )
+    endif()
 endif()
 
 if(UNIX)
@@ -26,7 +28,7 @@ if(UNIX)
     endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 elseif(WIN32)
-    add_definitions("/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /wd4251 /nologo")
+    add_definitions("/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /wd4251 /wd4244 /nologo")
     # CPU
     set(ArrayFire_CPU_LIBRARIES "${ArrayFire_DIR}/lib/afcpu.lib")
     # OpenCL
