@@ -19,13 +19,13 @@ Before installing location of the ArrayFire installation directory have to be co
 #### for current user:
 
 ```
-npm config cmake_af_path "path_to_arrayfire_installation_directory"
+npm config set cmake_af_path "path_to_arrayfire_installation_directory"
 ```
 
 #### for all users (global):
 
 ```
-npm config cmake_af_path "path_to_arrayfire_installation_directory" --global
+npm config set cmake_af_path "path_to_arrayfire_installation_directory" --global
 ```
 
 #### 2. Setting environment variable
