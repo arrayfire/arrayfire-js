@@ -317,3 +317,12 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
     }
     FIRE_THROW("Cannot extract dimensions and dtype from argumens.");
 }
+
+NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    if (args.Length() && args[args.Length() - 1]->IsFunction())
+    {
+        return new NanCallback(args[args.Length() - 1].As<Function>());
+    }
+    FIRE_THROW_CB_EXPECTED();
+}

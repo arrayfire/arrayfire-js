@@ -41,6 +41,13 @@ struct Worker : public NanAsyncWorker
     {
     }
 
+    Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+        executeFunc(executeFunc),
+        resultConvFunc(ConvResult([](Worker<T>* w, T v) { return NanNew(v); }))
+    {
+    }
+
     void Execute() override
     {
         using namespace std;

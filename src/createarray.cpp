@@ -174,13 +174,13 @@ NAN_METHOD(Constant)
 
 void InitCreateArray(v8::Handle<v8::Object> exports)
 {
-    exports->Set(NanNew<String>("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
-    exports->Set(NanNew<String>("randU"), NanNew<FunctionTemplate>(RandU)->GetFunction());
-    exports->Set(NanNew<String>("randn"), NanNew<FunctionTemplate>(RandN)->GetFunction());
-    exports->Set(NanNew<String>("randN"), NanNew<FunctionTemplate>(RandN)->GetFunction());
-    exports->Set(NanNew<String>("identity"), NanNew<FunctionTemplate>(Identity)->GetFunction());
-    exports->Set(NanNew<String>("range"), NanNew<FunctionTemplate>(Range)->GetFunction());
-    exports->Set(NanNew<String>("iota"), NanNew<FunctionTemplate>(Iota)->GetFunction());
-    exports->Set(NanNew<String>("diag"), NanNew<FunctionTemplate>(Diag)->GetFunction());
-    exports->Set(NanNew<String>("constant"), NanNew<FunctionTemplate>(Constant)->GetFunction());
+    exports->Set(NanNew("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
+    exports->Set(NanNew("randU"), NanNew<FunctionTemplate>(RandU)->GetFunction());
+    exports->Set(NanNew("randn"), NanNew<FunctionTemplate>(RandN)->GetFunction());
+    exports->Set(NanNew("randN"), NanNew<FunctionTemplate>(RandN)->GetFunction());
+    exports->Set(NanNew("identity"), NanNew<FunctionTemplate>(Identity)->GetFunction());
+    exports->Set(NanNew("range"), NanNew<FunctionTemplate>(Range)->GetFunction());
+    exports->Set(NanNew("iota"), NanNew<FunctionTemplate>(Iota)->GetFunction());
+    exports->Set(NanNew("diag"), NanNew<FunctionTemplate>(Diag)->GetFunction());
+    exports->Set(NanNew("constant"), NanNew<FunctionTemplate>(Constant)->GetFunction());
 }

@@ -85,19 +85,19 @@ NAN_METHOD(DeviceInfo)
         auto info = NanNew<Object>();
 
 #ifdef CPU
-        info->Set(NanNew<String>("name"), NanNew<String>("CPU"));
-        info->Set(NanNew<String>("platform"), NanNew<String>("CPU"));
-        info->Set(NanNew<String>("toolkit"), NanNew<String>("CPU"));
-        info->Set(NanNew<String>("compute"), NanNew<String>("CPU"));
-        info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        info->Set(NanNew("name"), NanNew("CPU"));
+        info->Set(NanNew("platform"), NanNew("CPU"));
+        info->Set(NanNew("toolkit"), NanNew("CPU"));
+        info->Set(NanNew("compute"), NanNew("CPU"));
+        info->Set(NanNew("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #else
         char name[256], platform[256], toolkit[256], compute[256];
         af::deviceInfo(name, platform, toolkit, compute);
-        info->Set(NanNew<String>("name"), NanNew<String>(name));
-        info->Set(NanNew<String>("platform"), NanNew<String>(platform));
-        info->Set(NanNew<String>("toolkit"), NanNew<String>(toolkit));
-        info->Set(NanNew<String>("compute"), NanNew<String>(compute));
-        info->Set(NanNew<String>("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        info->Set(NanNew("name"), NanNew<String>(name));
+        info->Set(NanNew("platform"), NanNew<String>(platform));
+        info->Set(NanNew("toolkit"), NanNew<String>(toolkit));
+        info->Set(NanNew("compute"), NanNew<String>(compute));
+        info->Set(NanNew("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
 #endif
 
         NanReturnValue(info);
@@ -218,12 +218,12 @@ NAN_METHOD(Pinned)
 
 void InitDevice(v8::Handle<v8::Object> exports)
 {
-    exports->Set(NanNew<String>("getDeviceCount"), NanNew<FunctionTemplate>(GetDeviceCount)->GetFunction());
-    exports->Set(NanNew<String>("getDevice"), NanNew<FunctionTemplate>(GetDevice)->GetFunction());
-    exports->Set(NanNew<String>("setDevice"), NanNew<FunctionTemplate>(SetDevice)->GetFunction());
-    exports->Set(NanNew<String>("deviceInfo"), NanNew<FunctionTemplate>(DeviceInfo)->GetFunction());
-    exports->Set(NanNew<String>("isDoubleAvailable"), NanNew<FunctionTemplate>(IsDoubleAvailable)->GetFunction());
-    exports->Set(NanNew<String>("sync"), NanNew<FunctionTemplate>(Sync)->GetFunction());
-    exports->Set(NanNew<String>("alloc"), NanNew<FunctionTemplate>(Alloc)->GetFunction());
-    exports->Set(NanNew<String>("pinned"), NanNew<FunctionTemplate>(Pinned)->GetFunction());
+    exports->Set(NanNew("getDeviceCount"), NanNew<FunctionTemplate>(GetDeviceCount)->GetFunction());
+    exports->Set(NanNew("getDevice"), NanNew<FunctionTemplate>(GetDevice)->GetFunction());
+    exports->Set(NanNew("setDevice"), NanNew<FunctionTemplate>(SetDevice)->GetFunction());
+    exports->Set(NanNew("deviceInfo"), NanNew<FunctionTemplate>(DeviceInfo)->GetFunction());
+    exports->Set(NanNew("isDoubleAvailable"), NanNew<FunctionTemplate>(IsDoubleAvailable)->GetFunction());
+    exports->Set(NanNew("sync"), NanNew<FunctionTemplate>(Sync)->GetFunction());
+    exports->Set(NanNew("alloc"), NanNew<FunctionTemplate>(Alloc)->GetFunction());
+    exports->Set(NanNew("pinned"), NanNew<FunctionTemplate>(Pinned)->GetFunction());
 }

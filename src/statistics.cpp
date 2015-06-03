@@ -20,11 +20,27 @@ limitations under the License.
 #include "arraywrapper.h"
 #include "errors.h"
 #include "guard.h"
+#include "worker.h"
 
 using namespace v8;
 using namespace std;
 using namespace node;
 
+FIRE_ASYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
+FIRE_ASYNC_METHOD_VEC_V1(Mean, mean)
+FIRE_ASYNC_METHOD_VEC_V1(Median, median)
+FIRE_ASYNC_METHOD_VEC_V1(StDev, stdev)
+
+// TODO: corrCoeff (complex stuff)
+// TODO: weightedMean
+// TODO: var
+
 void InitStatistics(v8::Handle<v8::Object> exports)
 {
+    exports->Set(NanNew("cov"), NanNew<FunctionTemplate>(Cov)->GetFunction());
+    exports->Set(NanNew("mean"), NanNew<FunctionTemplate>(Mean)->GetFunction());
+    exports->Set(NanNew("median"), NanNew<FunctionTemplate>(Median)->GetFunction());
+    exports->Set(NanNew("stdev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
+    exports->Set(NanNew("stDev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
+    exports->Set(NanNew("stdDev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
 }

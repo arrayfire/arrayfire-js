@@ -31,8 +31,8 @@ FIRE_ASYNC_METHOD_ARR(IsNaN, isNaN)
 
 void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)
 {
-    exports->Set(NanNew<String>("iszero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
-    exports->Set(NanNew<String>("isZero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
-    exports->Set(NanNew<String>("isInf"), NanNew<FunctionTemplate>(IsInf)->GetFunction());
-    exports->Set(NanNew<String>("isNaN"), NanNew<FunctionTemplate>(IsNaN)->GetFunction());
+    exports->Set(NanNew("iszero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
+    exports->Set(NanNew("isZero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
+    exports->Set(NanNew("isInf"), NanNew<FunctionTemplate>(IsInf)->GetFunction());
+    exports->Set(NanNew("isNaN"), NanNew<FunctionTemplate>(IsNaN)->GetFunction());
 }
