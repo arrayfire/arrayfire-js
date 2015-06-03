@@ -18,6 +18,7 @@ limitations under the License.
 #include "helpers.h"
 #include "errors.h"
 #include "arraywrapper.h"
+#include "symbols.h"
 
 using namespace std;
 using namespace v8;
@@ -137,7 +138,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     else
     {
-        auto member = obj->Get(NanNew("dims")); // TODO: Create symbol table on init
+        auto member = obj->Get(NanNew(DimsSymbol)); // TODO: Create symbol table on init
         if (member->IsArray())
         {
             dims = member.As<Array>();

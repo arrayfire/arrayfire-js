@@ -15,29 +15,13 @@ limitations under the License.
 */
 
 #include "ext.h"
-#include "fire.h"
-#include "device.h"
-#include "arraywrapper.h"
-#include "createarray.h"
-#include "moveandreorderarray.h"
-#include "arrayhelperfunctions.h"
-#include "mathfunctions.h"
-#include "vectoralgorithms.h"
-#include "statistics.h"
 #include "symbols.h"
 
 using namespace v8;
 using namespace std;
+using namespace node;
 
-void Init(v8::Handle<v8::Object> exports)
+void InitSymbols(v8::Handle<v8::Object> exports)
 {
-    InitSymbols(exports);
-    InitDevice(exports);
-    ArrayWrapper::Init(exports);
-    InitCreateArray(exports);
-    InitMoveAndReorderArray(exports);
-    InitArrayHelperFunctions(exports);
-    InitMathFunctions(exports);
-    InitVectorAlgorithms(exports);
-    InitStatistics(exports);
+    NanAssignPersistent(DimsSymbol, NanNew("dims"));
 }
