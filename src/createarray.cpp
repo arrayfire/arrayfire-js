@@ -120,12 +120,12 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 double v = value->NumberValue();
-                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
+                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
             }
             else
             {
                 float v = (float)value->NumberValue();
-                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
+                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
             }
         }
         else if (value->IsObject())
@@ -133,19 +133,19 @@ NAN_METHOD(Constant)
             if (af::isDoubleAvailable(af::getDevice()))
             {
                 auto v = ToDComplex(value);
-                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
+                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
             }
             else
             {
                 auto v = ToFComplex(value);
-                NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(v, dimAndType.first, dimAndType.second)))));
+                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
             }
         }
         else if (value->IsString())
         {
             String::Utf8Value str(value);
             intl val = strtoll(*str, nullptr, 10);
-            NanReturnValue(ArrayWrapper::New(new af::array(move(af::constant(val, dimAndType.first, dimAndType.second)))));
+            NanReturnValue(ArrayWrapper::New(af::constant(val, dimAndType.first, dimAndType.second)));
         }
         else
         {

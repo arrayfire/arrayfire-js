@@ -12,6 +12,7 @@ struct ArrayWrapper : public node::ObjectWrap
 
     static void Init(v8::Local<v8::Object> exports);
     static v8::Local<v8::Object> New(af::array* array);
+    static v8::Local<v8::Object> New(const af::array& array);
     static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
     static af::array* GetArray(v8::Local<v8::Value> value);
     static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);

@@ -219,12 +219,12 @@ af::index ToIndex(v8::Local<v8::Value> value)
         String::Utf8Value str(value);
         if (strcmp(*str, "span") == 0)
         {
-            return af::span();
+            return af::span;
         }
     }
     if (value->IsNull())
     {
-        return af::span();
+        return af::span;
     }
     FIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
