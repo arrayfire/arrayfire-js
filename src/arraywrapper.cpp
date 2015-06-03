@@ -509,7 +509,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetArray(args.This())->numDims()));
+        NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
     }
     FIRE_CATCH
 }

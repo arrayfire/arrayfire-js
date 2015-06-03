@@ -25,7 +25,7 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_ASYNC_METHOD_ARR(IsZero, isero)
+FIRE_ASYNC_METHOD_ARR(IsZero, iszero)
 FIRE_ASYNC_METHOD_ARR(IsInf, isInf)
 FIRE_ASYNC_METHOD_ARR(IsNaN, isNaN)
 
