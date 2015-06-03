@@ -1,5 +1,5 @@
 #[[
-Copyright 2015 G·bor Mezı aka unbornchikken
+Copyright 2015 G√°bor Mez≈ë aka unbornchikken
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -71,7 +71,9 @@ file(GLOB COMMON_SOURCE_FILES
     "src/moveandreorderarray.*"
     "src/arrayhelperfunctions.*"
     "src/functionhelpers.*"
-    "src/mathfunctions.*")
+    "src/mathfunctions.*"
+    "src/vectoralgorithms.*"
+    "src/statistics.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")

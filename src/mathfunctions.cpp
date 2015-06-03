@@ -62,6 +62,18 @@ FIRE_ASYNC_METHOD_ARR(Pow2, pow2)
 FIRE_ASYNC_METHOD_ARR_DOUBLE_COMB(Root, root)
 FIRE_ASYNC_METHOD_ARR(Sqrt, sqrt)
 
+FIRE_ASYNC_METHOD_ARR(ACosH, acosh)
+FIRE_ASYNC_METHOD_ARR(ASinH, asinh)
+FIRE_ASYNC_METHOD_ARR(ATanH, atanh)
+FIRE_ASYNC_METHOD_ARR(CosH, cosh)
+FIRE_ASYNC_METHOD_ARR(SinH, sinh)
+FIRE_ASYNC_METHOD_ARR(TanH, tanh)
+
+FIRE_ASYNC_METHOD_ARR(Complex, complex)
+FIRE_ASYNC_METHOD_ARR(Conjg, conjg)
+FIRE_ASYNC_METHOD_ARR(Imag, imag)
+FIRE_ASYNC_METHOD_ARR(Real, real)
+
 void InitMathFunctions(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew<String>("abs"), NanNew<FunctionTemplate>(Abs)->GetFunction());
@@ -93,14 +105,30 @@ void InitMathFunctions(v8::Handle<v8::Object> exports)
     exports->Set(NanNew<String>("erfc"), NanNew<FunctionTemplate>(Erfc)->GetFunction());
     exports->Set(NanNew<String>("exp"), NanNew<FunctionTemplate>(Exp)->GetFunction());
     exports->Set(NanNew<String>("expm1"), NanNew<FunctionTemplate>(ExpM1)->GetFunction());
+    exports->Set(NanNew<String>("expM1"), NanNew<FunctionTemplate>(ExpM1)->GetFunction());
     exports->Set(NanNew<String>("factorial"), NanNew<FunctionTemplate>(Factorial)->GetFunction());
     exports->Set(NanNew<String>("lgamma"), NanNew<FunctionTemplate>(LGamma)->GetFunction());
+    exports->Set(NanNew<String>("lGamma"), NanNew<FunctionTemplate>(LGamma)->GetFunction());
     exports->Set(NanNew<String>("tgamma"), NanNew<FunctionTemplate>(TGamma)->GetFunction());
+    exports->Set(NanNew<String>("tGamma"), NanNew<FunctionTemplate>(TGamma)->GetFunction());
     exports->Set(NanNew<String>("log"), NanNew<FunctionTemplate>(Log)->GetFunction());
     exports->Set(NanNew<String>("log10"), NanNew<FunctionTemplate>(Log10)->GetFunction());
     exports->Set(NanNew<String>("log1p"), NanNew<FunctionTemplate>(Log1P)->GetFunction());
+    exports->Set(NanNew<String>("log1P"), NanNew<FunctionTemplate>(Log1P)->GetFunction());
     exports->Set(NanNew<String>("pow"), NanNew<FunctionTemplate>(Pow)->GetFunction());
     exports->Set(NanNew<String>("pow2"), NanNew<FunctionTemplate>(Pow2)->GetFunction());
     exports->Set(NanNew<String>("root"), NanNew<FunctionTemplate>(Root)->GetFunction());
     exports->Set(NanNew<String>("sqrt"), NanNew<FunctionTemplate>(Sqrt)->GetFunction());
+
+    exports->Set(NanNew<String>("acosh"), NanNew<FunctionTemplate>(ACosH)->GetFunction());
+    exports->Set(NanNew<String>("aCosH"), NanNew<FunctionTemplate>(ACosH)->GetFunction());
+    exports->Set(NanNew<String>("asinh"), NanNew<FunctionTemplate>(ASinH)->GetFunction());
+    exports->Set(NanNew<String>("aSinH"), NanNew<FunctionTemplate>(ASinH)->GetFunction());
+    exports->Set(NanNew<String>("atanh"), NanNew<FunctionTemplate>(ATanH)->GetFunction());
+    exports->Set(NanNew<String>("aTanH"), NanNew<FunctionTemplate>(ATanH)->GetFunction());
+
+    exports->Set(NanNew<String>("complex"), NanNew<FunctionTemplate>(Complex)->GetFunction());
+    exports->Set(NanNew<String>("conjg"), NanNew<FunctionTemplate>(Conjg)->GetFunction());
+    exports->Set(NanNew<String>("imag"), NanNew<FunctionTemplate>(Imag)->GetFunction());
+    exports->Set(NanNew<String>("real"), NanNew<FunctionTemplate>(Real)->GetFunction());
 }
