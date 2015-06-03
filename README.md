@@ -28,7 +28,7 @@ npm config set cmake_af_path "path_to_arrayfire_installation_directory"
 npm config set cmake_af_path "path_to_arrayfire_installation_directory" --global
 ```
 
-#### 2. Setting environment variable
+#### 2. Setting AF_PATH environment variable
 
 ```
 AF_PATH="path_to_arrayfire_installation_directory"
