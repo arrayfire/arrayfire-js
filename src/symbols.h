@@ -19,8 +19,20 @@ limitations under the License.
 
 #include <nan.h>
 
-static v8::Persistent<v8::String> DimsSymbol;
+struct Symbols
+{
+    static v8::Persistent<v8::String> Dims;
+    static v8::Persistent<v8::String> Begin;
+    static v8::Persistent<v8::String> End;
+    static v8::Persistent<v8::String> Step;
+    static v8::Persistent<v8::String> IsGFor;
+    static v8::Persistent<v8::String> Imag;
+    static v8::Persistent<v8::String> Real;
+    static v8::Persistent<v8::String> Elements;
+    static v8::Persistent<v8::String> Ndims;
+    static v8::Persistent<v8::String> NDims;
 
-void InitSymbols(v8::Handle<v8::Object> exports);
+    static void Init();
+};
 
 #endif // FIRE_JS_SYMBOLS_H

@@ -20,6 +20,7 @@ limitations under the License.
 #include "guard.h"
 #include "worker.h"
 #include "errors.h"
+#include "symbols.h"
 
 using namespace v8;
 using namespace std;
@@ -481,18 +482,15 @@ NAN_METHOD(ArrayWrapper::Dims)
         {
             auto dims = pArray->dims();
             auto jsDims = NanNew<Object>();
-            jsDims->Set(NanNew("elements"), NanNew<Number>(dims.elements()));
-            jsDims->Set(NanNew("ndims"), NanNew<Number>(dims.ndims()));
-            jsDims->Set(NanNew("dim0"), NanNew<Number>(dims[0]));
-            jsDims->Set(NanNew("dim1"), NanNew<Number>(dims[1]));
-            jsDims->Set(NanNew("dim2"), NanNew<Number>(dims[2]));
-            jsDims->Set(NanNew("dim3"), NanNew<Number>(dims[3]));
+            jsDims->Set(NanNew(Symbols::Elements), NanNew<Number>(dims.elements()));
+            jsDims->Set(NanNew(Symbols::Ndims), NanNew<Number>(dims.ndims()));
+            jsDims->Set(NanNew(Symbols::NDims), NanNew<Number>(dims.ndims()));
             auto pDims = NanNew<Array>(4);
             pDims->Set(0, NanNew<Number>(dims[0]));
             pDims->Set(1, NanNew<Number>(dims[1]));
             pDims->Set(2, NanNew<Number>(dims[2]));
             pDims->Set(3, NanNew<Number>(dims[3]));
-            jsDims->Set(NanNew("dims"), pDims);
+            jsDims->Set(NanNew(Symbols::Dims), pDims);
 
             NanReturnValue(jsDims);
         }

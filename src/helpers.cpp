@@ -138,7 +138,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     else
     {
-        auto member = obj->Get(NanNew(DimsSymbol)); // TODO: Create symbol table on init
+        auto member = obj->Get(NanNew(Symbols::Dims));
         if (member->IsArray())
         {
             dims = member.As<Array>();
@@ -182,10 +182,10 @@ af::dim4 ToDim4(v8::Local<v8::Value> value)
 
 af::seq ToSeq(v8::Local<v8::Object> obj)
 {
-    auto begin = obj->Get(NanNew("begin")); // TODO: Create symbol table on init
-    auto end = obj->Get(NanNew("end")); // TODO: Create symbol table on init
-    auto step = obj->Get(NanNew("step")); // TODO: Create symbol table on init
-    auto isGFor = obj->Get(NanNew("isGFor")); // TODO: Create symbol table on init
+    auto begin = obj->Get(NanNew(Symbols::Begin));
+    auto end = obj->Get(NanNew(Symbols::End));
+    auto step = obj->Get(NanNew(Symbols::Step));
+    auto isGFor = obj->Get(NanNew(Symbols::IsGFor));
     if (begin->IsNumber() && begin->IsNumber())
     {
         double stepValue = 1;
@@ -248,8 +248,8 @@ af::index ToIndex(v8::Local<v8::Value> value)
 
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
 {
-    auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
-    auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
+    auto imag = obj->Get(NanNew(Symbols::Imag));
+    auto real = obj->Get(NanNew(Symbols::Real));
     if (imag->IsNumber() && real->IsNumber())
     {
         return { real->NumberValue(), imag->NumberValue() };
@@ -268,8 +268,8 @@ af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
 
 af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
 {
-    auto imag = obj->Get(NanNew("imag")); // TODO: Create symbol table on init
-    auto real = obj->Get(NanNew("real")); // TODO: Create symbol table on init
+    auto imag = obj->Get(NanNew(Symbols::Imag));
+    auto real = obj->Get(NanNew(Symbols::Real));
     if (imag->IsNumber() && real->IsNumber())
     {
         return { (float)real->NumberValue(), (float)imag->NumberValue() };

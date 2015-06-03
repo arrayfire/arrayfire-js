@@ -21,7 +21,27 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-void InitSymbols(v8::Handle<v8::Object> exports)
+Persistent<String> Symbols::Dims;
+Persistent<String> Symbols::Begin;
+Persistent<String> Symbols::End;
+Persistent<String> Symbols::Step;
+Persistent<String> Symbols::IsGFor;
+Persistent<String> Symbols::Imag;
+Persistent<String> Symbols::Real;
+Persistent<String> Symbols::Elements;
+Persistent<String> Symbols::Ndims;
+Persistent<String> Symbols::NDims;
+
+void Symbols::Init()
 {
-    NanAssignPersistent(DimsSymbol, NanNew("dims"));
+    NanAssignPersistent(Dims, NanNew("dims"));
+    NanAssignPersistent(Begin, NanNew("begin"));
+    NanAssignPersistent(End, NanNew("end"));
+    NanAssignPersistent(Step, NanNew("step"));
+    NanAssignPersistent(IsGFor, NanNew("IsGFor"));
+    NanAssignPersistent(Imag, NanNew("imag"));
+    NanAssignPersistent(Real, NanNew("real"));
+    NanAssignPersistent(Elements, NanNew("elements"));
+    NanAssignPersistent(Ndims, NanNew("ndims"));
+    NanAssignPersistent(NDims, NanNew("nDims"));
 }

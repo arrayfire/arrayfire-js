@@ -31,7 +31,7 @@ using namespace std;
 
 void Init(v8::Handle<v8::Object> exports)
 {
-    InitSymbols(exports);
+    Symbols::Init();
     InitDevice(exports);
     ArrayWrapper::Init(exports);
     InitCreateArray(exports);

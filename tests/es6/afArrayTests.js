@@ -1,5 +1,5 @@
 /*
-Copyright 2015 Gábor Mezõ aka unbornchikken
+Copyright 2015 Gï¿½bor Mezï¿½ aka unbornchikken
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,10 +64,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10);
                 assert(dims.ndims === 1);
-                assert(dims.dim0 === 10);
-                assert(dims.dim1 === 1);
-                assert(dims.dim2 === 1);
-                assert(dims.dim3 === 1);
+                assert(dims.dims[0] === 10);
+                assert(dims.dims[1] === 1);
+                assert(dims.dims[2] === 1);
+                assert(dims.dims[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === true);
@@ -98,10 +98,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20);
                 assert(dims.ndims === 2);
-                assert(dims.dim0 === 10);
-                assert(dims.dim1 === 20);
-                assert(dims.dim2 === 1);
-                assert(dims.dim3 === 1);
+                assert(dims.dims[0] === 10);
+                assert(dims.dims[1] === 20);
+                assert(dims.dims[2] === 1);
+                assert(dims.dims[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
@@ -132,10 +132,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20 * 30);
                 assert(dims.ndims === 3);
-                assert(dims.dim0 === 10);
-                assert(dims.dim1 === 20);
-                assert(dims.dim2 === 30);
-                assert(dims.dim3 === 1);
+                assert(dims.dims[0] === 10);
+                assert(dims.dims[1] === 20);
+                assert(dims.dims[2] === 30);
+                assert(dims.dims[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
@@ -165,10 +165,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20 * 30 * 40);
                 assert(dims.ndims === 4);
-                assert(dims.dim0 === 10);
-                assert(dims.dim1 === 20);
-                assert(dims.dim2 === 30);
-                assert(dims.dim3 === 40);
+                assert(dims.dims[0] === 10);
+                assert(dims.dims[1] === 20);
+                assert(dims.dims[2] === 30);
+                assert(dims.dims[3] === 40);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
