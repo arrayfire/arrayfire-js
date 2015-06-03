@@ -1,6 +1,6 @@
 {
   "name": "fire-js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Fire.js - ArrayFire for Node.js platform",
   "dependencies": {
     "bindings": "*",

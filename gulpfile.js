@@ -1,7 +1,7 @@
 var gulp = require("gulp");
 var traceur = require("gulp-traceur");
 var gulpSequence = require("gulp-sequence");
-var spawn = require("child_process").spawn;
+var exec = require("child_process").exec;
 
 gulp.task("compile-test", function () {
     return gulp.src("tests/es6/**/*.js", {base: "tests/es6"})
@@ -20,7 +20,7 @@ gulp.task("compile", gulpSequence(["compile-test", "compile-lib"]));
 gulp.task("default", gulpSequence("compile"));
 
 gulp.task("npm-publish", function (done) {
-    spawn("npm", ["publish"], { stdio: "inherit" }).on("close", done);
+    exec("npm publish").on("close", done);
 });
 
 gulp.task("publish", gulpSequence("compile", "npm-publish"));
