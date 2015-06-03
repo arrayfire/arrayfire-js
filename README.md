@@ -1,4 +1,4 @@
-# Fire.js v0.0.5-PROTOTYPE
+# Fire.js v0.0.6-PROTOTYPE
 
 ## About
 
