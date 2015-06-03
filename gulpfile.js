@@ -20,7 +20,14 @@ gulp.task("compile", gulpSequence(["compile-test", "compile-lib"]));
 gulp.task("default", gulpSequence("compile"));
 
 gulp.task("npm-publish", function (done) {
-    exec("npm publish").on("close", done);
+    exec("npm publish").on("close", function(e) {
+        if (e) {
+            console.error("Cannot publish to the npm. Exit code: " + e + ".");
+        }
+        else {
+            done();
+        }
+    });
 });
 
 gulp.task("publish", gulpSequence("compile", "npm-publish"));
