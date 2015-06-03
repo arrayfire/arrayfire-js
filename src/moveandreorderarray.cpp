@@ -1,3 +1,19 @@
+/*
+Copyright 2015 Gábor Mező aka unbornchikken
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #include "ext.h"
 #include "moveandreorderarray.h"
 #include "helpers.h"
@@ -15,7 +31,7 @@ NAN_METHOD(Join)
 
     try
     {
-        ARGS_LEN(3);
+        ARGS_LEN(4);
 
         af::dtype dim = GetDTypeInfo(args[0]).first;
         af::array array1 = *ArrayWrapper::GetArrayAt(args, 1);
@@ -33,7 +49,7 @@ NAN_METHOD(F)\
     \
     try\
     {\
-        ARGS_LEN(2);\
+        ARGS_LEN(3);\
         \
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
         unsigned x, y, z, w;\
@@ -78,20 +94,7 @@ M_R_XYZW_F(Shift, shift, 0, 0, 0)
 
 M_R_XYZW_F(ModDims, moddims, 1, 1, 1)
 
-NAN_METHOD(Flat)
-{
-    NanScope();
-
-    try
-    {
-        ARGS_LEN(1);
-
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);
-
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::flat(array))); });
-    }
-    FIRE_CATCH
-}
+FIRE_ASYNC_METHOD_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {
@@ -99,7 +102,7 @@ NAN_METHOD(Flip)
 
     try
     {
-        ARGS_LEN(2);
+        ARGS_LEN(3);
 
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);
         af::dtype dim = GetDTypeInfo(args[1]).first;
@@ -115,7 +118,7 @@ NAN_METHOD(Transpose)
 
     try
     {
-        ARGS_LEN(1);
+        ARGS_LEN(2);
 
         af::array array = *ArrayWrapper::GetArrayAt(args, 0);
         bool conjugate = args.Length() != 1 ? args[1]->BooleanValue() : false;

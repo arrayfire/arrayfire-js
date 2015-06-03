@@ -2,6 +2,7 @@
   "name": "fire-js",
   "version": "0.0.5",
   "description": "Fire.js - ArrayFire for Node.js platform",
+  "license" : "Apache-2.0",
   "dependencies": {
     "bindings": "*",
     "cmake-js": "1.x",

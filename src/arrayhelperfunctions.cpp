@@ -1,3 +1,19 @@
+/*
+Copyright 2015 Gábor Mező aka unbornchikken
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #include "ext.h"
 #include "arrayhelperfunctions.h"
 #include "helpers.h"
@@ -9,25 +25,9 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-#define AHF_IS_SOMETHING(F, f)\
-NAN_METHOD(F)\
-{\
-    NanScope();\
-    \
-    try\
-    {\
-        ARGS_LEN(1);\
-        \
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::f(array))); });\
-    }\
-    FIRE_CATCH\
-}
-
-AHF_IS_SOMETHING(IsZero, iszero)
-AHF_IS_SOMETHING(IsInf, isInf)
-AHF_IS_SOMETHING(IsNaN, isNaN)
+FIRE_ASYNC_METHOD_ARR(IsZero, iszero)
+FIRE_ASYNC_METHOD_ARR(IsInf, isInf)
+FIRE_ASYNC_METHOD_ARR(IsNaN, isNaN)
 
 void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)
 {
