@@ -12,7 +12,7 @@ Fire.js - [ArrayFire](http://arrayfire.com/) for Node.js platform. It uses [CMak
 
 ## Install
 
-Before installing ArrayFire location of the installation directory have to be configured for CMake.js. There are two options:
+Before installing location of the ArrayFire installation directory have to be configured for CMake.js. There are two options:
 
 #### 1. Using [npm config](https://github.com/unbornchikken/cmake-js#npm-config-integration)
 
