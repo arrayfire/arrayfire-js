@@ -33,8 +33,10 @@ inline void _NanThrow(const char* what, const char* file, int line)
 }
 
 #define FIRE_THROW_ARG_IS_NOT_AN_OBJ() FIRE_THROW("Argument is not an object.");
-#define FIRE_THROW_ARG_IS_NOT_A_CPLX() FIRE_THROW("Argument is not a Complex object instance.");
-#define FIRE_THROW_ARG_IS_NOT_A_SEQ() FIRE_THROW("Argument is not a Seq object instance.");
+#define FIRE_THROW_ARG_IS_NOT_A_DIM4() FIRE_THROW("Argument is not a Dim4 object.");
+#define FIRE_THROW_ARG_IS_NOT_A_CPLX() FIRE_THROW("Argument is not a Complex object.");
+#define FIRE_THROW_ARG_IS_NOT_A_SEQ() FIRE_THROW("Argument is not a Seq object.");
+#define FIRE_THROW_ARG_IS_NOT_AN_INDEX() FIRE_THROW("Argument is not an Index.");
 
 #define FIRE_CATCH \
     catch(fire_error &ex) { return NanThrowError(ex.what()); } \

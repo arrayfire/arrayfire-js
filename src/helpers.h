@@ -23,6 +23,8 @@ af::seq ToSeq(v8::Local<v8::Object> obj);
 
 af::seq ToSeq(v8::Local<v8::Value> value);
 
+af::index ToIndex(v8::Local<v8::Value> value);
+
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj);
 
 af::af_cdouble  ToDComplex(v8::Local<v8::Value> value);

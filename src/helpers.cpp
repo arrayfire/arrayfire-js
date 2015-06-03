@@ -1,6 +1,7 @@
 #include "ext.h"
 #include "helpers.h"
 #include "errors.h"
+#include "arraywrapper.h"
 
 using namespace std;
 using namespace v8;
@@ -127,7 +128,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
         }
         else
         {
-            FIRE_THROW("Argument is not a dim4 object.");
+            FIRE_THROW_ARG_IS_NOT_A_DIM4();
         }
     }
     int dim0 = 1;
@@ -167,12 +168,22 @@ af::seq ToSeq(v8::Local<v8::Object> obj)
     auto begin = obj->Get(NanNew("begin")); // TODO: Create symbol table on init
     auto end = obj->Get(NanNew("end")); // TODO: Create symbol table on init
     auto step = obj->Get(NanNew("step")); // TODO: Create symbol table on init
+    auto isGFor = obj->Get(NanNew("isGFor")); // TODO: Create symbol table on init
     if (begin->IsNumber() && begin->IsNumber())
     {
         double stepValue = 1;
         if (step->IsNumber())
         {
             stepValue = step->NumberValue();
+        }
+        bool isGForValue = false;
+        if (isGFor->IsBoolean())
+        {
+            isGForValue = isGFor->BooleanValue();
+        }
+        if (isGForValue)
+        {
+            return move(af::seq(af::seq(begin->NumberValue(), end->NumberValue(), stepValue), isGForValue));
         }
         return move(af::seq(begin->NumberValue(), end->NumberValue(), stepValue));
     }
@@ -186,6 +197,36 @@ af::seq ToSeq(v8::Local<v8::Value> value)
         return ToSeq(value.As<Object>());
     }
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
+}
+
+af::index ToIndex(v8::Local<v8::Value> value)
+{
+    if (value->IsNumber())
+    {
+        return af::index(value->Uint32Value());
+    }
+    if (value->IsObject())
+    {
+        auto pArray = ArrayWrapper::TryGetArray(value);
+        if (pArray)
+        {
+            return af::index(*pArray);
+        }
+        return ToSeq(value.As<Object>());
+    }
+    if (value->IsString())
+    {
+        String::Utf8Value str(value);
+        if (strcmp(*str, "span") == 0)
+        {
+            return af::span();
+        }
+    }
+    if (value->IsNull())
+    {
+        return af::span();
+    }
+    FIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
 
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)

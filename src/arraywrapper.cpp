@@ -358,7 +358,7 @@ NAN_METHOD(ArrayWrapper::Host)
 
     try
     {
-        ARGS_LEN(1);
+        ARGS_LEN(1)
 
         char* buffData;
         auto pArray = GetArray(args.This());
@@ -490,7 +490,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->numdims()));
+        NanReturnValue(New(GetArray(args.This())->numdims()));
     }
     FIRE_CATCH
 }
@@ -514,11 +514,9 @@ NAN_METHOD(ArrayWrapper::Copy)
     try
     {
         Guard();
-        auto result = New(new af::array(move(GetArray(args.This())->copy())));
-
-        NanReturnValue(result);
+        NanReturnValue(New(new af::array(move(GetArray(args.This())->copy()))));
     }
-    FIRE_CATCH;
+    FIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsEmpty)
@@ -528,7 +526,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isempty()));
+        NanReturnValue(New(GetArray(args.This())->isempty()));
     }
     FIRE_CATCH
 }
@@ -540,7 +538,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
+        NanReturnValue(New(GetArray(args.This())->isscalar()));
     }
     FIRE_CATCH
 }
@@ -552,7 +550,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isvector()));
+        NanReturnValue(New(GetArray(args.This())->isvector()));
     }
     FIRE_CATCH
 }
@@ -564,7 +562,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isrow()));
+        NanReturnValue(New(GetArray(args.This())->isrow()));
     }
     FIRE_CATCH
 }
@@ -576,7 +574,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
+        NanReturnValue(New(GetArray(args.This())->iscolumn()));
     }
     FIRE_CATCH
 }
@@ -588,7 +586,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
+        NanReturnValue(New(GetArray(args.This())->iscomplex()));
     }
     FIRE_CATCH
 }
@@ -600,7 +598,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isreal()));
+        NanReturnValue(New(GetArray(args.This())->isreal()));
     }
     FIRE_CATCH
 }
@@ -612,7 +610,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
+        NanReturnValue(New(GetArray(args.This())->isdouble()));
     }
     FIRE_CATCH
 }
@@ -624,7 +622,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->issingle()));
+        NanReturnValue(New(GetArray(args.This())->issingle()));
     }
     FIRE_CATCH
 }
@@ -636,7 +634,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
+        NanReturnValue(New(GetArray(args.This())->isrealfloating()));
     }
     FIRE_CATCH
 }
@@ -648,7 +646,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
+        NanReturnValue(New(GetArray(args.This())->isfloating()));
     }
     FIRE_CATCH
 }
@@ -660,7 +658,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
+        NanReturnValue(New(GetArray(args.This())->isinteger()));
     }
     FIRE_CATCH
 }
@@ -672,7 +670,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
+        NanReturnValue(New(GetArray(args.This())->type() == b8));
     }
     FIRE_CATCH
 }
@@ -699,127 +697,23 @@ NAN_METHOD(ArrayWrapper::At)
     {
         Guard();
 
-        ARGS_LEN(1);
+        ARGS_LEN(1)
 
-        auto s = [&](int idx)
+        if (args.Length() < 2)
         {
-            return ToSeq(args[idx]);
-        };
-
-        auto n = [&](int idx)
-        {
-            return args[idx]->Int32Value();
-        };
-
-        auto aIdx = TryGetArrayAt(args, 0);
-        if (aIdx)
-        {
-            NanReturnValue(New(new af::array((*GetArray(args.This()))(*aIdx))));
+            NanReturnValue(New(new af::array(GetArray(args.This())->operator()(ToIndex(args[0])))));
         }
-        else if (args.Length() == 1)
+        else if (args.Length() < 3)
         {
-            if (args[0]->IsNumber())
-            {
-                NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0)))));
-            }
-            else
-            {
-                NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0)))));
-            }
+            NanReturnValue(New(new af::array(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1])))));
         }
-        else if (args.Length() == 2)
+        else if (args.Length() < 4)
         {
-            if (args[0]->IsNumber())
-            {
-                if (args[0]->IsNumber())
-                {
-                    // n n
-                    NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1)))));
-                }
-                else
-                {
-                    // n s
-                    NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1)))));
-                }
-            }
-            else
-            {
-                if (args[0]->IsNumber())
-                {
-                    // s n
-                    NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1)))));
-                }
-                else
-                {
-                    // s s
-                    NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1)))));
-                }
-            }
+            NanReturnValue(New(new af::array(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2])))));
         }
-        else if (args.Length() == 3)
+        else
         {
-            if (args[0]->IsNumber())
-            {
-                if (args[0]->IsNumber())
-                {
-                    if (args[0]->IsNumber())
-                    {
-                        // n n n
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1), n(2)))));
-                    }
-                    else
-                    {
-                        // n n s
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), n(1), s(2)))));
-                    }
-                }
-                else
-                {
-                    if (args[0]->IsNumber())
-                    {
-                        // n s n
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), af::seq(n(2), n(2))))));
-                    }
-                    else
-                    {
-                        // n s s
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(n(0), s(1), s(2)))));
-                    }
-                }
-            }
-            else
-            {
-                if (args[0]->IsNumber())
-                {
-                    if (args[0]->IsNumber())
-                    {
-                        // s n n
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1), n(2)))));
-                    }
-                    else
-                    {
-                        // s n s
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), n(1), s(2)))));
-                    }
-                }
-                else
-                {
-                    if (args[0]->IsNumber())
-                    {
-                        // s s n
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1), n(2)))));
-                    }
-                    else
-                    {
-                        // s s s
-                        NanReturnValue(New(new af::array((*GetArray(args.This()))(s(0), s(1), s(2)))));
-                    }
-                }
-            }
-        }
-        else if (args.Length() == 4)
-        {
-            FIRE_THROW("Not supported since API's gonna be changed in RTM 3.0.");
+            NanReturnValue(New(new af::array(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2]), ToIndex(args[2])))));
         }
     }
     FIRE_CATCH
@@ -831,7 +725,7 @@ NAN_METHOD(ArrayWrapper::F)\
     NanScope();\
     try\
     {\
-        ARGS_LEN(1);\
+        ARGS_LEN(1)\
         NanReturnValue(New(new af::array(GetArray(args.This())->f(args[0]->Int32Value()))));\
     }\
     FIRE_CATCH\
@@ -862,7 +756,7 @@ NAN_METHOD(ArrayWrapper::As)
     NanScope();
     try
     {
-        ARGS_LEN(1);
+        ARGS_LEN(1)
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
         NanReturnValue(New(new af::array(GetArray(args.This())->as(type))));
     }
@@ -877,7 +771,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
-        ARGS_LEN(1);\
+        ARGS_LEN(1)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
         if (pOtherArray)\
@@ -951,7 +845,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
-        ARGS_LEN(1);\
+        ARGS_LEN(1)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
