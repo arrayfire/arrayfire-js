@@ -1,4 +1,4 @@
-# Fire.js v0.0.6-PROTOTYPE
+# Fire.js v0.8.0
 
 ## About
 
@@ -63,6 +63,7 @@ Port of the PI calculator from [Array Fire documentation](http://www.arrayfire.c
 // sample 40 million points on the GPU
 array x = randu(20e6), y = randu(20e6);
 array dist = sqrt(x * x + y * y);
+
 // pi is ratio of how many fell in the unit circle
 float num_inside = sum<float>(dist < 1);
 float pi = 4.0 * num_inside / 20e6;
@@ -71,9 +72,13 @@ af_print(pi);
 
 **JavaScript**
 
-*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of Array Fire methods too, there is no synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of Array Fire methods too, there is no and never be synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
 
 ```js
+const numberOfPoints = 20000000;
+
+// ...
+
 let x = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
 let y = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
 let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
@@ -83,7 +88,7 @@ let piVal = (4.0 *  num_inside) / numberOfPoints;
 console.log(`PI = ${piVal}`);
 ```
 
-It's included in the examples folder. To run on:
+It's included in the [examples folder](https://github.com/unbornchikken/fire-js/blob/master/examples/es6/bechmarks/pi.js). To run on:
 
 - io.js, enter: `iojs examples/es6/bechmarks/pi.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
