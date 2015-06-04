@@ -1,7 +1,6 @@
 "use strict";
 let Bluebird = require("bluebird");
 let async = Bluebird.coroutine;
-let asyncSupport = Bluebird.promisifyAll;
 let fire = require("../../..");
 let common = require("../common");
 
