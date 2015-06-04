@@ -81,30 +81,30 @@ file(GLOB TRAN_SOURCE_FILES
 
 # Common
 
-add_library(${PROJECT_NAME}_Common STATIC ${COMMON_SOURCE_FILES})
+add_library(${PROJECT_NAME}_Common STATIC "${COMMON_SOURCE_FILES}")
 
 # CPU
 
-add_library(${PROJECT_NAME}_CPU SHARED ${TRAN_SOURCE_FILES};src/init/init_CPU.cpp)
+add_library(${PROJECT_NAME}_CPU SHARED "${TRAN_SOURCE_FILES};src/init/init_CPU.cpp")
 
 set_target_properties(${PROJECT_NAME}_CPU PROPERTIES COMPILE_FLAGS -DCPU)
 
 set_target_properties(${PROJECT_NAME}_CPU PROPERTIES PREFIX "" SUFFIX ".node")
 
-target_link_libraries(${PROJECT_NAME}_CPU ${CMAKE_JS_LIB};${ArrayFire_CPU_LIBRARIES};${PROJECT_NAME}_Common)
+target_link_libraries(${PROJECT_NAME}_CPU "${CMAKE_JS_LIB};${ArrayFire_CPU_LIBRARIES};${PROJECT_NAME}_Common")
 
 # OpenCL
 
-add_library(${PROJECT_NAME}_OpenCL SHARED ${TRAN_SOURCE_FILES};src/init/init_OpenCL.cpp)
+add_library(${PROJECT_NAME}_OpenCL SHARED "${TRAN_SOURCE_FILES};src/init/init_OpenCL.cpp")
 
 set_target_properties(${PROJECT_NAME}_OpenCL PROPERTIES PREFIX "" SUFFIX ".node")
 
-target_link_libraries(${PROJECT_NAME}_OpenCL ${CMAKE_JS_LIB};${ArrayFire_OpenCL_LIBRARIES};${PROJECT_NAME}_Common)
+target_link_libraries(${PROJECT_NAME}_OpenCL "${CMAKE_JS_LIB};${ArrayFire_OpenCL_LIBRARIES};${PROJECT_NAME}_Common")
 
 # CUDA
 
-add_library(${PROJECT_NAME}_CUDA SHARED ${TRAN_SOURCE_FILES};src/init/init_CUDA.cpp)
+add_library(${PROJECT_NAME}_CUDA SHARED "${TRAN_SOURCE_FILES};src/init/init_CUDA.cpp")
 
 set_target_properties(${PROJECT_NAME}_CUDA PROPERTIES PREFIX "" SUFFIX ".node")
 
-target_link_libraries(${PROJECT_NAME}_CUDA ${CMAKE_JS_LIB};${ArrayFire_CUDA_LIBRARIES};${PROJECT_NAME}_Common)
+target_link_libraries(${PROJECT_NAME}_CUDA "${CMAKE_JS_LIB};${ArrayFire_CUDA_LIBRARIES};${PROJECT_NAME}_Common")
