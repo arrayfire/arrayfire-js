@@ -72,7 +72,7 @@ af_print(pi);
 
 **JavaScript**
 
-*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of ArrayFire methods too, there is no and never be synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of ArrayFire methods too, there is no and never be synchronous counterparts (I suggest use [ES6 generators](http://unbornchikken.github.io/fire-js/#how-to-use-es6-generators) instead of callback hell or even instead of bare promises).*
 
 ```js
 const numberOfPoints = 20000000;

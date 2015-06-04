@@ -25,7 +25,7 @@ fire.srqt(input, function(err, output) {
 
 Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. First, install a good promise library. I use [Bluebird](https://www.npmjs.com/package/bluebird).
 
-It can promisify all functions with traditions callbacks:
+It can promisify all functions with node style callbacks:
 
 ```js
 let Bluebird = require("bluebird");
