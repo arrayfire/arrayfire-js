@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "bindings": "*",
-    "cmake-js": "1.x",
+    "cmake-js": "*",
     "lodash": "*",
     "nan": "*",
     "traceur-runtime": "*"
@@ -18,11 +18,11 @@
     "better-assert": "*",
     "bluebird": "*",
     "gulp": "*",
-    "gulp-sequence": "^0.3.2",
+    "gulp-sequence": "*",
     "gulp-traceur": "*",
     "merge2": "*",
     "mocha": "*",
-    "performance-now": "^0.2.0",
+    "performance-now": "*",
     "ref": "*",
     "traceur": "*"
   }

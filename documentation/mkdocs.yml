@@ -1,0 +1,5 @@
+site_name: Fire.js Documentation
+pages:
+- Home: index.md
+- Functions to manage devices: devices.md
+theme: mkdocs
