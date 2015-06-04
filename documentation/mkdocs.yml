@@ -1,5 +1,9 @@
 site_name: Fire.js Documentation
 pages:
 - Home: index.md
-- Functions to manage devices: devices.md
+- Classes:
+  - AFArray: afArray.md
+- Functions:
+  - Managing Devices: devices.md
 theme: mkdocs
+repo_url: https://github.com/unbornchikken/fire-js
