@@ -4,7 +4,7 @@ let async = Bluebird.coroutine;
 let asyncSupport = Bluebird.promisifyAll;
 let fire = require("../../..");
 let util = require("util");
-var now = require("performance-now");
+let now = require("performance-now");
 
 let runOnDevices = async(function*(platformID, f) {
     let fireOfToolkit = fire(platformID);
