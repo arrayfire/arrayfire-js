@@ -161,7 +161,7 @@
 </code></pre>
 
 <p>Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. First, install a good promise library. I use <a href="https://www.npmjs.com/package/bluebird">Bluebird</a>.</p>
-<p>It can promisify all functions with traditions callbacks:</p>
+<p>It can promisify all functions with node style callbacks:</p>
 <pre><code class="js">let Bluebird = require(&quot;bluebird&quot;);
 
 let fire = Bluebird.promisifyAll(require(&quot;fire-js&quot;)(&quot;OpenCL&quot;));
@@ -226,5 +226,5 @@ let f = async(function*() {
 
 <!--
 MkDocs version : 0.13.3
-Build Date UTC : 2015-06-04 14:49:33.690000
+Build Date UTC : 2015-06-04 19:18:15.742929
 -->
