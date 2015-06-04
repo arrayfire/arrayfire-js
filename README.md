@@ -1,4 +1,4 @@
-# Fire.js v0.8.0
+# Fire.js
 
 ## About
 
