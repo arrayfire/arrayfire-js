@@ -2,7 +2,7 @@
   "name": "fire-js",
   "version": "0.0.6",
   "description": "Fire.js - ArrayFire for Node.js platform",
-  "license" : "Apache-2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "bindings": "*",
     "cmake-js": "1.x",
@@ -22,6 +22,7 @@
     "gulp-traceur": "*",
     "merge2": "*",
     "mocha": "*",
+    "performance-now": "^0.2.0",
     "ref": "*",
     "traceur": "*"
   }

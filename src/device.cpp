@@ -20,6 +20,8 @@ limitations under the License.
 #include "worker.h"
 #include "helpers.h"
 #include "errors.h"
+#include "symbols.h"
+
 using namespace v8;
 using namespace std;
 using namespace node;
@@ -85,19 +87,19 @@ NAN_METHOD(DeviceInfo)
         auto info = NanNew<Object>();
 
 #ifdef CPU
-        info->Set(NanNew("name"), NanNew("CPU"));
-        info->Set(NanNew("platform"), NanNew("CPU"));
-        info->Set(NanNew("toolkit"), NanNew("CPU"));
-        info->Set(NanNew("compute"), NanNew("CPU"));
-        info->Set(NanNew("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        info->Set(NanNew(Symbols::Name), NanNew(Symbols::Cpu));
+        info->Set(NanNew(Symbols::Platform), NanNew(Symbols::Cpu));
+        info->Set(NanNew(Symbols::Toolkit), NanNew(Symbols::Cpu));
+        info->Set(NanNew(Symbols::Compute), NanNew(Symbols::Cpu));
+        info->Set(NanNew(Symbols::IsDoubleAvailable), NanNew<Boolean>(IsDoubleAvailable));
 #else
         char name[256], platform[256], toolkit[256], compute[256];
         af::deviceInfo(name, platform, toolkit, compute);
-        info->Set(NanNew("name"), NanNew<String>(name));
-        info->Set(NanNew("platform"), NanNew<String>(platform));
-        info->Set(NanNew("toolkit"), NanNew<String>(toolkit));
-        info->Set(NanNew("compute"), NanNew<String>(compute));
-        info->Set(NanNew("isDoubleAvailable"), NanNew<Boolean>(IsDoubleAvailable));
+        info->Set(NanNew(Symbols::Name), NanNew<String>(name));
+        info->Set(NanNew(Symbols::Platform), NanNew<String>(platform));
+        info->Set(NanNew(Symbols::Toolkit), NanNew<String>(toolkit));
+        info->Set(NanNew(Symbols::Compute), NanNew<String>(compute));
+        info->Set(NanNew(Symbols::IsDoubleAvailable), NanNew<Boolean>(IsDoubleAvailable));
 #endif
 
         NanReturnValue(info);

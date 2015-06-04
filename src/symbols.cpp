@@ -31,6 +31,12 @@ Persistent<String> Symbols::Real;
 Persistent<String> Symbols::Elements;
 Persistent<String> Symbols::Ndims;
 Persistent<String> Symbols::NDims;
+Persistent<String> Symbols::Name;
+Persistent<String> Symbols::Platform;
+Persistent<String> Symbols::Toolkit;
+Persistent<String> Symbols::Compute;
+Persistent<String> Symbols::IsDoubleAvailable;
+Persistent<String> Symbols::Cpu;
 
 void Symbols::Init()
 {
@@ -44,4 +50,10 @@ void Symbols::Init()
     NanAssignPersistent(Elements, NanNew("elements"));
     NanAssignPersistent(Ndims, NanNew("ndims"));
     NanAssignPersistent(NDims, NanNew("nDims"));
+    NanAssignPersistent(Name, NanNew("name"));
+    NanAssignPersistent(Platform, NanNew("platform"));
+    NanAssignPersistent(Toolkit, NanNew("toolkit"));
+    NanAssignPersistent(Compute, NanNew("compute"));
+    NanAssignPersistent(IsDoubleAvailable, NanNew("isDoubleAvailable"));
+    NanAssignPersistent(Cpu, NanNew("CPU"));
 }

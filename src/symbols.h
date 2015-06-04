@@ -31,6 +31,12 @@ struct Symbols
     static v8::Persistent<v8::String> Elements;
     static v8::Persistent<v8::String> Ndims;
     static v8::Persistent<v8::String> NDims;
+    static v8::Persistent<v8::String> Name;
+    static v8::Persistent<v8::String> Platform;
+    static v8::Persistent<v8::String> Toolkit;
+    static v8::Persistent<v8::String> Compute;
+    static v8::Persistent<v8::String> IsDoubleAvailable;
+    static v8::Persistent<v8::String> Cpu;
 
     static void Init();
 };

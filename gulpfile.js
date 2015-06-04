@@ -31,7 +31,13 @@ gulp.task("compile-lib", function () {
         .pipe(gulp.dest("lib/es5"));
 });
 
-gulp.task("compile", gulpSequence(["compile-test", "compile-lib"]));
+gulp.task("compile-examples", function () {
+    return gulp.src("examples/es6/**/*.js", {base: "examples/es6"})
+        .pipe(traceur({sourceMaps: "inline"}))
+        .pipe(gulp.dest("examples/es5"));
+});
+
+gulp.task("compile", gulpSequence(["compile-test", "compile-lib", "compile-examples"]));
 
 gulp.task("default", gulpSequence("compile"));
 

@@ -14,21 +14,21 @@ Fire.js - [ArrayFire](http://arrayfire.com/) for Node.js platform. It uses [CMak
 
 Before installing location of the ArrayFire installation directory have to be configured for CMake.js. There are two options:
 
-#### 1. Using [npm config](https://github.com/unbornchikken/cmake-js#npm-config-integration)
+**1. Using [npm config](https://github.com/unbornchikken/cmake-js#npm-config-integration)**
 
-#### for current user:
+**for current user:**
 
 ```
 npm config set cmake_af_path "path_to_arrayfire_installation_directory"
 ```
 
-#### for all users (global):
+**for all users (global)**
 
 ```
 npm config set cmake_af_path "path_to_arrayfire_installation_directory" --global
 ```
 
-#### 2. Setting AF_PATH environment variable
+**2. Setting AF_PATH environment variable**
 
 ```
 AF_PATH="path_to_arrayfire_installation_directory"
@@ -52,6 +52,42 @@ var fire = require("fire-js")("OpenCL");
 // CUDA
 var fire = require("fire-js")("CUDA");
 ```
+
+### Small Example
+
+Port of the PI calculator from [Array Fire documentation](http://www.arrayfire.com/docs/index.htm):
+
+**C++**
+
+```C++
+// sample 40 million points on the GPU
+array x = randu(20e6), y = randu(20e6);
+array dist = sqrt(x * x + y * y);
+// pi is ratio of how many fell in the unit circle
+float num_inside = sum<float>(dist < 1);
+float pi = 4.0 * num_inside / 20e6;
+af_print(pi);
+```
+
+**JavaScript**
+
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of Array Fire methods too, there is no synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
+
+```js
+let x = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
+let y = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
+let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
+let num_inside = yield fire.sumAsync(dist.lt(1));
+let piVal = (4.0 *  num_inside) / numberOfPoints;
+
+console.log(\`PI = ${piVal}\`);
+```
+
+It's included in the examples folder. To run on:
+
+- io.js, enter: `iojs examples/es6/bechmarks/pi.js`
+- Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
+- Node.js below 0.12, enter: `node examples/es5/bechmarks/pi.js`
 
 ## Docs
 
