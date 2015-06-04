@@ -96,7 +96,7 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 
 ## Docs
 
-Don't have yet, sorry. See the unit tests they are pretty obvious.
+[In progress ...](http://unbornchikken.github.io/fire-js/) I'll try to put it together soon.
 
 ## License
 
