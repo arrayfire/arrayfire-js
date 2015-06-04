@@ -55,7 +55,7 @@ var fire = require("fire-js")("CUDA");
 
 ### Small Example
 
-Port of the PI calculator from [Array Fire documentation](http://www.arrayfire.com/docs/index.htm):
+Port of the PI calculator from [ArrayFire documentation](http://www.arrayfire.com/docs/index.htm):
 
 **C++**
 
@@ -72,7 +72,7 @@ af_print(pi);
 
 **JavaScript**
 
-*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of Array Fire methods too, there is no and never be synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so Fire.js is strictly asynchronous on this type of ArrayFire methods too, there is no and never be synchronous counterparts (I suggest use ES6 generators instead of callback hell or even instead of bare promises).*
 
 ```js
 const numberOfPoints = 20000000;

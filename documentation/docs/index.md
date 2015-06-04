@@ -1,4 +1,4 @@
-# About Array Fire
+# About ArrayFire
 
 *"ArrayFire is a high performance software library for parallel computing with an easy-to-use API. Its array based function set makes parallel programming more accessible."*
 
@@ -6,11 +6,11 @@ You can read its introduction [int its documentation's index page](http://www.ar
 
 # About Fire.js
 
-Fire.js is the Node.js bindings for Array Fire. Install instructions can be found in the [project's readme at Github](https://github.com/unbornchikken/fire-js#install).
+Fire.js is the Node.js bindings for ArrayFire. Install instructions can be found in the [project's readme at Github](https://github.com/unbornchikken/fire-js#install).
 
 ## (How To) Use ES6 Generators
 
-The original Array Fire library contains a lot of functions that blocks. They are often run at O(n) atleast on CPU backend, or do some blocking initialization work on first call on OpenCL/CUDA platforms. Because of this those functions are wrapped asynchronously, and can be called with traditional Node.js callbacks, eg.:
+The original ArrayFire library contains a lot of functions that blocks. They are often run at O(n) atleast on CPU backend, or do some blocking initialization work on first call on OpenCL/CUDA platforms. Because of this those functions are wrapped asynchronously, and can be called with traditional Node.js callbacks, eg.:
 
 ```js
 fire.srqt(input, function(err, output) {
