@@ -80,7 +80,7 @@ let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
 let num_inside = yield fire.sumAsync(dist.lt(1));
 let piVal = (4.0 *  num_inside) / numberOfPoints;
 
-console.log(\`PI = ${piVal}\`);
+console.log(`PI = ${piVal}`);
 ```
 
 It's included in the examples folder. To run on:
