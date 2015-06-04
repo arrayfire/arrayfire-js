@@ -1,0 +1,44 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Head 1\n\n\nHead 2\n\n\nHead 3", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#head-1", 
+            "text": "", 
+            "title": "Head 1"
+        }, 
+        {
+            "location": "/#head-2", 
+            "text": "", 
+            "title": "Head 2"
+        }, 
+        {
+            "location": "/#head-3", 
+            "text": "", 
+            "title": "Head 3"
+        }, 
+        {
+            "location": "/devices/", 
+            "text": "Head 1\n\n\nHead 2\n\n\nHead 3", 
+            "title": "Functions to manage devices"
+        }, 
+        {
+            "location": "/devices/#head-1", 
+            "text": "", 
+            "title": "Head 1"
+        }, 
+        {
+            "location": "/devices/#head-2", 
+            "text": "", 
+            "title": "Head 2"
+        }, 
+        {
+            "location": "/devices/#head-3", 
+            "text": "", 
+            "title": "Head 3"
+        }
+    ]
+}
