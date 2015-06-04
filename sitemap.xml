@@ -10,11 +10,23 @@
     
 
     
+        
+    <url>
+     <loc>None/afArray/</loc>
+     <lastmod>2015-06-04</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
     <url>
      <loc>None/devices/</loc>
      <lastmod>2015-06-04</lastmod>
      <changefreq>daily</changefreq>
     </url>
+        
     
 
 </urlset>

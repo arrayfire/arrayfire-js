@@ -59,8 +59,32 @@
                 
                 
                 
-                    <li >
-                        <a href="devices/">Functions to manage devices</a>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="afArray/">AFArray</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Functions <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="devices/">Managing Devices</a>
+</li>
+
+                        
+                        </ul>
                     </li>
                 
                 
@@ -80,11 +104,20 @@
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="devices/">
+                        <a rel="prev" href="afArray/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
                 
+                
+                    <li>
+                        <a href="https://github.com/unbornchikken/fire-js">
+                            
+                                <i class="fa fa-github"></i>
+                            
+                            GitHub
+                        </a>
+                    </li>
                 
             </ul>
         </div>
@@ -96,22 +129,57 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#head-1">Head 1</a></li>
+        <li class="main active"><a href="#about-array-fire">About Array Fire</a></li>
         
     
-        <li class="main "><a href="#head-2">Head 2</a></li>
+        <li class="main "><a href="#about-firejs">About Fire.js</a></li>
         
-    
-        <li class="main "><a href="#head-3">Head 3</a></li>
+            <li><a href="#how-to-use-es6-generators">(How To) Use ES6 Generators</a></li>
+        
+            <li><a href="#simple-example">Simple Example</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="head-1">Head 1</h1>
-<h1 id="head-2">Head 2</h1>
-<h1 id="head-3">Head 3</h1></div>
+<h1 id="about-array-fire">About Array Fire</h1>
+<p><em>"ArrayFire is a high performance software library for parallel computing with an easy-to-use API. Its array based function set makes parallel programming more accessible."</em></p>
+<p>You can read its introduction <a href="http://www.arrayfire.com/docs/index.htm">int its documentation's index page</a>. It's basically a math accelerator C++ library supporting CPU and GPU based backends on Windows, Linux and Mac. And it's just <strong>awesome</strong>.</p>
+<h1 id="about-firejs">About Fire.js</h1>
+<p>Fire.js is the Node.js bindings for Array Fire. Install instructions can be found in the <a href="https://github.com/unbornchikken/fire-js#install">project's readme at Github</a>.</p>
+<h2 id="how-to-use-es6-generators">(How To) Use ES6 Generators</h2>
+<p>The original Array Fire library contains a lot of functions that blocks. They are often run at O(n) atleast on CPU backend, or do some blocking initialization work on first call on OpenCL/CUDA platforms. Because of this those functions are wrapped asynchronously, and can be called with traditional Node.js callbacks, eg.:</p>
+<pre><code class="js">fire.srqt(input, function(err, output) {
+    if (err) {
+        // crash :)
+    }
+    else {
+        // continue work ..
+    }
+});
+</code></pre>
+
+<p>Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. First, install a good promise library. I use <a href="https://www.npmjs.com/package/bluebird">Bluebird</a>.</p>
+<p>It can promisify all functions with traditions callbacks:</p>
+<pre><code class="js">let Bluebird = require(&quot;bluebird&quot;);
+
+let fire = Bluebird.promisifyAll(require(&quot;fire-js&quot;)(&quot;OpenCL&quot;));
+</code></pre>
+
+<p>Wrap an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">ES6 generator function</a> by a coroutine, and you can yield promises from there:</p>
+<pre><code class="js">let async = Bluebird.coroutine;
+
+let f = async(function*() {
+    let output = yield fire.sqrtAsync(input);
+});
+</code></pre>
+
+<p>And voila, you can write asynchronous code that looks like synchronous. It's exactly the same thing those <a href="https://msdn.microsoft.com/en-us/library/hh191443.aspx">async/await features</a> that C# guys have!</p>
+<p>To run ES6 code you can use io.js that supports it inherently. Or use Node.js 0.12+ with --harmony flag. Or you can go with older Node.js versions with Gulp and Traceur modules.</p>
+<p>Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. Fire.js uses that method too. It has been developed in ES6, and uses <a href="https://github.com/unbornchikken/fire-js/blob/master/gulpfile.js">Gulp/Traceur</a> and <a href="https://github.com/unbornchikken/fire-js/blob/master/lib/index.js#L19">feature detection</a> to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.</p>
+<h2 id="simple-example">Simple Example</h2>
+<p>...</p></div>
             
         </div>
 
@@ -158,5 +226,5 @@
 
 <!--
 MkDocs version : 0.13.3
-Build Date UTC : 2015-06-04 13:53:04.532000
+Build Date UTC : 2015-06-04 14:47:59.149000
 -->
