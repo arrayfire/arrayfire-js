@@ -21,6 +21,7 @@ limitations under the License.
 #include <arrayfire.h>
 #include <nan.h>
 #include <complex>
+#include <functional>
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 

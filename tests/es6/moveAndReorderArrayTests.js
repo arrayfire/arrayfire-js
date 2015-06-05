@@ -27,7 +27,7 @@ let float = ref.types.float;
 function testPlatform (id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = Bluebird.promisifyAll(require("../..")(id));
+            let fire = require("../..")(id);
 
             describe("join", function () {
                 it("should be implemented", function() {

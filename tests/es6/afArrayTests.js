@@ -25,7 +25,7 @@ let async = Bluebird.coroutine;
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = Bluebird.promisifyAll(require("../..")(id));
+            let fire = require("../..")(id);
             let AFArray = fire.AFArray;
 
             it("should export AFArray constructor", function() {
@@ -38,6 +38,13 @@ function testPlatform(id) {
                 assert(array.bytes() === 0);
                 assert(array.elements() === 0);
                 assert(array.isempty());
+                assert(_.isFunction(array.host));
+                assert(_.isFunction(array.hostAsync));
+                assert(_.isUndefined(array.hostAsyncAsync));
+                assert(_.isFunction(array.hostSync));
+                assert(_.isUndefined(array.hostSyncAsync));
+                assert(_.isUndefined(array.hostSyncSync));
+                assert(_.isUndefined(array.hostAsyncSync));
             });
 
             it("should fail with one number argument", function() {
@@ -199,7 +206,7 @@ function testPlatform(id) {
                 verify4(array);
             });
 
-            it("should initialize from buffer, copyable, and readable", function(done) {
+            it("should initialize from buffer, copyable, and readable - asynchronously w/ generators", function(done) {
                 let f = async(function*() {
                     let int = ref.types.int;
                     const count = 10;
@@ -238,6 +245,44 @@ function testPlatform(id) {
                     }
                 });
                 f().nodeify(done);
+            });
+
+            it("should initialize from buffer, copyable, and readable - synchronously (blocking)", function() {
+                let int = ref.types.int;
+                const count = 10;
+                let buff = new Buffer(int.size * count);
+                for (let v = 0; v < count; v++) {
+                    int.set(buff, v * int.size, v * v);
+                }
+
+                assert(_.isFunction(AFArray.create));
+                assert(_.isFunction(AFArray.createSync));
+
+                let array = AFArray.createSync(count, fire.types.dtype.s32, buff);
+                assert(array.bytes() === count * int.size);
+                assert(array.type() === fire.types.dtype.s32);
+
+                let buff2 = new Buffer(int.size * count);
+                array.hostSync(buff2);
+                for (let v = 0; v < count; v++) {
+                    let v1 = int.get(buff, v * int.size);
+                    let v2 = int.get(buff2, v * int.size);
+                    assert(v1 === v2);
+                    assert(v1 === v * v);
+                }
+
+                let array2 = array.copy();
+                assert(array2 instanceof AFArray);
+                assert(array2.bytes() === array.bytes());
+                let buff3 = array2.hostSync();
+                assert(buff3 instanceof Buffer);
+                assert(buff3.length === int.size * count);
+                for (let v = 0; v < count; v++) {
+                    let v1 = int.get(buff, v * int.size);
+                    let v2 = int.get(buff3, v * int.size);
+                    assert(v1 === v2);
+                    assert(v1 === v * v);
+                }
             });
 
             it("should be tests for assignment operators", function() {

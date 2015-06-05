@@ -27,7 +27,7 @@ let float = ref.types.float;
 function testPlatform (id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = Bluebird.promisifyAll(require("../..")(id));
+            let fire = require("../..")(id);
 
             describe("randu", function () {
                 it("should yield uniform random int array with 2 dimensions", function (done) {

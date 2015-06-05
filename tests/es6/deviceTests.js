@@ -23,7 +23,7 @@ let Bluebird = require("bluebird");
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = Bluebird.promisifyAll(require("../..")(id));
+            let fire = require("../..")(id);
 
             it("should return available devices", function() {
                 let deviceCount = fire.getDeviceCount();

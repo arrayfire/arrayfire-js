@@ -29,6 +29,13 @@ limitations under the License.
 using namespace v8;
 using namespace std;
 
+NAN_METHOD(_DoEvents)
+{
+    NanScope();
+    uv_run(uv_default_loop(), UV_RUN_ONCE);
+    NanReturnUndefined();
+}
+
 void Init(v8::Handle<v8::Object> exports)
 {
     Symbols::Init();
@@ -40,4 +47,7 @@ void Init(v8::Handle<v8::Object> exports)
     InitMathFunctions(exports);
     InitVectorAlgorithms(exports);
     InitStatistics(exports);
+
+    // Helpers:
+    exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
 }

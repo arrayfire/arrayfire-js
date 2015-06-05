@@ -1,7 +1,6 @@
 "use strict";
 let Bluebird = require("bluebird");
 let async = Bluebird.coroutine;
-let asyncSupport = Bluebird.promisifyAll;
 let fire = require("../../..");
 let util = require("util");
 let now = require("performance-now");
@@ -10,7 +9,7 @@ let runOnDevices = async(function*(platformID, f) {
     let fireOfToolkit = fire(platformID);
     for (let deviceInfo of fireOfToolkit.getDevices()) {
         const start = now();
-        yield f(asyncSupport(fireOfToolkit), deviceInfo);
+        yield f(fireOfToolkit, deviceInfo);
         const end = now();
         console.log(`\n-- took ${((end - start) / 1000).toFixed(10)} seconds\n`);
     }
