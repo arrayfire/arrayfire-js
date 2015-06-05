@@ -25,13 +25,14 @@ fire.srqt(input, function(err, output) {
 });
 ```
 
-Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. Each asynchronous Fire.js method has two counterparts. One synchronous, ends with `"Sync"` (eg. `sqrtSync`). Those are just for supporting REPL prototyping scenarios, not intended to use in production code, because those blocks the vent loop and uses spin locks. The other is an asynchronous version that returns a [Bluebird promise](https://www.npmjs.com/package/bluebird), ends with `"Async"` (eg. `sqrtAsync`). Wrap an [ES6 generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) by a [coroutine](https://github.com/petkaantonov/bluebird/blob/master/API.md#promisecoroutinegeneratorfunction-generatorfunction---function), and you can yield those promises from there:
+Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. Each asynchronous Fire.js method has two counterparts. One synchronous, ends with `"Sync"` (eg. `sqrtSync`). Those are just for supporting REPL prototyping scenarios, not intended to use in production code, because those blocks the event loop and uses spin locks. The other is an asynchronous version that returns a [Bluebird promise](https://www.npmjs.com/package/bluebird), ends with `"Async"` (eg. `sqrtAsync`). Wrap an [ES6 generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) by a [coroutine](https://github.com/petkaantonov/bluebird/blob/master/API.md#promisecoroutinegeneratorfunction-generatorfunction---function), and you can yield those promises from there:
 
 ```js
 let async = Bluebird.coroutine;
 
 let f = async(function*() {
-	let output = yield fire.sqrtAsync(input);
+	let values = yield fire.sqrtAsync(input);
+    let output = yield fire.sqrtAsync(input);
 });
 ```
 
@@ -40,6 +41,12 @@ And voila, you can write asynchronous code that looks like synchronous. It's exa
 To run ES6 code you can use io.js that supports it inherently. Or use Node.js 0.12+ with --harmony flag. Or you can go with older Node.js versions with Gulp and Traceur modules.
 
 Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. Fire.js uses that method too. It has been developed in ES6, and uses [Gulp/Traceur](https://github.com/unbornchikken/fire-js/blob/master/gulpfile.js) and [feature detection](https://github.com/unbornchikken/fire-js/blob/master/lib/index.js#L19) to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.
+
+## API
+
+In Fire.js all ArrayFire types and functions are ported with respect of the original C++ syntax. There are some exceptions when it was neccessary. Many methods have an alias to provide them a counterpart using Node.js (camelCased) conventions.
+
+All asynchronous methods have promise based and synhronous counterparts as mentioned in the previous topic with `Async` and `Sync` endings rescpectively. This methods have the same signature like the originals, except the callback at the last argument.
 
 ## Small Example
 
@@ -83,3 +90,19 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 ## License
 
 [Apache 2.0](https://github.com/unbornchikken/fire-js/blob/master/LICENSE)
+
+```
+Copyright 2015 Gábor Mező aka unbornchikken
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
