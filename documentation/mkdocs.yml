@@ -5,7 +5,7 @@ pages:
   - dtype: dtype.md
   - source: source.md
 - Classes:
-  - AFArray: AFArray.md
+  - AFArray: afArray.md
 - Functions:
   - Managing Devices: devices.md
 theme: mkdocs
