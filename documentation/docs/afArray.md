@@ -13,7 +13,7 @@ Creates an AFArray instance of the specified dimensions, and copies data from th
 - `create(dim0, dim1, dim2, buffer, source, callback)`: [template<typename T\> array (dim_t dim0, dim_t dim1, dim_t dim2, const T *pointer, af::source src=afHost)](http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a)
 - `create(dim0, dim1, dim2, dim3, buffer, source, callback)`: [template<typename T\> array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)](http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
 - `create(dim0, dim1, dim2, dim4, buffer, source, callback)`: [template<typename T\>
- 	array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)] (http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
+ 	array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)](http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
 - `create(dims, buffer, source, callback)`: [template<typename \T> array (const dim4 &dims, const T *pointer, af::source src=afHost)](http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8)
 
 **Arguments:**
