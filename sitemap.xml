@@ -12,7 +12,23 @@
     
         
     <url>
-     <loc>None/afArray/</loc>
+     <loc>None/dtype/</loc>
+     <lastmod>2015-06-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/source/</loc>
+     <lastmod>2015-06-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>None/AFArray/</loc>
      <lastmod>2015-06-05</lastmod>
      <changefreq>daily</changefreq>
     </url>

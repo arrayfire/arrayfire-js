@@ -59,6 +59,27 @@
                 
                 
                 
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statics <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../dtype/">dtype</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../source/">source</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
                     <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -99,7 +120,7 @@
                 </li>
                 
                     <li >
-                        <a rel="next" href="..">
+                        <a rel="next" href="../source/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
@@ -129,22 +150,155 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#head-1">Head 1</a></li>
+        <li class="main active"><a href="#afarray-class">AFArray class</a></li>
         
-    
-        <li class="main "><a href="#head-2">Head 2</a></li>
+            <li><a href="#staitc-methods">Staitc methods</a></li>
         
-    
-        <li class="main "><a href="#head-3">Head 3</a></li>
+            <li><a href="#constructor">constructor</a></li>
+        
+            <li><a href="#methods">Methods</a></li>
+        
+            <li><a href="#indexing-operations">Indexing Operations</a></li>
+        
+            <li><a href="#operators">Operators</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="head-1">Head 1</h1>
-<h1 id="head-2">Head 2</h1>
-<h1 id="head-3">Head 3</h1></div>
+<h1 id="afarray-class">AFArray class</h1>
+<h2 id="staitc-methods">Staitc methods</h2>
+<h3 id="afarraycreate">AFArray.create()</h3>
+<p>asynchronous, counterparts: <code>createAsync</code>, <code>createSync</code></p>
+<p>Creates an AFArray instance of the specified dimensions, and copies data from the location specified by the buffer. Data can be reside on the host or on the device, the <code>source</code> argument specifies its location.</p>
+<ul>
+<li><code>create(dim0, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f">template&lt;typename T> array (dim_t dim0, const T *pointer, af::source src=afHost)</a></li>
+<li><code>create(dim0, dim1, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c">template&lt;typename T>    array (dim_t dim0, dim_t dim1, const T *pointer, af::source src=afHost)</a></li>
+<li><code>create(dim0, dim1, dim2, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a">template&lt;typename T> array (dim_t dim0, dim_t dim1, dim_t dim2, const T *pointer, af::source src=afHost)</a></li>
+<li><code>create(dim0, dim1, dim2, dim3, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">template&lt;typename T> array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)</a></li>
+<li><code>create(dim0, dim1, dim2, dim4, buffer, source, callback)</code>: [template&lt;typename T>
+    array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)] (http://www.arrayfire.com/docs/group<strong>construct</strong>mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)</li>
+<li><code>create(dims, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8">template<typename \T> array (const dim4 &amp;dims, const T *pointer, af::source src=afHost)</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>dim0 .. dim4: Number</strong> - size of the dimension</li>
+<li><strong>dims: Array|Dim4</strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
+<li><strong>source: value of source</strong> - can be one of the values of <code>source</code> object (eg. <code>source.host</code>)</li>
+</ul>
+<p><strong>Result</strong>: the created AFArray instance.</p>
+<h2 id="constructor">constructor</h2>
+<p>Arrays could be created as empty ones or by having a specified dimensions and element type. </p>
+<ul>
+<li><code>new AFArray()</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga9cbcfcbf0173e1edaf4094bb36b34b31">array ()</a></li>
+<li><code>new AFArray(dim0, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga73cb9e2360cecbc511b87abf76b6d631">array (dim_t dim0, dtype ty=f32)</a></li>
+<li><code>new AFArray(dim0, dim1, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1f0b51e20111680c7fe3c74d54c982dd">array (dim_t dim0, dim_t dim1, dtype ty=f32)</a></li>
+<li><code>new AFArray(dim0, dim1, dim2, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga69c9fa684e0b0beaf657ac1dc03afa56">array (dim_t dim0, dim_t dim1, dim_t dim2, dtype ty=f32)</a></li>
+<li><code>new AFArray(dim0, dim1, dim2, dim3, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga6bc7bac9bb52349c198fa0861b5004b7">array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, dtype ty=f32)</a></li>
+<li><code>new AFArray(dims, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga5686344bf8a49be5286892998d309619">array (const dim4 &amp;dims, dtype ty=f32)</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>dim0 .. dim4: Number</strong> - size of the dimension</li>
+<li><strong>dims: Array|Dim4</strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
+<li><strong>source: value of dType</strong> - can be one of the values of <code>dType</code> object (eg. <code>dType.f32</code>)</li>
+</ul>
+<p><strong>Remarks:</strong></p>
+<p>In Fire.js <code>type</code> argument is <strong>not optional</strong>.</p>
+<h2 id="methods">Methods</h2>
+<h3 id="elements">elements()</h3>
+<p>Get the number of elements in array.</p>
+<ul>
+<li><code>elements()</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf343b49d35978f4b617a65b83a7affb4">dim_t  elements () const</a></li>
+</ul>
+<p><strong>Result:</strong> Number</p>
+<h3 id="host">host()</h3>
+<p>Copy array data to host.</p>
+<p>asynchronous, counterparts: <code>hostAsync</code>, <code>hostSync</code></p>
+<ul>
+<li><code>host(callback)</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gad65cdb27b05827c55d4e2f59f6bbf2b4">template&lt;typename T> T * host () const</a></li>
+<li><code>host(buffer, callback)</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga67d1d90fb9f4423a68333104230d930d">void   host (void *ptr) const</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>buffer: Buffer</strong> - to hold array's values, must be atleast the size of the array.</li>
+</ul>
+<p><strong>Result:</strong> if buffer is not specified, then it will be created and returned, otherwise the result is <code>undefined</code></p>
+<h3 id="copytohost">copyToHost()</h3>
+<p>alias of <a href="#host">host</a></p>
+<h3 id="type">type</h3>
+<h3 id="dims">dims</h3>
+<h3 id="numdims">numdims</h3>
+<h3 id="numdims_1">numDims</h3>
+<h3 id="bytes">bytes</h3>
+<h3 id="copy">copy</h3>
+<h3 id="isempty">isempty</h3>
+<h3 id="isempty_1">isEmpty</h3>
+<h3 id="isscalar">isscalar</h3>
+<h3 id="isscalar_1">isScalar</h3>
+<h3 id="isvector">isvector</h3>
+<h3 id="isvector_1">isVector</h3>
+<h3 id="isrow">isrow</h3>
+<h3 id="isrow_1">isRow</h3>
+<h3 id="iscolumn">iscolumn</h3>
+<h3 id="iscolumn_1">isColumn</h3>
+<h3 id="iscomplex">iscomplex</h3>
+<h3 id="iscomplex_1">isComplex</h3>
+<h3 id="isreal">isreal</h3>
+<h3 id="isreal_1">isReal</h3>
+<h3 id="isdouble">isdouble</h3>
+<h3 id="isdouble_1">isDouble</h3>
+<h3 id="issingle">issingle</h3>
+<h3 id="issingle_1">isSingle</h3>
+<h3 id="isrealfloating">isrealfloating</h3>
+<h3 id="isrealfloating_1">isRealFloating</h3>
+<h3 id="isfloating">isfloating</h3>
+<h3 id="isfloating_1">isFloating</h3>
+<h3 id="isinteger">isinteger</h3>
+<h3 id="isinteger_1">isInteger</h3>
+<h3 id="isbool">isbool</h3>
+<h3 id="isbool_1">isBool</h3>
+<h3 id="eval">eval</h3>
+<h2 id="indexing-operations">Indexing Operations</h2>
+<h3 id="at">at</h3>
+<h3 id="row">row</h3>
+<h3 id="col">col</h3>
+<h3 id="slice">slice</h3>
+<h3 id="rows">rows</h3>
+<h3 id="cols">cols</h3>
+<h3 id="slices">slices</h3>
+<h2 id="operators">Operators</h2>
+<h3 id="as">as</h3>
+<h3 id="assign">assign</h3>
+<h3 id="set">set</h3>
+<h3 id="add">add</h3>
+<h3 id="addassign">addAssign</h3>
+<h3 id="sub">sub</h3>
+<h3 id="subassign">subAssign</h3>
+<h3 id="mul">mul</h3>
+<h3 id="mulassign">mulAssign</h3>
+<h3 id="div">div</h3>
+<h3 id="divassign">divAssign</h3>
+<h3 id="bitshiftl">bitshiftl</h3>
+<h3 id="bitshiftl_1">bitShiftL</h3>
+<h3 id="bitshiftr">bitshiftr</h3>
+<h3 id="bitshiftr_1">bitShiftR</h3>
+<h3 id="lt">lt</h3>
+<h3 id="gt">gt</h3>
+<h3 id="le">le</h3>
+<h3 id="ge">ge</h3>
+<h3 id="eq">eq</h3>
+<h3 id="neq">neq</h3>
+<h3 id="and">and</h3>
+<h3 id="or">or</h3>
+<h3 id="neg">neg</h3>
+<h3 id="not">not</h3>
+<h3 id="bitand">bitAnd</h3>
+<h3 id="bitor">bitOr</h3>
+<h3 id="bitxor">bitXor</h3></div>
             
         </div>
 
