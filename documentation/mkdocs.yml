@@ -5,8 +5,8 @@ pages:
   - dtype: dtype.md
   - source: source.md
 - Classes:
-  - AFArray: afArray.md
+  - AFArray: AFArray.md
 - Functions:
   - Managing Devices: devices.md
-theme: mkdocs
+theme: united
 repo_url: https://github.com/unbornchikken/fire-js
