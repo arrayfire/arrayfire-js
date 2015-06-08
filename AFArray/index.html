@@ -56,19 +56,8 @@
             
             
             
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statics <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                    
-                        <li >
-                            <a href="../dtype/">dtype</a>
-                        </li>
-                    
-                        <li >
-                            <a href="../source/">source</a>
-                        </li>
-                    
-                    </ul>
+                <li >
+                    <a href="../statics/">Statics</a>
                 </li>
             
             
@@ -79,6 +68,10 @@
                     
                         <li class="active">
                             <a href="./">AFArray</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Dim4/">Dim4</a>
                         </li>
                     
                     </ul>
@@ -103,12 +96,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../source/">
+                    <a rel="next" href="../statics/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../devices/">
+                    <a rel="prev" href="../Dim4/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -154,38 +147,37 @@
 <p>asynchronous, counterparts: <code>createAsync</code>, <code>createSync</code></p>
 <p>Creates an AFArray instance of the specified dimensions, and copies data from the location specified by the buffer. Data can be reside on the host or on the device, the <code>source</code> argument specifies its location.</p>
 <ul>
-<li><code>create(dim0, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f">template&lt;typename T> array (dim_t dim0, const T *pointer, af::source src=afHost)</a></li>
-<li><code>create(dim0, dim1, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c">template&lt;typename T>    array (dim_t dim0, dim_t dim1, const T *pointer, af::source src=afHost)</a></li>
-<li><code>create(dim0, dim1, dim2, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a">template&lt;typename T> array (dim_t dim0, dim_t dim1, dim_t dim2, const T *pointer, af::source src=afHost)</a></li>
-<li><code>create(dim0, dim1, dim2, dim3, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">template&lt;typename T> array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)</a></li>
-<li><code>create(dim0, dim1, dim2, dim4, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">template&lt;typename T>
-    array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, const T *pointer, af::source src=afHost)</a></li>
-<li><code>create(dims, buffer, source, callback)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8">template<typename \T> array (const dim4 &amp;dims, const T *pointer, af::source src=afHost)</a></li>
+<li><code>create(dim0, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, dim2, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, dim2, dim3, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, dim2, dim4, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dims, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><strong>dim0 .. dim4: Number</strong> - size of the dimension</li>
-<li><strong>dims: Array|Dim4</strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
+<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
 <li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
-<li><strong>source: value of source</strong> - can be one of the values of <code>source</code> object (eg. <code>source.host</code>)</li>
+<li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
 </ul>
 <p><strong>Result</strong>: the created AFArray instance.</p>
 <h2 id="constructor">constructor</h2>
 <p>Arrays could be created as empty ones or by having a specified dimensions and element type. </p>
 <ul>
-<li><code>new AFArray()</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga9cbcfcbf0173e1edaf4094bb36b34b31">array ()</a></li>
-<li><code>new AFArray(dim0, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga73cb9e2360cecbc511b87abf76b6d631">array (dim_t dim0, dtype ty=f32)</a></li>
-<li><code>new AFArray(dim0, dim1, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1f0b51e20111680c7fe3c74d54c982dd">array (dim_t dim0, dim_t dim1, dtype ty=f32)</a></li>
-<li><code>new AFArray(dim0, dim1, dim2, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga69c9fa684e0b0beaf657ac1dc03afa56">array (dim_t dim0, dim_t dim1, dim_t dim2, dtype ty=f32)</a></li>
-<li><code>new AFArray(dim0, dim1, dim2, dim3, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga6bc7bac9bb52349c198fa0861b5004b7">array (dim_t dim0, dim_t dim1, dim_t dim2, dim_t dim3, dtype ty=f32)</a></li>
-<li><code>new AFArray(dims, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga5686344bf8a49be5286892998d309619">array (const dim4 &amp;dims, dtype ty=f32)</a></li>
+<li><code>new AFArray()</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga9cbcfcbf0173e1edaf4094bb36b34b31">-&gt; ArrayFire Documentation</a></li>
+<li><code>new AFArray(dim0, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga73cb9e2360cecbc511b87abf76b6d631">-&gt; ArrayFire Documentation</a></li>
+<li><code>new AFArray(dim0, dim1, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1f0b51e20111680c7fe3c74d54c982dd">-&gt; ArrayFire Documentation</a></li>
+<li><code>new AFArray(dim0, dim1, dim2, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga69c9fa684e0b0beaf657ac1dc03afa56">-&gt; ArrayFire Documentation</a></li>
+<li><code>new AFArray(dim0, dim1, dim2, dim3, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga6bc7bac9bb52349c198fa0861b5004b7">-&gt; ArrayFire Documentation</a></li>
+<li><code>new AFArray(dims, type)</code>: <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga5686344bf8a49be5286892998d309619">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><strong>dim0 .. dim4: Number</strong> - size of the dimension</li>
-<li><strong>dims: Array|Dim4</strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
+<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
 <li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
-<li><strong>source: value of dType</strong> - can be one of the values of <code>dType</code> object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Remarks:</strong></p>
 <p>In Fire.js <code>type</code> argument is <strong>not optional</strong>.</p>
@@ -193,15 +185,15 @@
 <h3 id="elements">elements()</h3>
 <p>Get the number of elements in array.</p>
 <ul>
-<li><code>elements()</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf343b49d35978f4b617a65b83a7affb4">dim_t  elements () const</a></li>
+<li><code>elements()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf343b49d35978f4b617a65b83a7affb4">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> Number</p>
 <h3 id="host">host()</h3>
 <p>Copy array data to host.</p>
 <p>asynchronous, counterparts: <code>hostAsync</code>, <code>hostSync</code></p>
 <ul>
-<li><code>host(callback)</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gad65cdb27b05827c55d4e2f59f6bbf2b4">template&lt;typename T> T * host () const</a></li>
-<li><code>host(buffer, callback)</code>: <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga67d1d90fb9f4423a68333104230d930d">void   host (void *ptr) const</a></li>
+<li><code>host(callback)</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gad65cdb27b05827c55d4e2f59f6bbf2b4">-&gt; ArrayFire Documentation</a></li>
+<li><code>host(buffer, callback)</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga67d1d90fb9f4423a68333104230d930d">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -210,39 +202,55 @@
 <p><strong>Result:</strong> if buffer is not specified, then it will be created and returned, otherwise the result is <code>undefined</code></p>
 <h3 id="copytohost">copyToHost()</h3>
 <p>alias of <a href="#host">host</a></p>
+<h3 id="write">write</h3>
+<p>Perform deep copy from host/device pointer to an existing array.</p>
+<ul>
+<li><code>write(buffer, bytesToCopy, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaa70b253da2d32394c521a815f7627116">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>buffer: Buffer</strong> - data to copy to the array, or device pointer created by the <code>alloc</code> method.</li>
+<li><strong>bytesToCopy</strong>: bytes to copy</li>
+<li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
+</ul>
 <h3 id="type">type</h3>
+<ul>
+<li><code>type()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga0844daa9b8cc7b7912e89a3d8ddf1a4b">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> array's element type, can be one of the values of <strong><a href="../statics/#typesdtype">dType</a></strong> object</p>
 <h3 id="dims">dims</h3>
+<ul>
+<li><code>dims()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf056729e3ff924f5c1d41e0a8db3ce1b">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> array's dimensions info in a <strong><a href="../Dim4">Dim4</a></strong> object instance</p>
 <h3 id="numdims">numdims</h3>
+<ul>
+<li><code>numdims()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga269a19b0320a93f19314d4903045b067">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> number of dimensions of the array</p>
 <h3 id="numdims_1">numDims</h3>
+<p>alias of <a href="#numdims">numdims</a></p>
 <h3 id="bytes">bytes</h3>
+<ul>
+<li><code>bytes()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gae9a95268261b397cae87b47a59b7e3cb">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> size of the array in bytes</p>
 <h3 id="copy">copy</h3>
-<h3 id="isempty">isempty</h3>
-<h3 id="isempty_1">isEmpty</h3>
-<h3 id="isscalar">isscalar</h3>
-<h3 id="isscalar_1">isScalar</h3>
-<h3 id="isvector">isvector</h3>
-<h3 id="isvector_1">isVector</h3>
-<h3 id="isrow">isrow</h3>
-<h3 id="isrow_1">isRow</h3>
-<h3 id="iscolumn">iscolumn</h3>
-<h3 id="iscolumn_1">isColumn</h3>
-<h3 id="iscomplex">iscomplex</h3>
-<h3 id="iscomplex_1">isComplex</h3>
-<h3 id="isreal">isreal</h3>
-<h3 id="isreal_1">isReal</h3>
-<h3 id="isdouble">isdouble</h3>
-<h3 id="isdouble_1">isDouble</h3>
-<h3 id="issingle">issingle</h3>
-<h3 id="issingle_1">isSingle</h3>
-<h3 id="isrealfloating">isrealfloating</h3>
-<h3 id="isrealfloating_1">isRealFloating</h3>
-<h3 id="isfloating">isfloating</h3>
-<h3 id="isfloating_1">isFloating</h3>
-<h3 id="isinteger">isinteger</h3>
-<h3 id="isinteger_1">isInteger</h3>
-<h3 id="isbool">isbool</h3>
-<h3 id="isbool_1">isBool</h3>
+<ul>
+<li><code>copy()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gad79c786c646fe05a18e208eabf4dae94">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> new AFArray instance holding a deep copy of the array</p>
+<h3 id="isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool">isempty, isscalar, isvector, isrow, iscolumn, iscomplex, isreal, isdouble, issingle, isrealfloating, isfloating, isinteger, isbool</h3>
+<p>aliases respectively: <code>isEmpty</code>, <code>isScalar</code>, <code>isVector</code>, <code>isRow</code>, <code>isColumn</code>, <code>isComplex</code>, <code>isReal</code>, <code>isDouble</code>, <code>isSingle</code>, <code>isRealFloating</code>, <code>isFloating</code>, <code>isInteger</code>, <code>isBool</code> </p>
+<ul>
+<li><code>is&lt;anything&gt;</code>() <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gabe874940ae5ed8c40a8f99913982e657">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result:</strong> actual type info (Boolean)</p>
 <h3 id="eval">eval</h3>
+<ul>
+<li>eval() <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p>Evaluate any JIT expressions to generate data for the array.</p>
 <h2 id="indexing-operations">Indexing Operations</h2>
 <h3 id="at">at</h3>
 <h3 id="row">row</h3>

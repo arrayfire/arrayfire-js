@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>source - Fire.js Documentation</title>
+	<title>Dim4 - Fire.js Documentation</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -56,29 +56,22 @@
             
             
             
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statics <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                    
-                        <li >
-                            <a href="../dtype/">dtype</a>
-                        </li>
-                    
-                        <li class="active">
-                            <a href="./">source</a>
-                        </li>
-                    
-                    </ul>
+                <li >
+                    <a href="../statics/">Statics</a>
                 </li>
             
             
             
-                <li class="dropdown">
+                <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     
                         <li >
                             <a href="../AFArray/">AFArray</a>
+                        </li>
+                    
+                        <li class="active">
+                            <a href="./">Dim4</a>
                         </li>
                     
                     </ul>
@@ -103,12 +96,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../dtype/">
+                    <a rel="next" href="../AFArray/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../AFArray/">
+                    <a rel="prev" href="../devices/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -131,11 +124,36 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#dim4-class">Dim4 class</a></li>
+        
+            <li><a href="#constructors">constructors</a></li>
+        
+            <li><a href="#properties">Properties</a></li>
+        
+    
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-</div>
+<h1 id="dim4-class">Dim4 class</h1>
+<h2 id="constructors">constructors</h2>
+<ul>
+<li><code>new Dim4(dimArray)</code></li>
+<li><code>new Dim4(dim0, dim1, dim2, dim3)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><strong>dimArray: Array</strong> - array holding dimension sizes, eg.: [1, 2], [1, 5, 6], [4, 5, 1, 1]</li>
+<li><strong>dim0 .. dim3: Number</strong> - size of the dimension, default is 1</li>
+</ul>
+<h2 id="properties">Properties</h2>
+<h3 id="dims">dims</h3>
+<p><strong>Value:</strong> <strong>Array</strong> containing the dimension sizes, eg.: two dimensions = <code>[2, 3, 1, 1]</code>, four dimensions = <code>[2, 3, 4, 5]</code></p>
+<h3 id="ndims">ndims</h3>
+<p>alias: <code>nDims</code></p>
+<p><strong>Value:</strong> number of dimensions</p>
+<h3 id="elements">elements</h3>
+<p><strong>Value:</strong> number of elements (dim0 * dim1 * dim2 * dim3)</p></div>
         </div>
 
         <footer class="col-md-12">
