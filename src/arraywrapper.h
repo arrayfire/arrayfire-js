@@ -30,14 +30,17 @@ struct ArrayWrapper : public node::ObjectWrap
     static v8::Local<v8::Object> New(af::array* array);
     static v8::Local<v8::Object> New(const af::array& array);
     static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
-    static af::array* GetArray(v8::Local<v8::Value> value);
+    static af::array* GetArray(v8::Local<v8::Value>& value);
+    static af::array* TryGetArray(v8::Local<v8::Value>& value);
+    static af::array* GetArray(v8::Local<v8::Object>& value);
+    static af::array* TryGetArray(v8::Local<v8::Object>& value);
     static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
-    static af::array* TryGetArray(v8::Local<v8::Value> value);
     static af::array* TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
 
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
     static NAN_METHOD(Host);
+    static NAN_METHOD(Write);
     static NAN_METHOD(Type);
     static NAN_METHOD(Dims);
     static NAN_METHOD(NumDims);

@@ -25,33 +25,39 @@ limitations under the License.
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 
-std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value);
+std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value>& value);
 
 std::string ErrToString(af_err);
 
 v8::Local<v8::Object> WrapPointer(void* ptr);
 
-af::dim4 ToDim4(v8::Local<v8::Object> obj);
+af::dim4 ToDim4(v8::Local<v8::Object>& obj);
 
-af::dim4 ToDim4(v8::Local<v8::Value> value);
+af::dim4 ToDim4(v8::Local<v8::Value>& value);
 
-af::seq ToSeq(v8::Local<v8::Object> obj);
+af::seq ToSeq(v8::Local<v8::Object>& obj);
 
-af::seq ToSeq(v8::Local<v8::Value> value);
+af::seq ToSeq(v8::Local<v8::Value>& value);
 
-af::index ToIndex(v8::Local<v8::Value> value);
+af::index ToIndex(v8::Local<v8::Value>& value);
 
-af::af_cdouble ToDComplex(v8::Local<v8::Object> obj);
+af::af_cdouble ToDComplex(v8::Local<v8::Object>& obj);
 
-af::af_cdouble  ToDComplex(v8::Local<v8::Value> value);
+af::af_cdouble  ToDComplex(v8::Local<v8::Value>& value);
 
-af::af_cfloat  ToFComplex(v8::Local<v8::Object> obj);
+af::af_cfloat  ToFComplex(v8::Local<v8::Object>& obj);
 
-af::af_cfloat ToFComplex(v8::Local<v8::Value> value);
+af::af_cfloat ToFComplex(v8::Local<v8::Value>& value);
+
+v8::Local<v8::Object> ToV8Complex(const af::af_cdouble& value);
+
+v8::Local<v8::Object> ToV8Complex(const af::af_cfloat& value);
 
 std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength = -1, int argsFollowingDims = 0, int dimsStartAt = 0);
 
 NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+inline bool NeedsDouble(const af::array array) { return array.type() == f64 || array.type() == c64 || array.type() == s64 || array.type() == u64; }
 
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
@@ -201,7 +207,7 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_VEC_V1(F, f)\
+#define FIRE_ASYNC_METHOD_ALGO_V1(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -217,7 +223,7 @@ NAN_METHOD(F)\
         }\
         else\
         {\
-            if (af::isDoubleAvailable(af::getDevice()))\
+            if (NeedsDouble(array))\
             {\
                 auto exec = [=]() { Guard(); return af::f<double>(array); };\
                 auto worker = new Worker<double>(GetCallback(args), std::move(exec));\
@@ -236,7 +242,7 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_VEC_V2(F, f)\
+#define FIRE_ASYNC_METHOD_ALGO_V2(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -290,6 +296,43 @@ NAN_METHOD(F)\
             auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
             NanAsyncQueueWorker(worker);\
             NanReturnUndefined();\
+        }\
+    }\
+    FIRE_CATCH\
+}
+
+// weighted mean like stuff:
+#define FIRE_ASYNC_METHOD_ALGO_V3(F, f)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    try\
+    {\
+        ARGS_LEN(3);\
+        \
+        auto array1 = *ArrayWrapper::GetArrayAt(args, 0);\
+        auto array2 = *ArrayWrapper::GetArrayAt(args, 1);\
+        if (args.Length() > 3)\
+        {\
+            int dim = args[2]->Int32Value();\
+            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::f(array1, array2, dim)); });\
+        }\
+        else\
+        {\
+            if (NeedsDouble(array1))\
+            {\
+                auto exec = [=]() { Guard(); return af::f<double>(array1, array2); };\
+                auto worker = new Worker<double>(GetCallback(args), std::move(exec));\
+                NanAsyncQueueWorker(worker);\
+                NanReturnUndefined();\
+            }\
+            else\
+            {\
+                auto exec = [=]() { Guard(); return af::f<float>(array1, array2); };\
+                auto worker = new Worker<float>(GetCallback(args), std::move(exec));\
+                NanAsyncQueueWorker(worker);\
+                NanReturnUndefined();\
+            }\
         }\
     }\
     FIRE_CATCH\

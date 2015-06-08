@@ -49,6 +49,7 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("elements"), NanNew<FunctionTemplate>(Elements), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("host"), NanNew<FunctionTemplate>(Host), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("copyToHost"), NanNew<FunctionTemplate>(Host), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("write"), NanNew<FunctionTemplate>(Write), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("type"), NanNew<FunctionTemplate>(Type), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("dims"), NanNew<FunctionTemplate>(Dims), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("numdims"), NanNew<FunctionTemplate>(NumDims), v8::ReadOnly);
@@ -156,23 +157,14 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     }
 }
 
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Value>& value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
-{
-    auto array = TryGetArrayAt(args, index);
-    if (array) return array;
-    stringstream ss;
-    ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
-    FIRE_THROW(ss.str().c_str());
-}
-
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value>& value)
 {
     try
     {
@@ -186,6 +178,35 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
     {
     }
     return nullptr;
+}
+
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Object>& value)
+{
+    auto array = TryGetArray(value);
+    if (array) return array;
+    FIRE_THROW("Argument is not an AFArray instance.");
+}
+
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object>& value)
+{
+    try
+    {
+        auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
+        if (wrapper) return wrapper->array;
+    }
+    catch (...)
+    {
+    }
+    return nullptr;
+}
+
+af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+{
+    auto array = TryGetArrayAt(args, index);
+    if (array) return array;
+    stringstream ss;
+    ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
+    FIRE_THROW(ss.str().c_str());
 }
 
 af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
@@ -394,23 +415,13 @@ NAN_METHOD(ArrayWrapper::Host)
                 return NAN_THROW("Buffer is too small to hold values.");
             }
 
-            NanCallback *callback = nullptr;
-            if (args.Length() > 1 && args[1]->IsFunction())
-            {
-                callback = new NanCallback(args[1].As<Function>());
-            }
-            if (!callback)
-            {
-                return NAN_THROW_CB_EXPECTED();
-            }
-
             af::array array(*pArray);
             auto exec = [=]()
             {
                 Guard();
                 array.host(buffData);
             };
-            auto worker = new Worker<void>(callback, move(exec));
+            auto worker = new Worker<void>(GetCallback(args), move(exec));
             worker->SaveToPersistent("data", args[0]->ToObject());
 
             NanAsyncQueueWorker(worker);
@@ -418,16 +429,6 @@ NAN_METHOD(ArrayWrapper::Host)
         }
         else
         {
-            NanCallback *callback = nullptr;
-            if (args[0]->IsFunction())
-            {
-                callback = new NanCallback(args[0].As<Function>());
-            }
-            if (!callback)
-            {
-                return NAN_THROW_CB_EXPECTED();
-            }
-
             size_t size = pArray->elements() * GetDTypeInfo(pArray->type()).second;
             buffData = new char[size];
             try
@@ -443,7 +444,7 @@ NAN_METHOD(ArrayWrapper::Host)
                 {
                     return NanNewBufferHandle(data, size, [](char* data, void* hint) { delete[] data; }, nullptr);
                 };
-                auto worker = new Worker<char*>(callback, move(exec), move(conv));
+                auto worker = new Worker<char*>(GetCallback(args), move(exec), move(conv));
                 NanAsyncQueueWorker(worker);
                 NanReturnUndefined();
             }
@@ -453,6 +454,48 @@ NAN_METHOD(ArrayWrapper::Host)
                 throw;
             }
         }
+    }
+    FIRE_CATCH
+}
+
+NAN_METHOD(ArrayWrapper::Write)
+{
+    NanScope();
+
+    try
+    {
+        ARGS_LEN(3)
+
+        char* buffData;
+        auto pArray = GetArray(args.This());
+
+        if (Buffer::HasInstance(args[0]))
+        {
+            buffData = Buffer::Data(args[0]);
+        }
+        else
+        {
+            return NAN_THROW("First argument is no a Buffer.");
+        }
+
+        unsigned bytes = args[1]->Uint32Value();
+        af_source src = afHost;
+        if (args.Length() > 3)
+        {
+            src = (af_source)(args[2]->Int32Value());
+        }
+
+        af::array array(*pArray);
+        auto exec = [=]()
+        {
+            Guard();
+            af_write_array(array.get(), buffData, bytes, src);
+        };
+        auto worker = new Worker<void>(GetCallback(args), move(exec));
+        worker->SaveToPersistent("data", args[0]->ToObject());
+
+        NanAsyncQueueWorker(worker);
+        NanReturnUndefined();
     }
     FIRE_CATCH
 }
@@ -790,6 +833,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
+        bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
@@ -807,7 +851,7 @@ NAN_METHOD(ArrayWrapper::F)\
                 Guard();\
                 array Op value->Int32Value();\
             }\
-            else if (af::isDoubleAvailable(af::getDevice()))\
+            else if (isDouble)\
             {\
                 Guard();\
                 array Op v;\
@@ -826,7 +870,7 @@ NAN_METHOD(ArrayWrapper::F)\
                 Guard();\
                 array Op v;\
             }\
-            else\
+            else if (isDouble)\
             {\
                 auto v = ToFComplex(value);\
                 Guard();\
@@ -864,6 +908,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
+        bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
@@ -882,7 +927,7 @@ NAN_METHOD(ArrayWrapper::F)\
                 Guard();\
                 result = new af::array(array Op value->Int32Value());\
             }\
-            else if (af::isDoubleAvailable(af::getDevice()))\
+            else if (isDouble)\
             {\
                 Guard();\
                 result = new af::array(array Op v);\
@@ -893,7 +938,7 @@ NAN_METHOD(ArrayWrapper::F)\
                 result = new af::array(array Op (float)v);\
             }\
         }\
-        else if (value->IsObject())\
+        else if (isDouble)\
         {\
             if (af::isDoubleAvailable(af::getDevice()))\
             {\

@@ -1,11 +1,10 @@
 site_name: Fire.js Documentation
 pages:
 - Home: index.md
-- Statics:
-  - dtype: dtype.md
-  - source: source.md
+- Statics: statics.md
 - Classes:
   - AFArray: AFArray.md
+  - Dim4: Dim4.md
 - Functions:
   - Managing Devices: devices.md
 theme: united

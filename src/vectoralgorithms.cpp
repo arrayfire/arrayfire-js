@@ -26,15 +26,15 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_ASYNC_METHOD_VEC_V1(AllTrue, allTrue)
-FIRE_ASYNC_METHOD_VEC_V1(AnyTrue, anyTrue)
-FIRE_ASYNC_METHOD_VEC_V1(Count, count)
-FIRE_ASYNC_METHOD_VEC_V1(FindMax, max)
-FIRE_ASYNC_METHOD_VEC_V1(FindMin, min)
-FIRE_ASYNC_METHOD_VEC_V1(Product, product)
-FIRE_ASYNC_METHOD_VEC_V1(Sum, sum)
-FIRE_ASYNC_METHOD_VEC_V2(FindMinAt, min)
-FIRE_ASYNC_METHOD_VEC_V2(FindMaxAt, max)
+FIRE_ASYNC_METHOD_ALGO_V1(AllTrue, allTrue)
+FIRE_ASYNC_METHOD_ALGO_V1(AnyTrue, anyTrue)
+FIRE_ASYNC_METHOD_ALGO_V1(Count, count)
+FIRE_ASYNC_METHOD_ALGO_V1(FindMax, max)
+FIRE_ASYNC_METHOD_ALGO_V1(FindMin, min)
+FIRE_ASYNC_METHOD_ALGO_V1(Product, product)
+FIRE_ASYNC_METHOD_ALGO_V1(Sum, sum)
+FIRE_ASYNC_METHOD_ALGO_V2(FindMinAt, min)
+FIRE_ASYNC_METHOD_ALGO_V2(FindMaxAt, max)
 
 NAN_METHOD(Sort)
 {
