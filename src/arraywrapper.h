@@ -82,19 +82,19 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Cols);
     static NAN_METHOD(Slices);
     static NAN_METHOD(As);
-    static NAN_METHOD(Assign);
 
-    static NAN_METHOD(Add);
+    static NAN_METHOD(Assign);    
     static NAN_METHOD(AddAssign);
-    static NAN_METHOD(Sub);
-    static NAN_METHOD(SubAssign);
-    static NAN_METHOD(Mul);
-    static NAN_METHOD(MulAssign);
-    static NAN_METHOD(Div);
+    static NAN_METHOD(SubAssign);    
+    static NAN_METHOD(MulAssign);    
     static NAN_METHOD(DivAssign);
+
+    static NAN_METHOD(Div);
+    static NAN_METHOD(Mul);
+    static NAN_METHOD(Sub);
+    static NAN_METHOD(Add);
     static NAN_METHOD(BitShiftL);
     static NAN_METHOD(BitShiftR);
-
     static NAN_METHOD(Lt);
     static NAN_METHOD(Gt);
     static NAN_METHOD(Le);
