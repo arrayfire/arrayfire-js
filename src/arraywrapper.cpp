@@ -21,6 +21,7 @@ limitations under the License.
 #include "worker.h"
 #include "errors.h"
 #include "symbols.h"
+#include "arrayorproxyholder.h"
 
 using namespace v8;
 using namespace std;
@@ -28,15 +29,15 @@ using namespace node;
 
 Persistent<Function> ArrayWrapper::constructor;
 
-ArrayWrapper::ArrayWrapper(af::array* array) :
-    array(array)
+ArrayWrapper::ArrayWrapper(ArrayOrProxyHolder* data) :
+    data(data)
 {
-    assert(array);
+    assert(data);
 }
 
 ArrayWrapper::~ArrayWrapper()
 {
-    delete array;
+    delete data;
 }
 
 void ArrayWrapper::Init(v8::Local<v8::Object> exports)
@@ -83,6 +84,7 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("isbool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("isBool"), NanNew<FunctionTemplate>(IsBool), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::ReadOnly);
+
     NanSetPrototypeTemplate(tmpl, NanNew("at"), NanNew<FunctionTemplate>(At), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("row"), NanNew<FunctionTemplate>(Row), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("col"), NanNew<FunctionTemplate>(Col), v8::ReadOnly);
@@ -130,16 +132,33 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
 v8::Local<Object> ArrayWrapper::New(af::array* array)
 {
     assert(array);
-    Local<Value> args[] = { WrapPointer(array) };
+    auto data = new ArrayOrProxyHolder(array);
+    Local<Value> args[] = { WrapPointer(data) };
     auto c = NanNew(constructor);
     auto inst = c->NewInstance(1, args);
-    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->array == array);
+    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->data == data);
     return inst;
 }
 
 v8::Local<Object> ArrayWrapper::New(const af::array& array)
 {
     return New(new af::array(array));
+}
+
+v8::Local<Object> ArrayWrapper::New(af::array::array_proxy* arrayProxy)
+{
+    assert(arrayProxy);
+    auto data = new ArrayOrProxyHolder(arrayProxy);
+    Local<Value> args[] = { WrapPointer(data) };
+    auto c = NanNew(constructor);
+    auto inst = c->NewInstance(1, args);
+    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->data == data);
+    return inst;
+}
+
+v8::Local<Object> ArrayWrapper::New(const af::array::array_proxy& arrayProxy)
+{
+    return New(new af::array::array_proxy(arrayProxy));
 }
 
 void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory)
@@ -157,21 +176,21 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     }
 }
 
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Value>& value)
+ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Value>& value)
 {
-    auto array = TryGetArray(value);
+    auto array = TryGet(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value>& value)
+ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Value>& value)
 {
     try
     {
         if (value->IsObject())
         {
             auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
-            if (wrapper) return wrapper->array;
+            if (wrapper) return wrapper->data;
         }
     }
     catch (...)
@@ -180,19 +199,19 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value>& value)
     return nullptr;
 }
 
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Object>& value)
+ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Object>& value)
 {
-    auto array = TryGetArray(value);
+    auto array = TryGet(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object>& value)
+ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Object>& value)
 {
     try
     {
         auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
-        if (wrapper) return wrapper->array;
+        if (wrapper) return wrapper->data;
     }
     catch (...)
     {
@@ -200,21 +219,57 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object>& value)
     return nullptr;
 }
 
-af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+ArrayOrProxyHolder* ArrayWrapper::GetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
 {
-    auto array = TryGetArrayAt(args, index);
+    auto array = TryGetAt(args, index);
     if (array) return array;
     stringstream ss;
     ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
     FIRE_THROW(ss.str().c_str());
 }
 
-af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+ArrayOrProxyHolder* ArrayWrapper::TryGetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
 {
     if (index < args.Length())
     {
-        return GetArray(args[index]);
+        return Get(args[index]);
     }
+    return nullptr;
+}
+
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Value>& value)
+{
+    return Get(value)->GetArray();
+}
+
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value>& value)
+{
+    auto data = TryGet(value);
+    if (data) return data->GetArray();
+    return nullptr;
+}
+
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Object>& value)
+{
+    return Get(value)->GetArray();
+}
+
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object>& value)
+{
+    auto data = TryGet(value);
+    if (data) return data->GetArray();
+    return nullptr;
+}
+
+af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+{
+    return GetAt(args, index)->GetArray();
+}
+
+af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+{
+    auto data = TryGetAt(args, index);
+    if (data) return data->GetArray();
     return nullptr;
 }
 
@@ -230,13 +285,13 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
         {
             if (args.Length() == 0)
             {
-                instance = new ArrayWrapper(new af::array());
+                instance = new ArrayWrapper(new ArrayOrProxyHolder(new af::array()));
             }
             else if (args.Length() == 1)
             {
                 if (Buffer::HasInstance(args[0]))
                 {
-                    instance = new ArrayWrapper(reinterpret_cast<af::array*>(Buffer::Data(args[0])));
+                    instance = new ArrayWrapper(reinterpret_cast<ArrayOrProxyHolder*>(Buffer::Data(args[0])));
                 }
             }
             else
@@ -254,7 +309,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
                 {
                     // Creating new
                     auto dimAndType = ParseDimAndTypeArgs(args);
-                    instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
+                    instance = new ArrayWrapper(new ArrayOrProxyHolder(new af::array(dimAndType.first, dimAndType.second)));
                 }
             }
         }
@@ -788,7 +843,14 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(1)\
-        NanReturnValue(New(GetArray(args.This())->f(args[0]->Int32Value())));\
+        auto pHolder = Get(args.This());\
+        auto pProxy = pHolder->GetArrayProxy();\
+        if (pProxy)\
+        {\
+            NanReturnValue(New(pProxy->f(args[0]->Int32Value())));\
+            return;\
+        }\
+        NanReturnValue(New(pHolder->GetArray()->f(args[0]->Int32Value())));\
     }\
     FIRE_CATCH\
 }
@@ -804,7 +866,14 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(2);\
-        NanReturnValue(New(GetArray(args.This())->f(args[0]->Int32Value(), args[1]->Int32Value())));\
+        auto pHolder = Get(args.This());\
+        auto pProxy = pHolder->GetArrayProxy();\
+        if (pProxy)\
+        {\
+            NanReturnValue(New(pProxy->f(args[0]->Int32Value(), args[1]->Int32Value())));\
+            return;\
+        }\
+        NanReturnValue(New(pHolder->GetArray()->f(args[0]->Int32Value(), args[1]->Int32Value())));\
     }\
     FIRE_CATCH\
 }
@@ -832,61 +901,143 @@ NAN_METHOD(ArrayWrapper::F)\
     \
     try\
     {\
-        auto& array = *GetArray(args.This());\
-        bool isDouble = NeedsDouble(array);\
-        ARGS_LEN(1)\
-        auto value = args[0];\
-        auto pOtherArray = TryGetArray(value);\
-        if (pOtherArray)\
+        auto holder = Get(args.This());\
+        auto pProxy = holder->GetArrayProxy();\
+        if (pProxy)\
         {\
-            auto& otherArray = *pOtherArray;\
-            Guard();\
-            array Op otherArray;\
-        }\
-        else if (value->IsNumber())\
-        {\
-            double v = value->NumberValue();\
-            if (floor(v) == v)\
+            auto& proxy = *pProxy;\
+            bool isDouble = NeedsDouble(proxy);\
+            ARGS_LEN(1)\
+            auto value = args[0];\
+            auto pOtherHolder = TryGet(value);\
+            if (pOtherHolder)\
             {\
-                Guard();\
-                array Op value->Int32Value();\
+                if (pOtherHolder->GetArrayProxy())\
+                {\
+                    auto& otherArrayProxy = *pOtherHolder->GetArrayProxy();\
+                    Guard();\
+                    proxy Op otherArrayProxy;\
+                }\
+                else\
+                {\
+                    auto& otherArray = *pOtherHolder->GetArray();\
+                    Guard();\
+                    proxy Op otherArray;\
+                }\
             }\
-            else if (isDouble)\
+            else if (value->IsNumber())\
             {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    Guard();\
+                    proxy Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    Guard();\
+                    proxy Op v;\
+                }\
+                else\
+                {\
+                    Guard();\
+                    proxy Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (af::isDoubleAvailable(af::getDevice()))\
+                {\
+                    auto v = ToDComplex(value);\
+                    Guard();\
+                    proxy Op v;\
+                }\
+                else if (isDouble)\
+                {\
+                    auto v = ToFComplex(value);\
+                    Guard();\
+                    proxy Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                intl v = strtoll(*str, nullptr, 10);\
+                Guard();\
+                proxy Op v;\
+            }\
+            else\
+            {\
+                return NAN_THROW_INVALID_ARGS();\
+            }\
+        }\
+        else\
+        {\
+            auto& array = *holder->GetArray();\
+            bool isDouble = NeedsDouble(array);\
+            ARGS_LEN(1)\
+            auto value = args[0];\
+            auto pOtherHolder = TryGet(value);\
+            if (pOtherHolder)\
+            {\
+                if (pOtherHolder->GetArrayProxy())\
+                {\
+                    auto& otherArrayProxy = *pOtherHolder->GetArrayProxy();\
+                    Guard();\
+                    array Op otherArrayProxy;\
+                }\
+                else\
+                {\
+                    auto& otherArray = *pOtherHolder->GetArray();\
+                    Guard();\
+                    array Op otherArray;\
+                }\
+            }\
+            else if (value->IsNumber())\
+            {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    Guard();\
+                    array Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    Guard();\
+                    array Op v;\
+                }\
+                else\
+                {\
+                    Guard();\
+                    array Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (af::isDoubleAvailable(af::getDevice()))\
+                {\
+                    auto v = ToDComplex(value);\
+                    Guard();\
+                    array Op v;\
+                }\
+                else if (isDouble)\
+                {\
+                    auto v = ToFComplex(value);\
+                    Guard();\
+                    array Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                intl v = strtoll(*str, nullptr, 10);\
                 Guard();\
                 array Op v;\
             }\
             else\
             {\
-                Guard();\
-                array Op (float)v;\
+                return NAN_THROW_INVALID_ARGS();\
             }\
-        }\
-        else if (value->IsObject())\
-        {\
-            if (af::isDoubleAvailable(af::getDevice()))\
-            {\
-                auto v = ToDComplex(value);\
-                Guard();\
-                array Op v;\
-            }\
-            else if (isDouble)\
-            {\
-                auto v = ToFComplex(value);\
-                Guard();\
-                array Op v;\
-            }\
-        }\
-        else if (value->IsString())\
-        {\
-            String::Utf8Value str(value);\
-            intl v = strtoll(*str, nullptr, 10);\
-            Guard();\
-            array Op v;\
-        }\
-        else\
-        {\
-            return NAN_THROW_INVALID_ARGS();\
         }\
         \
         NanReturnValue(args.This());\
@@ -911,13 +1062,22 @@ NAN_METHOD(ArrayWrapper::F)\
         bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
         auto value = args[0];\
-        auto pOtherArray = TryGetArray(value);\
+        auto pOtherHolder = TryGet(value);\
         af::array* result = nullptr;\
-        if (pOtherArray)\
+        if (pOtherHolder)\
         {\
-            auto& otherArray = *pOtherArray;\
-            Guard();\
-            result = new af::array(array Op otherArray);\
+            if (pOtherHolder->GetArrayProxy())\
+            {\
+                auto& otherProxy = *pOtherHolder->GetArrayProxy();\
+                Guard();\
+                result = new af::array(array Op otherProxy);\
+            }\
+            else\
+            {\
+                auto& otherArray = *pOtherHolder->GetArray();\
+                Guard();\
+                result = new af::array(array Op otherArray);\
+            }\
         }\
         else if (value->IsNumber())\
         {\

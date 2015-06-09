@@ -186,7 +186,7 @@ af::seq ToSeq(v8::Local<v8::Object>& obj)
     auto end = obj->Get(NanNew(Symbols::End));
     auto step = obj->Get(NanNew(Symbols::Step));
     auto isGFor = obj->Get(NanNew(Symbols::IsGFor));
-    if (begin->IsNumber() && begin->IsNumber())
+    if (begin->IsNumber() && end->IsNumber())
     {
         double stepValue = 1;
         if (step->IsNumber())
@@ -218,18 +218,13 @@ af::seq ToSeq(v8::Local<v8::Value>& value)
 
 af::index ToIndex(v8::Local<v8::Value>& value)
 {
+    if (value->IsNull())
+    {
+        return af::span;
+    }
     if (value->IsNumber())
     {
         return af::index(value->Uint32Value());
-    }
-    if (value->IsObject())
-    {
-        auto pArray = ArrayWrapper::TryGetArray(value);
-        if (pArray)
-        {
-            return af::index(*pArray);
-        }
-        return ToSeq(value.As<Object>());
     }
     if (value->IsString())
     {
@@ -239,10 +234,15 @@ af::index ToIndex(v8::Local<v8::Value>& value)
             return af::span;
         }
     }
-    if (value->IsNull())
+    if (value->IsObject())
     {
-        return af::span;
-    }
+        auto pArray = ArrayWrapper::TryGetArray(value);
+        if (pArray)
+        {
+            return af::index(*pArray);
+        }
+        return ToSeq(value.As<Object>());
+    }    
     FIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
 

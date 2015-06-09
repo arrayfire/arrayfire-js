@@ -21,15 +21,29 @@ limitations under the License.
 #include <arrayfire.h>
 #include <functional>
 
+struct ArrayOrProxyHolder;
+
 struct ArrayWrapper : public node::ObjectWrap
 {
     ArrayWrapper(const ArrayWrapper&) = delete;
     ~ArrayWrapper();
 
     static void Init(v8::Local<v8::Object> exports);
+
     static v8::Local<v8::Object> New(af::array* array);
     static v8::Local<v8::Object> New(const af::array& array);
+    static v8::Local<v8::Object> New(af::array::array_proxy* arrayProxy);
+    static v8::Local<v8::Object> New(const af::array::array_proxy& arrayProxy);
+
     static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
+
+    static ArrayOrProxyHolder* Get(v8::Local<v8::Value>& value);
+    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Value>& value);
+    static ArrayOrProxyHolder* Get(v8::Local<v8::Object>& value);
+    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Object>& value);
+    static ArrayOrProxyHolder* GetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
+    static ArrayOrProxyHolder* TryGetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
+
     static af::array* GetArray(v8::Local<v8::Value>& value);
     static af::array* TryGetArray(v8::Local<v8::Value>& value);
     static af::array* GetArray(v8::Local<v8::Object>& value);
@@ -96,7 +110,7 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(BitXor);
 
 private:
-    explicit ArrayWrapper(af::array* array);
+    explicit ArrayWrapper(ArrayOrProxyHolder* data);
 
     template<typename T>
     static af::array* CreateArray(void* ptr, af_source src, const af::dim4& dim4);
@@ -104,7 +118,7 @@ private:
 
     static v8::Persistent<v8::Function> constructor;
 
-    af::array* array;
+    ArrayOrProxyHolder* data;
 };
 
 #endif // ARRAY_FIRE_JS_ARRAYWRAPPER_H

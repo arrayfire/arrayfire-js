@@ -131,19 +131,34 @@ aliases respectively: `isEmpty`, `isScalar`, `isVector`, `isRow`, `isColumn`, `i
 
 ### eval
 
-- eval() [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581)
+- `eval()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581)
 
 Evaluate any JIT expressions to generate data for the array.
 
 ## Indexing Operations
 
 ### at
-### row
-### col
-### slice
-### rows
-### cols
-### slices
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mem__operator__paren.htm)
+
+- `at(s0)`
+- `at(s0, s1)`
+- `at(s0, s1, s2)`
+- `at(s0, s1, s2, s3)`
+
+**Arguments**:
+
+- **s0 .. s3: null|String|Number|[Seq](Seq)|AFArray** 
+
+    - **null:** means `"span"`
+    - **String:** can be `"span"`
+    - **Number:** element's index, or -1 which means the last element
+    - **[Seq](Seq):** sequence of values
+    - **AFArray:** array holding the index value
+
+### row, rows
+### col, cols
+### slice, slices
 
 ## Operators
 

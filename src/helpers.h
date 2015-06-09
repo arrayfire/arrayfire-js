@@ -59,6 +59,8 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 inline bool NeedsDouble(const af::array array) { return array.type() == f64 || array.type() == c64 || array.type() == s64 || array.type() == u64; }
 
+inline bool NeedsDouble(const af::array::array_proxy arrayProxy) { return arrayProxy.type() == f64 || arrayProxy.type() == c64 || arrayProxy.type() == s64 || arrayProxy.type() == u64; }
+
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
 #define FIRE_ASYNC_METHOD_ARR(F, f)\

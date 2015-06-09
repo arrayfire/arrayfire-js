@@ -5,6 +5,7 @@ pages:
 - Classes:
   - AFArray: AFArray.md
   - Dim4: Dim4.md
+  - Seq: Seq.md
 - Functions:
   - Managing Devices: devices.md
 theme: united
