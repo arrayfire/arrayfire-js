@@ -92,7 +92,7 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 [Apache 2.0](https://github.com/unbornchikken/fire-js/blob/master/LICENSE)
 
 ```
-Copyright 2015 Gábor Mező aka unbornchikken
+Copyright 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
