@@ -37,17 +37,17 @@ struct ArrayWrapper : public node::ObjectWrap
 
     static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
 
-    static ArrayOrProxyHolder* Get(v8::Local<v8::Value>& value);
-    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Value>& value);
-    static ArrayOrProxyHolder* Get(v8::Local<v8::Object>& value);
-    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Object>& value);
+    static ArrayOrProxyHolder* Get(v8::Local<v8::Value> value);
+    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Value> value);
+    static ArrayOrProxyHolder* Get(v8::Local<v8::Object> value);
+    static ArrayOrProxyHolder* TryGet(v8::Local<v8::Object> value);
     static ArrayOrProxyHolder* GetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
     static ArrayOrProxyHolder* TryGetAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
 
-    static af::array* GetArray(v8::Local<v8::Value>& value);
-    static af::array* TryGetArray(v8::Local<v8::Value>& value);
-    static af::array* GetArray(v8::Local<v8::Object>& value);
-    static af::array* TryGetArray(v8::Local<v8::Object>& value);
+    static af::array* GetArray(v8::Local<v8::Value> value);
+    static af::array* TryGetArray(v8::Local<v8::Value> value);
+    static af::array* GetArray(v8::Local<v8::Object> value);
+    static af::array* TryGetArray(v8::Local<v8::Object> value);
     static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
     static af::array* TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
 

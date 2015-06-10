@@ -176,14 +176,14 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     }
 }
 
-ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Value>& value)
+ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Value> value)
 {
     auto array = TryGet(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Value>& value)
+ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Value> value)
 {
     try
     {
@@ -199,14 +199,14 @@ ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Value>& value)
     return nullptr;
 }
 
-ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Object>& value)
+ArrayOrProxyHolder* ArrayWrapper::Get(v8::Local<v8::Object> value)
 {
     auto array = TryGet(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Object>& value)
+ArrayOrProxyHolder* ArrayWrapper::TryGet(v8::Local<v8::Object> value)
 {
     try
     {
@@ -237,24 +237,24 @@ ArrayOrProxyHolder* ArrayWrapper::TryGetAt(const v8::FunctionCallbackInfo<v8::Va
     return nullptr;
 }
 
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Value>& value)
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
     return Get(value)->GetArray();
 }
 
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value>& value)
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
 {
     auto data = TryGet(value);
     if (data) return data->GetArray();
     return nullptr;
 }
 
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Object>& value)
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Object> value)
 {
     return Get(value)->GetArray();
 }
 
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object>& value)
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
 {
     auto data = TryGet(value);
     if (data) return data->GetArray();
@@ -273,7 +273,7 @@ af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>
     return nullptr;
 }
 
-void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value> &args)
+void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     NanScope();
 

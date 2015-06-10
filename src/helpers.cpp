@@ -76,7 +76,7 @@ pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype)
     return move(make_pair(dtype, sizeOf));
 }
 
-std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value>& value)
+std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value)
 {
     if (value->IsNumber())
     {
@@ -129,7 +129,7 @@ v8::Local<v8::Object> WrapPointer(void* ptr)
     return NanNewBufferHandle(reinterpret_cast<char*>(ptr), 0, [](char*v1, void*v2) {}, nullptr);
 }
 
-af::dim4 ToDim4(v8::Local<v8::Object>& obj)
+af::dim4 ToDim4(v8::Local<v8::Object> obj)
 {
     Local<Array> dims;
     if (obj->IsArray())
@@ -171,7 +171,7 @@ af::dim4 ToDim4(v8::Local<v8::Object>& obj)
     return move(af::dim4(dim0, dim1, dim2, dim3));
 }
 
-af::dim4 ToDim4(v8::Local<v8::Value>& value)
+af::dim4 ToDim4(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {
@@ -180,7 +180,7 @@ af::dim4 ToDim4(v8::Local<v8::Value>& value)
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
-af::seq ToSeq(v8::Local<v8::Object>& obj)
+af::seq ToSeq(v8::Local<v8::Object> obj)
 {
     auto begin = obj->Get(NanNew(Symbols::Begin));
     auto end = obj->Get(NanNew(Symbols::End));
@@ -207,7 +207,7 @@ af::seq ToSeq(v8::Local<v8::Object>& obj)
     FIRE_THROW_ARG_IS_NOT_A_SEQ();
 }
 
-af::seq ToSeq(v8::Local<v8::Value>& value)
+af::seq ToSeq(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {
@@ -216,7 +216,7 @@ af::seq ToSeq(v8::Local<v8::Value>& value)
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
-af::index ToIndex(v8::Local<v8::Value>& value)
+af::index ToIndex(v8::Local<v8::Value> value)
 {
     if (value->IsNull())
     {
@@ -246,7 +246,7 @@ af::index ToIndex(v8::Local<v8::Value>& value)
     FIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
 
-af::af_cdouble ToDComplex(v8::Local<v8::Object>& obj)
+af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
 {
     auto imag = obj->Get(NanNew(Symbols::Imag));
     auto real = obj->Get(NanNew(Symbols::Real));
@@ -257,7 +257,7 @@ af::af_cdouble ToDComplex(v8::Local<v8::Object>& obj)
     FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
-af::af_cdouble ToDComplex(v8::Local<v8::Value>& value)
+af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {
@@ -266,7 +266,7 @@ af::af_cdouble ToDComplex(v8::Local<v8::Value>& value)
     FIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
-af::af_cfloat ToFComplex(v8::Local<v8::Object>& obj)
+af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
 {
     auto imag = obj->Get(NanNew(Symbols::Imag));
     auto real = obj->Get(NanNew(Symbols::Real));
@@ -277,7 +277,7 @@ af::af_cfloat ToFComplex(v8::Local<v8::Object>& obj)
     FIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
-af::af_cfloat ToFComplex(v8::Local<v8::Value>& value)
+af::af_cfloat ToFComplex(v8::Local<v8::Value> value)
 {
     if (value->IsObject())
     {

@@ -25,29 +25,29 @@ limitations under the License.
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 
-std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value>& value);
+std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value);
 
 std::string ErrToString(af_err);
 
 v8::Local<v8::Object> WrapPointer(void* ptr);
 
-af::dim4 ToDim4(v8::Local<v8::Object>& obj);
+af::dim4 ToDim4(v8::Local<v8::Object> obj);
 
-af::dim4 ToDim4(v8::Local<v8::Value>& value);
+af::dim4 ToDim4(v8::Local<v8::Value> value);
 
-af::seq ToSeq(v8::Local<v8::Object>& obj);
+af::seq ToSeq(v8::Local<v8::Object> obj);
 
-af::seq ToSeq(v8::Local<v8::Value>& value);
+af::seq ToSeq(v8::Local<v8::Value> value);
 
-af::index ToIndex(v8::Local<v8::Value>& value);
+af::index ToIndex(v8::Local<v8::Value> value);
 
-af::af_cdouble ToDComplex(v8::Local<v8::Object>& obj);
+af::af_cdouble ToDComplex(v8::Local<v8::Object> obj);
 
-af::af_cdouble  ToDComplex(v8::Local<v8::Value>& value);
+af::af_cdouble  ToDComplex(v8::Local<v8::Value> value);
 
-af::af_cfloat  ToFComplex(v8::Local<v8::Object>& obj);
+af::af_cfloat  ToFComplex(v8::Local<v8::Object> obj);
 
-af::af_cfloat ToFComplex(v8::Local<v8::Value>& value);
+af::af_cfloat ToFComplex(v8::Local<v8::Value> value);
 
 v8::Local<v8::Object> ToV8Complex(const af::af_cdouble& value);
 
