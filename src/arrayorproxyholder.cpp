@@ -5,6 +5,14 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
+ArrayOrProxyHolder::ArrayOrProxyHolder(ArrayOrProxyHolder&& h) :
+    _array(h._array),
+    _arrayProxy(h._arrayProxy)
+{
+    h._array = nullptr;
+    h._arrayProxy = nullptr;
+}
+
 ArrayOrProxyHolder::ArrayOrProxyHolder(af::array* array) :
     _array(array),
     _arrayProxy(nullptr)
@@ -44,4 +52,12 @@ af::array*ArrayOrProxyHolder::GetArray()
     delete _arrayProxy;
     _arrayProxy = nullptr;
     return _array;
+}
+
+ArrayOrProxyHolder&& ArrayOrProxyHolder::operator=(ArrayOrProxyHolder&& h)
+{
+    _array = h._array;
+    _arrayProxy = h._arrayProxy;
+    h._array = nullptr;
+    h._arrayProxy = nullptr;
 }
