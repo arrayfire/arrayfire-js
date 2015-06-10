@@ -445,7 +445,7 @@ NAN_METHOD(ArrayWrapper::Elements)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetArray(args.This())->elements()));
+        NanReturnValue(NanNew<Number>(Get(args.This())->elements()));
     }
     FIRE_CATCH
 }
@@ -562,7 +562,7 @@ NAN_METHOD(ArrayWrapper::Type)
     try
     {
         Guard();
-        NanReturnValue(GetArray(args.This())->type());
+        NanReturnValue(Get(args.This())->type());
     }
     FIRE_CATCH
 }
@@ -575,10 +575,10 @@ NAN_METHOD(ArrayWrapper::Dims)
     {
         Guard();
 
-        auto pArray = GetArray(args.This());
+        auto pHolder = Get(args.This());
         if (!args.Length())
         {
-            auto dims = pArray->dims();
+            auto dims = pHolder->dims();
             auto jsDims = NanNew<Object>();
             jsDims->Set(NanNew(Symbols::Elements), NanNew<Number>(dims.elements()));
             jsDims->Set(NanNew(Symbols::Ndims), NanNew<Number>(dims.ndims()));
@@ -594,7 +594,7 @@ NAN_METHOD(ArrayWrapper::Dims)
         }
         else
         {
-            NanReturnValue(NanNew<Number>(pArray->dims(args[0]->Uint32Value())));
+            NanReturnValue(NanNew<Number>(pHolder->dims(args[0]->Uint32Value())));
         }
     }
     FIRE_CATCH
@@ -607,7 +607,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
+        NanReturnValue(NanNew<Number>(Get(args.This())->numdims()));
     }
     FIRE_CATCH
 }
@@ -619,7 +619,7 @@ NAN_METHOD(ArrayWrapper::Bytes)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
+        NanReturnValue(NanNew<Number>((unsigned)Get(args.This())->bytes()));
     }
     FIRE_CATCH
 }
@@ -631,7 +631,7 @@ NAN_METHOD(ArrayWrapper::Copy)
     try
     {
         Guard();
-        NanReturnValue(New(new af::array(move(GetArray(args.This())->copy()))));
+        NanReturnValue(New(new af::array(move(Get(args.This())->copy()))));
     }
     FIRE_CATCH
 }
@@ -643,7 +643,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isempty()));
+        NanReturnValue(NanNew(Get(args.This())->isempty()));
     }
     FIRE_CATCH
 }
@@ -655,7 +655,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
+        NanReturnValue(NanNew(Get(args.This())->isscalar()));
     }
     FIRE_CATCH
 }
@@ -667,7 +667,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isvector()));
+        NanReturnValue(NanNew(Get(args.This())->isvector()));
     }
     FIRE_CATCH
 }
@@ -679,7 +679,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isrow()));
+        NanReturnValue(NanNew(Get(args.This())->isrow()));
     }
     FIRE_CATCH
 }
@@ -691,7 +691,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
+        NanReturnValue(NanNew(Get(args.This())->iscolumn()));
     }
     FIRE_CATCH
 }
@@ -703,7 +703,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
+        NanReturnValue(NanNew(Get(args.This())->iscomplex()));
     }
     FIRE_CATCH
 }
@@ -715,7 +715,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isreal()));
+        NanReturnValue(NanNew(Get(args.This())->isreal()));
     }
     FIRE_CATCH
 }
@@ -727,7 +727,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
+        NanReturnValue(NanNew(Get(args.This())->isdouble()));
     }
     FIRE_CATCH
 }
@@ -739,7 +739,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->issingle()));
+        NanReturnValue(NanNew(Get(args.This())->issingle()));
     }
     FIRE_CATCH
 }
@@ -751,7 +751,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
+        NanReturnValue(NanNew(Get(args.This())->isrealfloating()));
     }
     FIRE_CATCH
 }
@@ -763,7 +763,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
+        NanReturnValue(NanNew(Get(args.This())->isfloating()));
     }
     FIRE_CATCH
 }
@@ -775,7 +775,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
+        NanReturnValue(NanNew(Get(args.This())->isinteger()));
     }
     FIRE_CATCH
 }
@@ -787,7 +787,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
+        NanReturnValue(NanNew(Get(args.This())->type() == b8));
     }
     FIRE_CATCH
 }
@@ -799,7 +799,7 @@ NAN_METHOD(ArrayWrapper::Eval)
     try
     {
         Guard();
-        GetArray(args.This())->eval();
+        Get(args.This())->eval();
         NanReturnUndefined();
     }
     FIRE_CATCH
@@ -889,7 +889,7 @@ NAN_METHOD(ArrayWrapper::As)
     {
         ARGS_LEN(1)
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
-        NanReturnValue(New(GetArray(args.This())->as(type)));
+        NanReturnValue(New(Get(args.This())->as(type)));
     }
     FIRE_CATCH
 }
@@ -901,143 +901,62 @@ NAN_METHOD(ArrayWrapper::F)\
     \
     try\
     {\
-        auto holder = Get(args.This());\
-        auto pProxy = holder->GetArrayProxy();\
-        if (pProxy)\
+        auto pHolder = Get(args.This());\
+        auto& holder = *pHolder;\
+        bool isDouble = NeedsDouble(holder);\
+        ARGS_LEN(1)\
+        auto value = args[0];\
+        auto pOtherHolder = TryGet(value);\
+        if (pOtherHolder)\
         {\
-            auto& proxy = *pProxy;\
-            bool isDouble = NeedsDouble(proxy);\
-            ARGS_LEN(1)\
-            auto value = args[0];\
-            auto pOtherHolder = TryGet(value);\
-            if (pOtherHolder)\
+            auto& otherHolder = *pOtherHolder;\
+            Guard();\
+            holder Op otherHolder;\
+        }\
+        else if (value->IsNumber())\
+        {\
+            double v = value->NumberValue();\
+            if (floor(v) == v)\
             {\
-                if (pOtherHolder->GetArrayProxy())\
-                {\
-                    auto& otherArrayProxy = *pOtherHolder->GetArrayProxy();\
-                    Guard();\
-                    proxy Op otherArrayProxy;\
-                }\
-                else\
-                {\
-                    auto& otherArray = *pOtherHolder->GetArray();\
-                    Guard();\
-                    proxy Op otherArray;\
-                }\
-            }\
-            else if (value->IsNumber())\
-            {\
-                double v = value->NumberValue();\
-                if (floor(v) == v)\
-                {\
-                    Guard();\
-                    proxy Op value->Int32Value();\
-                }\
-                else if (isDouble)\
-                {\
-                    Guard();\
-                    proxy Op v;\
-                }\
-                else\
-                {\
-                    Guard();\
-                    proxy Op (float)v;\
-                }\
-            }\
-            else if (value->IsObject())\
-            {\
-                if (af::isDoubleAvailable(af::getDevice()))\
-                {\
-                    auto v = ToDComplex(value);\
-                    Guard();\
-                    proxy Op v;\
-                }\
-                else if (isDouble)\
-                {\
-                    auto v = ToFComplex(value);\
-                    Guard();\
-                    proxy Op v;\
-                }\
-            }\
-            else if (value->IsString())\
-            {\
-                String::Utf8Value str(value);\
-                intl v = strtoll(*str, nullptr, 10);\
                 Guard();\
-                proxy Op v;\
+                holder Op value->Int32Value();\
+            }\
+            else if (isDouble)\
+            {\
+                Guard();\
+                holder Op v;\
             }\
             else\
             {\
-                return NAN_THROW_INVALID_ARGS();\
+                Guard();\
+                holder Op (float)v;\
             }\
+        }\
+        else if (value->IsObject())\
+        {\
+            if (af::isDoubleAvailable(af::getDevice()))\
+            {\
+                auto v = ToDComplex(value);\
+                Guard();\
+                holder Op v;\
+            }\
+            else if (isDouble)\
+            {\
+                auto v = ToFComplex(value);\
+                Guard();\
+                holder Op v;\
+            }\
+        }\
+        else if (value->IsString())\
+        {\
+            String::Utf8Value str(value);\
+            __int64_t v = strtoll(*str, nullptr, 10);\
+            Guard();\
+            holder Op v;\
         }\
         else\
         {\
-            auto& array = *holder->GetArray();\
-            bool isDouble = NeedsDouble(array);\
-            ARGS_LEN(1)\
-            auto value = args[0];\
-            auto pOtherHolder = TryGet(value);\
-            if (pOtherHolder)\
-            {\
-                if (pOtherHolder->GetArrayProxy())\
-                {\
-                    auto& otherArrayProxy = *pOtherHolder->GetArrayProxy();\
-                    Guard();\
-                    array Op otherArrayProxy;\
-                }\
-                else\
-                {\
-                    auto& otherArray = *pOtherHolder->GetArray();\
-                    Guard();\
-                    array Op otherArray;\
-                }\
-            }\
-            else if (value->IsNumber())\
-            {\
-                double v = value->NumberValue();\
-                if (floor(v) == v)\
-                {\
-                    Guard();\
-                    array Op value->Int32Value();\
-                }\
-                else if (isDouble)\
-                {\
-                    Guard();\
-                    array Op v;\
-                }\
-                else\
-                {\
-                    Guard();\
-                    array Op (float)v;\
-                }\
-            }\
-            else if (value->IsObject())\
-            {\
-                if (af::isDoubleAvailable(af::getDevice()))\
-                {\
-                    auto v = ToDComplex(value);\
-                    Guard();\
-                    array Op v;\
-                }\
-                else if (isDouble)\
-                {\
-                    auto v = ToFComplex(value);\
-                    Guard();\
-                    array Op v;\
-                }\
-            }\
-            else if (value->IsString())\
-            {\
-                String::Utf8Value str(value);\
-                intl v = strtoll(*str, nullptr, 10);\
-                Guard();\
-                array Op v;\
-            }\
-            else\
-            {\
-                return NAN_THROW_INVALID_ARGS();\
-            }\
+            return NAN_THROW_INVALID_ARGS();\
         }\
         \
         NanReturnValue(args.This());\

@@ -1,5 +1,5 @@
-#ifndef ARRAYORPROXYHOLDER_H
-#define ARRAYORPROXYHOLDER_H
+#ifndef FIRE_JS_ARRAYORPROXYHOLDER_H
+#define FIRE_JS_ARRAYORPROXYHOLDER_H
 
 #include <arrayfire.h>
 
@@ -21,6 +21,140 @@ struct ArrayOrProxyHolder
     }
 
     ArrayOrProxyHolder &&operator=(ArrayOrProxyHolder&& h);
+
+    bool NeedsDouble() const;
+
+    dim_t elements() const
+    {
+        if (_arrayProxy) return _arrayProxy->elements();
+        return _array->elements();
+    }
+
+    af::dtype type() const
+    {
+        if (_arrayProxy) return _arrayProxy->type();
+        return _array->type();
+    }
+
+    af::dim4 dims() const
+    {
+        if (_arrayProxy) return _arrayProxy->dims();
+        return _array->dims();
+    }
+
+    dim_t dims(unsigned dim) const
+    {
+        if (_arrayProxy) return _arrayProxy->dims(dim);
+        return _array->dims(dim);
+    }
+
+    unsigned numdims() const
+    {
+        if (_arrayProxy) return _arrayProxy->numdims();
+        return _array->numdims();
+    }
+
+    size_t bytes() const
+    {
+        if (_arrayProxy) return _arrayProxy->bytes();
+        return _array->bytes();
+    }
+
+    af::array copy() const
+    {
+        if (_arrayProxy) return _arrayProxy->copy();
+        return _array->copy();
+    }
+
+    bool isempty() const
+    {
+        if (_arrayProxy) return _arrayProxy->isempty();
+        return _array->isempty();
+    }
+
+    bool isscalar() const
+    {
+        if (_arrayProxy) return _arrayProxy->isscalar();
+        return _array->isscalar();
+    }
+
+    bool isvector() const
+    {
+        if (_arrayProxy) return _arrayProxy->isvector();
+        return _array->isvector();
+    }
+
+    bool isrow() const
+    {
+        if (_arrayProxy) return _arrayProxy->isrow();
+        return _array->isrow();
+    }
+
+    bool iscolumn() const
+    {
+        if (_arrayProxy) return _arrayProxy->iscolumn();
+        return _array->iscolumn();
+    }
+
+    bool iscomplex() const
+    {
+        if (_arrayProxy) return _arrayProxy->iscomplex();
+        return _array->iscomplex();
+    }
+
+    bool isreal() const
+    {
+        if (_arrayProxy) return _arrayProxy->isreal();
+        return _array->isreal();
+    }
+
+    bool isdouble() const
+    {
+        if (_arrayProxy) return _arrayProxy->isdouble();
+        return _array->isdouble();
+    }
+
+    bool issingle() const
+    {
+        if (_arrayProxy) return _arrayProxy->issingle();
+        return _array->issingle();
+    }
+
+    bool isrealfloating() const
+    {
+        if (_arrayProxy) return _arrayProxy->isrealfloating();
+        return _array->isrealfloating();
+    }
+
+    bool isfloating() const
+    {
+        if (_arrayProxy) return _arrayProxy->isfloating();
+        return _array->isfloating();
+    }
+
+    bool isinteger() const
+    {
+        if (_arrayProxy) return _arrayProxy->isinteger();
+        return _array->isinteger();
+    }
+
+    bool isbool() const
+    {
+        if (_arrayProxy) return _arrayProxy->isbool();
+        return _array->isbool();
+    }
+
+    void eval() const
+    {
+        if (_arrayProxy) return _arrayProxy->eval();
+        return _array->eval();
+    }
+
+    af::array as(af::dtype type) const
+    {
+        if (_arrayProxy) return _arrayProxy->as(type);
+        return _array->as(type);
+    }
 
 #define OP_ASSIGN(OP)\
     ArrayOrProxyHolder& operator OP(const ArrayOrProxyHolder& h)\
@@ -114,4 +248,4 @@ private:
     af::array::array_proxy* _arrayProxy;
 };
 
-#endif // ARRAYORPROXYHOLDER_H
+#endif // FIRE_JS_ARRAYORPROXYHOLDER_H

@@ -19,6 +19,7 @@ limitations under the License.
 #include "errors.h"
 #include "arraywrapper.h"
 #include "symbols.h"
+#include "arrayorproxyholder.h"
 
 using namespace std;
 using namespace v8;
@@ -342,4 +343,9 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
         return new NanCallback(args[args.Length() - 1].As<Function>());
     }
     FIRE_THROW_CB_EXPECTED();
+}
+
+bool NeedsDouble(const ArrayOrProxyHolder& holder)
+{
+    return holder.NeedsDouble();
 }

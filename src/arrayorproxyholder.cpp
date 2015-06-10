@@ -1,5 +1,6 @@
 #include "ext.h"
 #include "arrayorproxyholder.h"
+#include "helpers.h"
 
 using namespace v8;
 using namespace std;
@@ -60,4 +61,11 @@ ArrayOrProxyHolder&& ArrayOrProxyHolder::operator=(ArrayOrProxyHolder&& h)
     _arrayProxy = h._arrayProxy;
     h._array = nullptr;
     h._arrayProxy = nullptr;
+}
+
+bool ArrayOrProxyHolder::NeedsDouble() const
+{
+    if (_arrayProxy) return ::NeedsDouble(*_arrayProxy);
+    if (_array) return ::NeedsDouble(*_array);
+    assert(false);
 }
