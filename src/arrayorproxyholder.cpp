@@ -55,12 +55,13 @@ af::array*ArrayOrProxyHolder::GetArray()
     return _array;
 }
 
-ArrayOrProxyHolder&& ArrayOrProxyHolder::operator=(ArrayOrProxyHolder&& h)
+ArrayOrProxyHolder& ArrayOrProxyHolder::operator=(ArrayOrProxyHolder&& h)
 {
     _array = h._array;
     _arrayProxy = h._arrayProxy;
     h._array = nullptr;
     h._arrayProxy = nullptr;
+    return *this;
 }
 
 bool ArrayOrProxyHolder::NeedsDouble() const
@@ -68,4 +69,5 @@ bool ArrayOrProxyHolder::NeedsDouble() const
     if (_arrayProxy) return ::NeedsDouble(*_arrayProxy);
     if (_array) return ::NeedsDouble(*_array);
     assert(false);
+    return false;
 }

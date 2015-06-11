@@ -20,7 +20,7 @@ struct ArrayOrProxyHolder
         return _arrayProxy;
     }
 
-    ArrayOrProxyHolder &&operator=(ArrayOrProxyHolder&& h);
+    ArrayOrProxyHolder& operator=(ArrayOrProxyHolder&& h);
 
     bool NeedsDouble() const;
 
@@ -156,6 +156,78 @@ struct ArrayOrProxyHolder
         return _array->as(type);
     }
 
+    af::array::array_proxy row(int index)
+    {
+        if (_arrayProxy) return _arrayProxy->row(index);
+        return _array->row(index);
+    }
+
+    const af::array::array_proxy row(int index) const
+    {
+        if (_arrayProxy) return _arrayProxy->row(index);
+        return _array->row(index);
+    }
+
+    af::array::array_proxy rows(int first, int last)
+    {
+        if (_arrayProxy) return _arrayProxy->rows(first, last);
+        return _array->rows(first, last);
+    }
+
+    const af::array::array_proxy rows(int first, int last) const
+    {
+        if (_arrayProxy) return _arrayProxy->rows(first, last);
+        return _array->rows(first, last);
+    }
+
+    af::array::array_proxy col(int index)
+    {
+        if (_arrayProxy) return _arrayProxy->col(index);
+        return _array->col(index);
+    }
+
+    const af::array::array_proxy col(int index) const
+    {
+        if (_arrayProxy) return _arrayProxy->col(index);
+        return _array->col(index);
+    }
+
+    af::array::array_proxy cols(int first, int last)
+    {
+        if (_arrayProxy) return _arrayProxy->cols(first, last);
+        return _array->cols(first, last);
+    }
+
+    const af::array::array_proxy cols(int first, int last) const
+    {
+        if (_arrayProxy) return _arrayProxy->cols(first, last);
+        return _array->cols(first, last);
+    }
+
+    af::array::array_proxy slice(int index)
+    {
+        if (_arrayProxy) return _arrayProxy->slice(index);
+        return _array->slice(index);
+    }
+
+    const af::array::array_proxy slice(int index) const
+    {
+        if (_arrayProxy) return _arrayProxy->row(index);
+        return _array->row(index);
+    }
+
+    af::array::array_proxy slices(int first, int last)
+    {
+        if (_arrayProxy) return _arrayProxy->slices(first, last);
+        return _array->slices(first, last);
+    }
+
+    const af::array::array_proxy slices(int first, int last) const
+    {
+        if (_arrayProxy) return _arrayProxy->slices(first, last);
+        return _array->slices(first, last);
+    }
+
 #define OP_ASSIGN(OP)\
     ArrayOrProxyHolder& operator OP(const ArrayOrProxyHolder& h)\
     {\
@@ -234,11 +306,11 @@ struct ArrayOrProxyHolder
     OP_ASSIGN2(*=, af::af_cfloat)
     OP_ASSIGN2(/=, af::af_cfloat)
 
-    OP_ASSIGN2(=,  __int64_t)
-    OP_ASSIGN2(+=, __int64_t)
-    OP_ASSIGN2(-=, __int64_t)
-    OP_ASSIGN2(*=, __int64_t)
-    OP_ASSIGN2(/=, __int64_t)
+    OP_ASSIGN2(=,  __int64)
+    OP_ASSIGN2(+=, __int64)
+    OP_ASSIGN2(-=, __int64)
+    OP_ASSIGN2(*=, __int64)
+    OP_ASSIGN2(/=, __int64)
 
 #undef OP_ASSIGN
 #undef OP_ASSIGN2
