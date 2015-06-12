@@ -203,9 +203,7 @@ Gets a reference of a matrix in a 3D AFArray.
 
 **Result:** AFArray instance holding reference to the specified region of the original 3D array
 
-## Operators
-
-### Assignment Operators
+## Assignment Operators
 
 [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__index__mat.htm)
 
@@ -227,7 +225,7 @@ Gets a reference of a matrix in a 3D AFArray.
     
 **Result:** assignee AFArray instance
 
-### Arithmetic Operators
+## Arithmetic Operators
 
 [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__arith__mat.htm)
 
@@ -251,7 +249,7 @@ Gets a reference of a matrix in a 3D AFArray.
     
 **Result:** AFArray instance holding the operation's result
 
-### Logical Operators
+## Logical Operators
 
 [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__logic__mat.htm)
 
