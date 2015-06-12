@@ -4,7 +4,7 @@
     
     <url>
      <loc>None/</loc>
-     <lastmod>2015-06-08</lastmod>
+     <lastmod>2015-06-12</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>None/statics/</loc>
-     <lastmod>2015-06-08</lastmod>
+     <lastmod>2015-06-12</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -21,13 +21,25 @@
         
     <url>
      <loc>None/AFArray/</loc>
-     <lastmod>2015-06-08</lastmod>
+     <lastmod>2015-06-12</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/Dim4/</loc>
-     <lastmod>2015-06-08</lastmod>
+     <lastmod>2015-06-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/Seq/</loc>
+     <lastmod>2015-06-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/Complex/</loc>
+     <lastmod>2015-06-12</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -37,7 +49,7 @@
         
     <url>
      <loc>None/devices/</loc>
-     <lastmod>2015-06-08</lastmod>
+     <lastmod>2015-06-12</lastmod>
      <changefreq>daily</changefreq>
     </url>
         

@@ -74,6 +74,14 @@
                             <a href="../Dim4/">Dim4</a>
                         </li>
                     
+                        <li >
+                            <a href="../Seq/">Seq</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Complex/">Complex</a>
+                        </li>
+                    
                     </ul>
                 </li>
             
@@ -135,6 +143,8 @@
             <li><a href="#indexing-operations">Indexing Operations</a></li>
         
             <li><a href="#operators">Operators</a></li>
+        
+            <li><a href="#todo">TODO</a></li>
         
     
     </ul>
@@ -248,46 +258,150 @@
 <p><strong>Result:</strong> actual type info (Boolean)</p>
 <h3 id="eval">eval</h3>
 <ul>
-<li>eval() <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581">-&gt; ArrayFire Documentation</a></li>
+<li><code>eval()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p>Evaluate any JIT expressions to generate data for the array.</p>
 <h2 id="indexing-operations">Indexing Operations</h2>
 <h3 id="at">at</h3>
-<h3 id="row">row</h3>
-<h3 id="col">col</h3>
-<h3 id="slice">slice</h3>
-<h3 id="rows">rows</h3>
-<h3 id="cols">cols</h3>
-<h3 id="slices">slices</h3>
+<p><a href="http://www.arrayfire.com/docs/group__array__mem__operator__paren.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>at(s0)</code></li>
+<li><code>at(s0, s1)</code></li>
+<li><code>at(s0, s1, s2)</code></li>
+<li><code>at(s0, s1, s2, s3)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><strong>s0 .. s3: null|String|Number|<a href="../Seq">Seq</a>|AFArray</strong> </p>
+<ul>
+<li><strong>null:</strong> means <code>"span"</code></li>
+<li><strong>String:</strong> can be <code>"span"</code></li>
+<li><strong>Number:</strong> element's index, or -1 which means the last element</li>
+<li><strong><a href="../Seq">Seq</a>:</strong> sequence of values</li>
+<li><strong>AFArray:</strong> array holding the index value</li>
+</ul>
+</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding reference to the the specified region of the original array</p>
+<h3 id="row-rows">row, rows</h3>
+<p>Gets a reference of a row in a 2D AFArray.</p>
+<p><a href="http://www.arrayfire.com/docs/group__array__mem__row.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>row(index)</code></li>
+<li><code>rows(firstIndex, lastIndex)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><strong>index, fistIndex, lastIndex: Number</strong> - a row index or a range of row indices</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding reference to the specified region of the original 2D array</p>
+<h3 id="col-cols">col, cols</h3>
+<p>Gets a reference of a column in a 2D AFArray.</p>
+<p><a href="http://www.arrayfire.com/docs/group__array__mem__col.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>col(index)</code></li>
+<li><code>cols(firstIndex, lastIndex)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><strong>index, fistIndex, lastIndex: Number</strong> - a column index or a range of column indices</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding reference to the specified region of the original 2D array</p>
+<h3 id="slice-slices">slice, slices</h3>
+<p>Gets a reference of a matrix in a 3D AFArray.</p>
+<p><a href="http://www.arrayfire.com/docs/group__array__mem__slice.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>slice(index)</code></li>
+<li><code>slices(firstIndex, lastIndex)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><strong>index, fistIndex, lastIndex: Number</strong> - a matrix index or a range of matrix indices</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding reference to the specified region of the original 3D array</p>
 <h2 id="operators">Operators</h2>
+<h3 id="assignment-operators">Assignment Operators</h3>
+<p><a href="http://www.arrayfire.com/docs/group__index__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>assign(other)</code> operator =</li>
+<li><code>set(other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(other)</code> operator +=</li>
+<li><code>subAssign(other)</code> operator -=</li>
+<li><code>mulAssign(other)</code> operator *=</li>
+<li><code>divAssign(other)</code> operator /=</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
+<ul>
+<li><strong>AFArray:</strong> rhs array</li>
+<li><strong>Number:</strong> rhs number</li>
+<li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>
+<li><strong>String:</strong>: rhs number value (to workaround JavaScript inability to hold int64 values)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Result:</strong> assignee AFArray instance</p>
+<h3 id="arithmetic-operators">Arithmetic Operators</h3>
+<p><a href="http://www.arrayfire.com/docs/group__arith__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>add(other)</code> operator +</li>
+<li><code>sub(other)</code> operator -</li>
+<li><code>mul(other)</code> operator *</li>
+<li><code>div(other)</code> operator /</li>
+<li><code>bitshiftl(other)</code> operator &lt;&lt;</li>
+<li><code>bitShiftL(other)</code> operator &lt;&lt; (alias of bitshiftl)</li>
+<li><code>bitshiftr(other)</code> operator &lt;&lt;</li>
+<li><code>bitShiftR(other)</code> operator &lt;&lt; (alias of bitshiftr)</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
+<ul>
+<li><strong>AFArray:</strong> rhs array</li>
+<li><strong>Number:</strong> rhs number</li>
+<li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>
+<li><strong>String:</strong>: rhs number value (to workaround JavaScript inability to hold int64 values)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding the operation's result</p>
+<h3 id="logical-operators">Logical Operators</h3>
+<p><a href="http://www.arrayfire.com/docs/group__logic__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<ul>
+<li><code>neg()</code> operator -</li>
+<li><code>not()</code> operator !</li>
+<li><code>lt(other)</code> operator &lt;</li>
+<li><code>gt(other)</code> operator &gt;</li>
+<li><code>le(other)</code> operator &lt;=</li>
+<li><code>ge(other)</code> operator &gt;=</li>
+<li><code>eq(other)</code> operator ==</li>
+<li><code>neq(other)</code> operator !=</li>
+<li><code>and(other)</code> operator &amp;&amp;</li>
+<li><code>or(other)</code> operator ||</li>
+<li><code>bitAnd(other)</code> operator &amp;</li>
+<li><code>bitOr(other)</code> operator |</li>
+<li><code>bitXor(other)</code> operator ^</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>
+<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
+<ul>
+<li><strong>AFArray:</strong> rhs array</li>
+<li><strong>Number:</strong> rhs number</li>
+<li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>
+<li><strong>String:</strong>: rhs number value (to workaround JavaScript inability to hold int64 values)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding the operation's result</p>
+<h2 id="todo">TODO</h2>
 <h3 id="as">as</h3>
-<h3 id="assign">assign</h3>
-<h3 id="set">set</h3>
-<h3 id="add">add</h3>
-<h3 id="addassign">addAssign</h3>
-<h3 id="sub">sub</h3>
-<h3 id="subassign">subAssign</h3>
-<h3 id="mul">mul</h3>
-<h3 id="mulassign">mulAssign</h3>
-<h3 id="div">div</h3>
-<h3 id="divassign">divAssign</h3>
-<h3 id="bitshiftl">bitshiftl</h3>
-<h3 id="bitshiftl_1">bitShiftL</h3>
-<h3 id="bitshiftr">bitshiftr</h3>
-<h3 id="bitshiftr_1">bitShiftR</h3>
-<h3 id="lt">lt</h3>
-<h3 id="gt">gt</h3>
-<h3 id="le">le</h3>
-<h3 id="ge">ge</h3>
-<h3 id="eq">eq</h3>
-<h3 id="neq">neq</h3>
-<h3 id="and">and</h3>
-<h3 id="or">or</h3>
-<h3 id="neg">neg</h3>
-<h3 id="not">not</h3>
-<h3 id="bitand">bitAnd</h3>
-<h3 id="bitor">bitOr</h3>
-<h3 id="bitxor">bitXor</h3></div>
+<h3 id="scalar">scalar!</h3></div>
         </div>
 
         <footer class="col-md-12">

@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Statics - Fire.js Documentation</title>
+	<title>Complex - Fire.js Documentation</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -56,13 +56,13 @@
             
             
             
-                <li class="active">
-                    <a href="./">Statics</a>
+                <li >
+                    <a href="../statics/">Statics</a>
                 </li>
             
             
             
-                <li class="dropdown">
+                <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     
@@ -78,8 +78,8 @@
                             <a href="../Seq/">Seq</a>
                         </li>
                     
-                        <li >
-                            <a href="../Complex/">Complex</a>
+                        <li class="active">
+                            <a href="./">Complex</a>
                         </li>
                     
                     </ul>
@@ -104,12 +104,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="..">
+                    <a rel="next" href="../Seq/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../AFArray/">
+                    <a rel="prev" href="../devices/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -132,50 +132,32 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#static-objects">Static Objects</a></li>
+        <li class="main active"><a href="#complex-class">Complex class</a></li>
         
-            <li><a href="#typesdtype">types.dType</a></li>
+            <li><a href="#constructor">constructor</a></li>
         
-            <li><a href="#typessource">types.source</a></li>
+            <li><a href="#properties">Properties</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="static-objects">Static Objects</h1>
-<p>They are accessible from the main Fire.js context object, eg.:</p>
-<pre><code class="js">var fire = require(&quot;fire-js&quot;)(&quot;CPU&quot;);
-
-// dType:
-var dType = fire.types.dType;
-</code></pre>
-
-<h2 id="typesdtype">types.dType</h2>
-<p>alias: <code>types.dtype</code></p>
-<pre><code class="js">{
-    f32: 0, // float
-    c32: 1, // complex of float
-    f64: 2, // double
-    c64: 3, // complex of double
-    b8: 4, // boolean (8 bits)
-    s32: 5, // int
-    u32: 6, // uint
-    u8: 7, // byte
-    s64: 8, // int64    
-    u64: 9 // uint64
-}
-</code></pre>
-
-<h2 id="typessource">types.source</h2>
-<pre><code class="js">{
-    device: 0,
-    host: 1,
-    // ArrayFire convention compatible aliases:
-    afDevice: 0,  
-    afHost: 1
-}
-</code></pre></div>
+<h1 id="complex-class">Complex class</h1>
+<h2 id="constructor">constructor</h2>
+<ul>
+<li><code>new Complex(real, imag)</code></li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><strong>real: Number</strong> - real part of the value</li>
+<li><strong>imag: Number</strong> - imaginary part of the value</li>
+</ul>
+<h2 id="properties">Properties</h2>
+<h3 id="real">real</h3>
+<p><strong>Value:</strong> real part of the value</p>
+<h3 id="imag">imag</h3>
+<p><strong>Value:</strong> imaginary part of the value</p></div>
         </div>
 
         <footer class="col-md-12">
