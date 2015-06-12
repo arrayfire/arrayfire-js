@@ -155,38 +155,131 @@ Evaluate any JIT expressions to generate data for the array.
     - **Number:** element's index, or -1 which means the last element
     - **[Seq](Seq):** sequence of values
     - **AFArray:** array holding the index value
+    
+**Result:** AFArray instance holding reference to the the specified region of the original array
 
 ### row, rows
+
+Gets a reference of a row in a 2D AFArray.
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mem__row.htm)
+
+- `row(index)`
+- `rows(firstIndex, lastIndex)`
+
+**Arguments**:
+
+- **index, fistIndex, lastIndex: Number** - a row index or a range of row indices
+
+**Result:** AFArray instance holding reference to the specified region of the original 2D array
+
 ### col, cols
+
+Gets a reference of a column in a 2D AFArray.
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mem__col.htm)
+
+- `col(index)`
+- `cols(firstIndex, lastIndex)`
+
+**Arguments**:
+
+- **index, fistIndex, lastIndex: Number** - a column index or a range of column indices
+
+**Result:** AFArray instance holding reference to the specified region of the original 2D array
+
 ### slice, slices
+
+Gets a reference of a matrix in a 3D AFArray.
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mem__slice.htm)
+
+- `slice(index)`
+- `slices(firstIndex, lastIndex)`
+
+**Arguments**:
+
+- **index, fistIndex, lastIndex: Number** - a matrix index or a range of matrix indices
+
+**Result:** AFArray instance holding reference to the specified region of the original 3D array
 
 ## Operators
 
+### Assignment Operators
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__index__mat.htm)
+
+- `assign(other)` operator =
+- `set(other)` operator = (alias of assign)
+- `addAssign(other)` operator +=
+- `subAssign(other)` operator -=
+- `mulAssign(other)` operator *=
+- `divAssign(other)` operator /=
+
+**Arguments**:
+
+- **other: AFArray|Number|[Complex](Complex)|String** 
+
+    - **AFArray:** rhs array
+    - **Number:** rhs number
+    - **[Complex](Complex):** rhs complex value
+    - **String:**: rhs number value (to workaround JavaScript inability to hold int64 values)
+    
+**Result:** assignee AFArray instance
+
+### Arithmetic Operators
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__arith__mat.htm)
+
+- `add(other)` operator +
+- `sub(other)` operator -
+- `mul(other)` operator *
+- `div(other)` operator /
+- `bitshiftl(other)` operator <<
+- `bitShiftL(other)` operator << (alias of bitshiftl)
+- `bitshiftr(other)` operator <<
+- `bitShiftR(other)` operator << (alias of bitshiftr)
+
+**Arguments**:
+
+- **other: AFArray|Number|[Complex](Complex)|String** 
+
+    - **AFArray:** rhs array
+    - **Number:** rhs number
+    - **[Complex](Complex):** rhs complex value
+    - **String:**: rhs number value (to workaround JavaScript inability to hold int64 values)
+    
+**Result:** AFArray instance holding the operation's result
+
+### Logical Operators
+
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__logic__mat.htm)
+
+- `neg()` operator -
+- `not()` operator !
+- `lt(other)` operator <
+- `gt(other)` operator >
+- `le(other)` operator <=
+- `ge(other)` operator >=
+- `eq(other)` operator ==
+- `neq(other)` operator !=
+- `and(other)` operator &&
+- `or(other)` operator ||
+- `bitAnd(other)` operator &
+- `bitOr(other)` operator |
+- `bitXor(other)` operator ^
+
+**Arguments**:
+
+- **other: AFArray|Number|[Complex](Complex)|String** 
+
+    - **AFArray:** rhs array
+    - **Number:** rhs number
+    - **[Complex](Complex):** rhs complex value
+    - **String:**: rhs number value (to workaround JavaScript inability to hold int64 values)
+    
+**Result:** AFArray instance holding the operation's result
+
+## TODO
 ### as
-### assign
-### set
-### add
-### addAssign
-### sub
-### subAssign
-### mul
-### mulAssign
-### div
-### divAssign
-### bitshiftl
-### bitShiftL
-### bitshiftr
-### bitShiftR
-### lt
-### gt
-### le
-### ge
-### eq
-### neq
-### and
-### or
-### neg
-### not
-### bitAnd
-### bitOr
-### bitXor
+### scalar!

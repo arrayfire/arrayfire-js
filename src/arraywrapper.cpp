@@ -927,13 +927,13 @@ NAN_METHOD(ArrayWrapper::F)\
         }\
         else if (value->IsObject())\
         {\
-            if (af::isDoubleAvailable(af::getDevice()))\
+            if (isDouble)\
             {\
                 auto v = ToDComplex(value);\
                 Guard();\
                 holder Op v;\
             }\
-            else if (isDouble)\
+            else\
             {\
                 auto v = ToFComplex(value);\
                 Guard();\
@@ -1010,9 +1010,9 @@ NAN_METHOD(ArrayWrapper::F)\
                 result = new af::array(array Op (float)v);\
             }\
         }\
-        else if (isDouble)\
+        else if (value->IsObject())\
         {\
-            if (af::isDoubleAvailable(af::getDevice()))\
+            if (isDouble)\
             {\
                 auto v = ToDComplex(value);\
                 Guard();\
