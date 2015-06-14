@@ -1,5 +1,39 @@
 # AFArray class
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Staitc methods](#staitc-methods)
+  - [AFArray.create()](#afarraycreate)
+- [constructor](#constructor)
+- [Methods](#methods)
+  - [elements()](#elements)
+  - [host()](#host)
+  - [copyToHost()](#copytohost)
+  - [write()](#write)
+  - [type()](#type)
+  - [dims()](#dims)
+  - [numdims()](#numdims)
+  - [numDims()](#numdims)
+  - [bytes()](#bytes)
+  - [copy()](#copy)
+  - [isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()](#isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool)
+  - [eval()](#eval)
+- [Indexing Operations](#indexing-operations)
+  - [at()](#at)
+  - [row(), rows()](#row-rows)
+  - [col(), cols()](#col-cols)
+  - [slice(), slices()](#slice-slices)
+- [Assignment Operators](#assignment-operators)
+- [Arithmetic Operators](#arithmetic-operators)
+- [Logical Operators](#logical-operators)
+- [TODO](#todo)
+  - [as()](#as)
+  - [scalar()!](#scalar)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Staitc methods
 
 ### AFArray.create()
@@ -75,7 +109,7 @@ asynchronous, counterparts: `hostAsync`, `hostSync`
 
 alias of [host](#host)
 
-### write
+### write()
 
 Perform deep copy from host/device pointer to an existing array.
 
@@ -87,41 +121,41 @@ Perform deep copy from host/device pointer to an existing array.
 - **bytesToCopy**: bytes to copy
 - **source: value of [source](statics/#typessource)** - can be one of the values of source object (eg. `source.host`)
 
-### type
+### type()
 
 - `type()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga0844daa9b8cc7b7912e89a3d8ddf1a4b)
 
 **Result:** array's element type, can be one of the values of **[dType](statics/#typesdtype)** object
 
-### dims
+### dims()
 
 - `dims()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gaf056729e3ff924f5c1d41e0a8db3ce1b)
 
 **Result:** array's dimensions info in a **[Dim4](Dim4)** object instance
 
-### numdims
+### numdims()
 
 - `numdims()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga269a19b0320a93f19314d4903045b067)
 
 **Result:** number of dimensions of the array
 
-### numDims
+### numDims()
 
 alias of [numdims](#numdims)
 
-### bytes
+### bytes()
 
 - `bytes()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gae9a95268261b397cae87b47a59b7e3cb)
 
 **Result:** size of the array in bytes
 
-### copy
+### copy()
 
 - `copy()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gad79c786c646fe05a18e208eabf4dae94)
 
 **Result:** new AFArray instance holding a deep copy of the array
 
-### isempty, isscalar, isvector, isrow, iscolumn, iscomplex, isreal, isdouble, issingle, isrealfloating, isfloating, isinteger, isbool
+### isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()
 
 aliases respectively: `isEmpty`, `isScalar`, `isVector`, `isRow`, `isColumn`, `isComplex`, `isReal`, `isDouble`, `isSingle`, `isRealFloating`, `isFloating`, `isInteger`, `isBool` 
 
@@ -129,7 +163,7 @@ aliases respectively: `isEmpty`, `isScalar`, `isVector`, `isRow`, `isColumn`, `i
 
 **Result:** actual type info (Boolean)
 
-### eval
+### eval()
 
 - `eval()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581)
 
@@ -137,7 +171,7 @@ Evaluate any JIT expressions to generate data for the array.
 
 ## Indexing Operations
 
-### at
+### at()
 
 [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mem__operator__paren.htm)
 
@@ -158,7 +192,7 @@ Evaluate any JIT expressions to generate data for the array.
     
 **Result:** AFArray instance holding reference to the the specified region of the original array
 
-### row, rows
+### row(), rows()
 
 Gets a reference of a row in a 2D AFArray.
 
@@ -173,7 +207,7 @@ Gets a reference of a row in a 2D AFArray.
 
 **Result:** AFArray instance holding reference to the specified region of the original 2D array
 
-### col, cols
+### col(), cols()
 
 Gets a reference of a column in a 2D AFArray.
 
@@ -188,7 +222,7 @@ Gets a reference of a column in a 2D AFArray.
 
 **Result:** AFArray instance holding reference to the specified region of the original 2D array
 
-### slice, slices
+### slice(), slices()
 
 Gets a reference of a matrix in a 3D AFArray.
 
@@ -279,5 +313,5 @@ Gets a reference of a matrix in a 3D AFArray.
 **Result:** AFArray instance holding the operation's result
 
 ## TODO
-### as
-### scalar!
+### as()
+### scalar()!
