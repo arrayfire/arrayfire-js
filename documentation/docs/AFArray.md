@@ -3,34 +3,33 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Staitc methods](#staitc-methods)
-  - [AFArray.create()](#afarraycreate)
+    - [AFArray.create()](#afarraycreate)
 - [constructor](#constructor)
 - [Methods](#methods)
-  - [elements()](#elements)
-  - [host()](#host)
-  - [copyToHost()](#copytohost)
-  - [write()](#write)
-  - [type()](#type)
-  - [dims()](#dims)
-  - [numdims()](#numdims)
-  - [numDims()](#numdims)
-  - [bytes()](#bytes)
-  - [copy()](#copy)
-  - [isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()](#isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool)
-  - [eval()](#eval)
+    - [elements()](#elements)
+    - [host()](#host)
+    - [copyToHost()](#copytohost)
+    - [scalar()](#scalar)
+    - [value()](#value)
+    - [write()](#write)
+    - [type()](#type)
+    - [dims()](#dims)
+    - [numdims()](#numdims)
+    - [numDims()](#numdims)
+    - [bytes()](#bytes)
+    - [as()](#as)
+    - [copy()](#copy)
+    - [isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()](#isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool)
+    - [eval()](#eval)
 - [Indexing Operations](#indexing-operations)
-  - [at()](#at)
-  - [row(), rows()](#row-rows)
-  - [col(), cols()](#col-cols)
-  - [slice(), slices()](#slice-slices)
+    - [at()](#at)
+    - [row(), rows()](#row-rows)
+    - [col(), cols()](#col-cols)
+    - [slice(), slices()](#slice-slices)
 - [Assignment Operators](#assignment-operators)
 - [Arithmetic Operators](#arithmetic-operators)
 - [Logical Operators](#logical-operators)
-- [TODO](#todo)
-  - [as()](#as)
-  - [scalar()!](#scalar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -109,6 +108,20 @@ asynchronous, counterparts: `hostAsync`, `hostSync`
 
 alias of [host](#host)
 
+### scalar()
+
+Get scalar value from the array (if its size is larger than one in any dimensions it gives the first value).
+
+asynchronous, counterparts: `scalarAsync`, `scalarSync`
+
+- `scalar(callback)`
+
+**Result: Boolean|Number|String|[Complex](Complex)** value in the array, type depends on the array's type.
+
+### value()
+
+alias of [scalar](#scalar)
+
 ### write()
 
 Perform deep copy from host/device pointer to an existing array.
@@ -148,6 +161,18 @@ alias of [numdims](#numdims)
 - `bytes()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gae9a95268261b397cae87b47a59b7e3cb)
 
 **Result:** size of the array in bytes
+
+### as()
+
+Converts the array into another type. 
+
+- `as(type)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga28967fdd5fff8001f4ef6181d9b186fb)
+
+**Arguments:**
+
+- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+
+**Result:** AFArray instance holding reference the converted array
 
 ### copy()
 
@@ -311,7 +336,3 @@ Gets a reference of a matrix in a 3D AFArray.
     - **String:**: rhs number value (to workaround JavaScript inability to hold int64 values)
     
 **Result:** AFArray instance holding the operation's result
-
-## TODO
-### as()
-### scalar()!
