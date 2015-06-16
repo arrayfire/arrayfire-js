@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Managing Devices - Fire.js Documentation</title>
+	<title>Platform and Device managing - Fire.js Documentation</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -92,7 +92,15 @@
                     <ul class="dropdown-menu">
                     
                         <li class="active">
-                            <a href="./">Managing Devices</a>
+                            <a href="./">Platform and Device managing</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../create/">Functions to create arrays</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../helpers/">Helper function for arrays</a>
                         </li>
                     
                     </ul>
@@ -108,8 +116,8 @@
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li class="disabled">
-                    <a rel="prev" >
+                <li >
+                    <a rel="prev" href="../create/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -132,22 +140,153 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#head-1">Head 1</a></li>
+        <li class="main active"><a href="#platform-and-device-managing">Platform and Device managing</a></li>
         
-    
-        <li class="main "><a href="#head-2">Head 2</a></li>
+            <li><a href="#selecting-platform">Selecting Platform</a></li>
         
-    
-        <li class="main "><a href="#head-3">Head 3</a></li>
+            <li><a href="#getdevicecount">getDeviceCount()</a></li>
+        
+            <li><a href="#getdevices">getDevices()</a></li>
+        
+            <li><a href="#getdevice">getDevice()</a></li>
+        
+            <li><a href="#setdevice">setDevice()</a></li>
+        
+            <li><a href="#deviceinfo">deviceInfo()</a></li>
+        
+            <li><a href="#isdoubleavailable">isDoubleAvailable()</a></li>
+        
+            <li><a href="#sync">sync()</a></li>
+        
+            <li><a href="#wait">wait()</a></li>
+        
+            <li><a href="#alloc">alloc()</a></li>
+        
+            <li><a href="#pinned">pinned()</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="head-1">Head 1</h1>
-<h1 id="head-2">Head 2</h1>
-<h1 id="head-3">Head 3</h1></div>
+<h1 id="platform-and-device-managing">Platform and Device managing</h1>
+<p><a href="http://www.arrayfire.com/docs/group__device__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<ul>
+<li><a href="#selecting-platform">Selecting Platform</a></li>
+<li><a href="#getdevicecount">getDeviceCount()</a></li>
+<li><a href="#getdevices">getDevices()</a></li>
+<li><a href="#getdevice">getDevice()</a></li>
+<li><a href="#setdevice">setDevice()</a></li>
+<li><a href="#deviceinfo">deviceInfo()</a></li>
+<li><a href="#isdoubleavailable">isDoubleAvailable()</a></li>
+<li><a href="#sync">sync()</a></li>
+<li><a href="#wait">wait()</a></li>
+<li><a href="#alloc">alloc()</a></li>
+<li><a href="#pinned">pinned()</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h2 id="selecting-platform">Selecting Platform</h2>
+<p>Fire.js platform can be selected by calling the root function with the appropriate platform ID as an argument.</p>
+<p>Supported platform IDs:</p>
+<ul>
+<li><code>CPU</code> (cpu fallback)</li>
+<li><code>OpenCL</code></li>
+<li><code>CUDA</code></li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="js">var fire = require(&quot;fire-js&quot;);
+var cpuPlatform = fire(&quot;CPU&quot;);
+</code></pre>
+
+<h2 id="getdevicecount">getDeviceCount()</h2>
+<p>Gets the number of devices on the given platform.</p>
+<ul>
+<li><code>getDeviceCount()</code>: <a href="http://www.arrayfire.com/docs/group__device__func__count.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result: Number</strong> - number of devices</p>
+<p><strong>Example:</strong></p>
+<pre><code class="js">var fire = require(&quot;fire-js&quot;);
+var cpuPlatform = fire(&quot;CPU&quot;);
+var deviceCount = cpuPlatform.getDeviceCount();
+</code></pre>
+
+<h2 id="getdevices">getDevices()</h2>
+<p>Gets available device descriptors on the given platform.</p>
+<ul>
+<li><code>getDevices()</code></li>
+</ul>
+<p><strong>Result: Array</strong> - array of <a href="#deviceinfo">device descriptors</a> </p>
+<h2 id="getdevice">getDevice()</h2>
+<p>Get the current device ID. </p>
+<ul>
+<li><code>getDevice()</code>: <a href="http://www.arrayfire.com/docs/group__device__func__get.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result: Number</strong> - current device ID</p>
+<h2 id="setdevice">setDevice()</h2>
+<p>Change current device to specified device.</p>
+<ul>
+<li><code>setDevice(id)</code>: <a href="http://www.arrayfire.com/docs/group__device__func__set.htm">-&gt; ArrayFire Documentation</a> </li>
+</ul>
+<h2 id="deviceinfo">deviceInfo()</h2>
+<p>Get the current device's descriptor. </p>
+<ul>
+<li><code>deviceInfo()</code>: <a href="http://www.arrayfire.com/docs/group__device__func__prop.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result: object</strong> - fields</p>
+<ul>
+<li><strong>name: String</strong> - device's vendor specified name</li>
+<li><strong>platform: String</strong> - ID of the platform (CPU, OpenCL, CUDA)</li>
+<li><strong>toolkit: String</strong> - device's vendor specified platform name</li>
+<li><strong>compute: String</strong> - device's vendor specified version</li>
+<li><strong>isDoubleAvailable: Boolean</strong> - is double precision supported</li>
+</ul>
+<h2 id="isdoubleavailable">isDoubleAvailable()</h2>
+<p>Check if double precision support is available for specified device. </p>
+<ul>
+<li><code>isDoubleAvailable(deviceID)</code>: <a href="http://www.arrayfire.com/docs/group__device__func__dbl.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Argments:</strong></p>
+<ul>
+<li><strong>deviceID: Number</strong> - device's ID</li>
+</ul>
+<p><strong>Result: Booean</strong> - is double precision supported</p>
+<h2 id="sync">sync()</h2>
+<p>asynchronous, counterparts: <code>syncAsync</code>, <code>syncSync</code></p>
+<p>Waits until all operations on device are finished. </p>
+<ul>
+<li><code>sync()</code>: <a href="http://www.arrayfire.com/docs/group__device__func__sync.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<h2 id="wait">wait()</h2>
+<p>alias of <a href="#sync">sync()</a></p>
+<h2 id="alloc">alloc()</h2>
+<p>Allocates memory on the device.</p>
+<ul>
+<li><code>alloc(elements, type)</code>: <a href="http://www.arrayfire.com/docs/group__device__func__alloc.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>elements: Number</strong> - number of elements to allocate</li>
+<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+</ul>
+<p><strong>Result: Buffer</strong> - device memory pointer</p>
+<p><strong>Remarks:</strong> Deallocation is handled by the GC automatically</p>
+<h2 id="pinned">pinned()</h2>
+<p>Allocates pinned memory on the host by using ArrayFire's memory manager.</p>
+<ul>
+<li><code>pinned(elements, type)</code>: <a href="http://www.arrayfire.com/docs/group__device__func__pinned.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>elements: Number</strong> - number of elements to allocate</li>
+<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+</ul>
+<p><strong>Result: Buffer</strong> - memory pointer</p>
+<p><strong>Remarks:</strong> Deallocation is handled by the GC automatically</p></div>
         </div>
 
         <footer class="col-md-12">

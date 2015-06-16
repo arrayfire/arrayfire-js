@@ -92,7 +92,15 @@
                     <ul class="dropdown-menu">
                     
                         <li >
-                            <a href="../devices/">Managing Devices</a>
+                            <a href="../devices/">Platform and Device managing</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../create/">Functions to create arrays</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../helpers/">Helper function for arrays</a>
                         </li>
                     
                     </ul>
@@ -148,30 +156,70 @@
         
             <li><a href="#logical-operators">Logical Operators</a></li>
         
-            <li><a href="#todo">TODO</a></li>
-        
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
 <h1 id="afarray-class">AFArray class</h1>
+<p><a href="http://www.arrayfire.com/docs/group__array__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+<ul>
+<li><a href="#staitc-methods">Staitc methods</a><ul>
+<li><a href="#afarraycreate">AFArray.create()</a></li>
+</ul>
+</li>
+<li><a href="#constructor">constructor</a></li>
+<li><a href="#methods">Methods</a><ul>
+<li><a href="#elements">elements()</a></li>
+<li><a href="#host">host()</a></li>
+<li><a href="#copytohost">copyToHost()</a></li>
+<li><a href="#scalar">scalar()</a></li>
+<li><a href="#value">value()</a></li>
+<li><a href="#write">write()</a></li>
+<li><a href="#type">type()</a></li>
+<li><a href="#dims">dims()</a></li>
+<li><a href="#numdims">numdims()</a></li>
+<li><a href="#numdims">numDims()</a></li>
+<li><a href="#bytes">bytes()</a></li>
+<li><a href="#as">as()</a></li>
+<li><a href="#copy">copy()</a></li>
+<li><a href="#isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool">isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()</a></li>
+<li><a href="#eval">eval()</a></li>
+</ul>
+</li>
+<li><a href="#indexing-operations">Indexing Operations</a><ul>
+<li><a href="#at">at()</a></li>
+<li><a href="#row-rows">row(), rows()</a></li>
+<li><a href="#col-cols">col(), cols()</a></li>
+<li><a href="#slice-slices">slice(), slices()</a></li>
+</ul>
+</li>
+<li><a href="#assignment-operators">Assignment Operators</a></li>
+<li><a href="#arithmetic-operators">Arithmetic Operators</a></li>
+<li><a href="#logical-operators">Logical Operators</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <h2 id="staitc-methods">Staitc methods</h2>
 <h3 id="afarraycreate">AFArray.create()</h3>
 <p>asynchronous, counterparts: <code>createAsync</code>, <code>createSync</code></p>
 <p>Creates an AFArray instance of the specified dimensions, and copies data from the location specified by the buffer. Data can be reside on the host or on the device, the <code>source</code> argument specifies its location.</p>
 <ul>
-<li><code>create(dim0, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f">-&gt; ArrayFire Documentation</a></li>
-<li><code>create(dim0, dim1, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c">-&gt; ArrayFire Documentation</a></li>
-<li><code>create(dim0, dim1, dim2, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a">-&gt; ArrayFire Documentation</a></li>
-<li><code>create(dim0, dim1, dim2, dim3, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">-&gt; ArrayFire Documentation</a></li>
-<li><code>create(dim0, dim1, dim2, dim4, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, type, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, type, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, dim2, type, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a">-&gt; ArrayFire Documentation</a></li>
+<li><code>create(dim0, dim1, dim2, dim3, type, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5">-&gt; ArrayFire Documentation</a></li>
 <li><code>create(dims, buffer, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
-<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimensions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
+<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 <li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
 <li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
 </ul>
@@ -189,8 +237,7 @@
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
-<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimentsions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
-<li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
+<li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimensions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
 <li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Remarks:</strong></p>
@@ -216,7 +263,16 @@
 <p><strong>Result:</strong> if buffer is not specified, then it will be created and returned, otherwise the result is <code>undefined</code></p>
 <h3 id="copytohost">copyToHost()</h3>
 <p>alias of <a href="#host">host</a></p>
-<h3 id="write">write</h3>
+<h3 id="scalar">scalar()</h3>
+<p>asynchronous, counterparts: <code>scalarAsync</code>, <code>scalarSync</code></p>
+<p>Get scalar value from the array (if its size is larger than one in any dimensions it gives the first value).</p>
+<ul>
+<li><code>scalar(callback)</code></li>
+</ul>
+<p><strong>Result: Boolean|Number|String|<a href="../Complex">Complex</a></strong> value in the array, type depends on the array's type.</p>
+<h3 id="value">value()</h3>
+<p>alias of <a href="#scalar">scalar()</a></p>
+<h3 id="write">write()</h3>
 <p>Perform deep copy from host/device pointer to an existing array.</p>
 <ul>
 <li><code>write(buffer, bytesToCopy, source, callback)</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaa70b253da2d32394c521a815f7627116">-&gt; ArrayFire Documentation</a></li>
@@ -227,46 +283,56 @@
 <li><strong>bytesToCopy</strong>: bytes to copy</li>
 <li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
 </ul>
-<h3 id="type">type</h3>
+<h3 id="type">type()</h3>
 <ul>
 <li><code>type()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga0844daa9b8cc7b7912e89a3d8ddf1a4b">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> array's element type, can be one of the values of <strong><a href="../statics/#typesdtype">dType</a></strong> object</p>
-<h3 id="dims">dims</h3>
+<h3 id="dims">dims()</h3>
 <ul>
 <li><code>dims()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf056729e3ff924f5c1d41e0a8db3ce1b">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> array's dimensions info in a <strong><a href="../Dim4">Dim4</a></strong> object instance</p>
-<h3 id="numdims">numdims</h3>
+<h3 id="numdims">numdims()</h3>
 <ul>
 <li><code>numdims()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga269a19b0320a93f19314d4903045b067">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> number of dimensions of the array</p>
-<h3 id="numdims_1">numDims</h3>
+<h3 id="numdims_1">numDims()</h3>
 <p>alias of <a href="#numdims">numdims</a></p>
-<h3 id="bytes">bytes</h3>
+<h3 id="bytes">bytes()</h3>
 <ul>
 <li><code>bytes()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gae9a95268261b397cae87b47a59b7e3cb">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> size of the array in bytes</p>
-<h3 id="copy">copy</h3>
+<h3 id="as">as()</h3>
+<p>Converts the array into another type. </p>
+<ul>
+<li><code>as(type)</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga28967fdd5fff8001f4ef6181d9b186fb">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+</ul>
+<p><strong>Result:</strong> AFArray instance holding reference the converted array</p>
+<h3 id="copy">copy()</h3>
 <ul>
 <li><code>copy()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gad79c786c646fe05a18e208eabf4dae94">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> new AFArray instance holding a deep copy of the array</p>
-<h3 id="isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool">isempty, isscalar, isvector, isrow, iscolumn, iscomplex, isreal, isdouble, issingle, isrealfloating, isfloating, isinteger, isbool</h3>
+<h3 id="isempty-isscalar-isvector-isrow-iscolumn-iscomplex-isreal-isdouble-issingle-isrealfloating-isfloating-isinteger-isbool">isempty(), isscalar(), isvector(), isrow(), iscolumn(), iscomplex(), isreal(), isdouble(), issingle(), isrealfloating(), isfloating(), isinteger(), isbool()</h3>
 <p>aliases respectively: <code>isEmpty</code>, <code>isScalar</code>, <code>isVector</code>, <code>isRow</code>, <code>isColumn</code>, <code>isComplex</code>, <code>isReal</code>, <code>isDouble</code>, <code>isSingle</code>, <code>isRealFloating</code>, <code>isFloating</code>, <code>isInteger</code>, <code>isBool</code> </p>
 <ul>
 <li><code>is&lt;anything&gt;</code>() <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gabe874940ae5ed8c40a8f99913982e657">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p><strong>Result:</strong> actual type info (Boolean)</p>
-<h3 id="eval">eval</h3>
+<h3 id="eval">eval()</h3>
 <ul>
 <li><code>eval()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581">-&gt; ArrayFire Documentation</a></li>
 </ul>
 <p>Evaluate any JIT expressions to generate data for the array.</p>
 <h2 id="indexing-operations">Indexing Operations</h2>
-<h3 id="at">at</h3>
+<h3 id="at">at()</h3>
 <p><a href="http://www.arrayfire.com/docs/group__array__mem__operator__paren.htm">-&gt; ArrayFire Documentation</a></p>
 <ul>
 <li><code>at(s0)</code></li>
@@ -288,7 +354,7 @@
 </li>
 </ul>
 <p><strong>Result:</strong> AFArray instance holding reference to the the specified region of the original array</p>
-<h3 id="row-rows">row, rows</h3>
+<h3 id="row-rows">row(), rows()</h3>
 <p>Gets a reference of a row in a 2D AFArray.</p>
 <p><a href="http://www.arrayfire.com/docs/group__array__mem__row.htm">-&gt; ArrayFire Documentation</a></p>
 <ul>
@@ -300,7 +366,7 @@
 <li><strong>index, fistIndex, lastIndex: Number</strong> - a row index or a range of row indices</li>
 </ul>
 <p><strong>Result:</strong> AFArray instance holding reference to the specified region of the original 2D array</p>
-<h3 id="col-cols">col, cols</h3>
+<h3 id="col-cols">col(), cols()</h3>
 <p>Gets a reference of a column in a 2D AFArray.</p>
 <p><a href="http://www.arrayfire.com/docs/group__array__mem__col.htm">-&gt; ArrayFire Documentation</a></p>
 <ul>
@@ -312,7 +378,7 @@
 <li><strong>index, fistIndex, lastIndex: Number</strong> - a column index or a range of column indices</li>
 </ul>
 <p><strong>Result:</strong> AFArray instance holding reference to the specified region of the original 2D array</p>
-<h3 id="slice-slices">slice, slices</h3>
+<h3 id="slice-slices">slice(), slices()</h3>
 <p>Gets a reference of a matrix in a 3D AFArray.</p>
 <p><a href="http://www.arrayfire.com/docs/group__array__mem__slice.htm">-&gt; ArrayFire Documentation</a></p>
 <ul>
@@ -401,10 +467,7 @@
 </ul>
 </li>
 </ul>
-<p><strong>Result:</strong> AFArray instance holding the operation's result</p>
-<h2 id="todo">TODO</h2>
-<h3 id="as">as</h3>
-<h3 id="scalar">scalar!</h3></div>
+<p><strong>Result:</strong> AFArray instance holding the operation's result</p></div>
         </div>
 
         <footer class="col-md-12">

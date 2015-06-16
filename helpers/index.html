@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Seq - Fire.js Documentation</title>
+	<title>Helper function for arrays - Fire.js Documentation</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -62,7 +62,7 @@
             
             
             
-                <li class="dropdown active">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     
@@ -74,8 +74,8 @@
                             <a href="../Dim4/">Dim4</a>
                         </li>
                     
-                        <li class="active">
-                            <a href="./">Seq</a>
+                        <li >
+                            <a href="../Seq/">Seq</a>
                         </li>
                     
                         <li >
@@ -87,7 +87,7 @@
             
             
             
-                <li class="dropdown">
+                <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Functions <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     
@@ -99,8 +99,8 @@
                             <a href="../create/">Functions to create arrays</a>
                         </li>
                     
-                        <li >
-                            <a href="../helpers/">Helper function for arrays</a>
+                        <li class="active">
+                            <a href="./">Helper function for arrays</a>
                         </li>
                     
                     </ul>
@@ -112,12 +112,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../Dim4/">
+                    <a rel="next" href="../create/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li >
-                    <a rel="prev" href="../Complex/">
+                <li class="disabled">
+                    <a rel="prev" >
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -140,36 +140,55 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#seq-class">Seq class</a></li>
+        <li class="main active"><a href="#helper-function-for-arrays">Helper function for arrays</a></li>
         
-            <li><a href="#constructors">constructors</a></li>
+            <li><a href="#iszero">iszero()</a></li>
         
-            <li><a href="#properties">Properties</a></li>
+            <li><a href="#iszero_1">isZero()</a></li>
+        
+            <li><a href="#isinf">isInf()</a></li>
+        
+            <li><a href="#isnan">isNaN()</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="seq-class">Seq class</h1>
-<h2 id="constructors">constructors</h2>
+<h1 id="helper-function-for-arrays">Helper function for arrays</h1>
+<p><a href="http://www.arrayfire.com/docs/group__helper__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 <ul>
-<li><code>new Seq(begin, end)</code></li>
-<li><code>new Seq(begin, end, step)</code></li>
+<li><a href="#iszero">iszero()</a></li>
+<li><a href="#iszero">isZero()</a></li>
+<li><a href="#isinf">isInf()</a></li>
+<li><a href="#isnan">isNaN()</a></li>
 </ul>
-<p><strong>Arguments</strong>:</p>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h2 id="iszero">iszero()</h2>
+<p>Check if values are zero. </p>
 <ul>
-<li><strong>begin: Number</strong> - begin of sequence values</li>
-<li><strong>end: Number</strong> - end of sequence values</li>
-<li><strong>step: Number</strong> - step size (default is 1)</li>
+<li><code>iszero()</code> <a href="http://www.arrayfire.com/docs/group__arith__func__iszero.htm">-&gt; ArrayFire Documentation</a></li>
 </ul>
-<h2 id="properties">Properties</h2>
-<h3 id="begin">begin</h3>
-<p><strong>Value:</strong> begin of sequence values</p>
-<h3 id="end">end</h3>
-<p><strong>Value:</strong> end of sequence values</p>
-<h3 id="step">step</h3>
-<p><strong>Value:</strong> step size</p></div>
+<p><strong>Result: AFArray:</strong> containing 1's where input is zero, and 0 otherwise.</p>
+<h2 id="iszero_1">isZero()</h2>
+<p>alias of <a href="#iszero">iszero()</a></p>
+<h2 id="isinf">isInf()</h2>
+<p>Check if values are infinite. </p>
+<ul>
+<li><code>isInf()</code> <a href="http://www.arrayfire.com/docs/group__arith__func__isinf.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result: AFArray:</strong> containing 1's where input is infinity, and 0 otherwise.</p>
+<h2 id="isnan">isNaN()</h2>
+<p>Check if values are Nan. </p>
+<ul>
+<li><code>isNaN()</code> <a href="http://www.arrayfire.com/docs/group__arith__func__isnan.htm">-&gt; ArrayFire Documentation</a></li>
+</ul>
+<p><strong>Result: AFArray:</strong> containing 1's where input is NaN, and 0 otherwise.</p></div>
         </div>
 
         <footer class="col-md-12">
