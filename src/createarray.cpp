@@ -178,8 +178,8 @@ NAN_METHOD(Constant)
                     }
                 case u64:
                     {
-                        long long val = strtoll(*str, nullptr, 10);
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<long long>(v, dimAndType.first, dimAndType.second))); });
+                        unsigned long long val = strtoll(*str, nullptr, 10);
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned long long>(v, dimAndType.first, dimAndType.second))); });
                     }
             }
         }
