@@ -244,14 +244,21 @@ function testPlatform(id) {
                         assert(v1 === v * v);
                     }
 
+                    // Let's do some indexing:
                     let v = yield array2.valueAsync();
                     assert(v === 0.0);
 
-                    v = yield array2.at(0, 0).valueAsync();
+                    v = yield array2.at(1).valueAsync();
                     assert(v === 1.0);
 
-                    /*v = yield array2.at(0, 2).scalarAsync();
-                    assert(v === 4.0);*/
+                    v = yield array2.at(2).scalarAsync();
+                    assert(v === 4.0);
+
+                    v = yield array2.at("end").scalarAsync();
+                    assert(v === 9.0 * 9.0);
+
+                    v = yield array2.at(fire.end - 1).scalarAsync();
+                    assert(v === 8.0 * 8.0);
                 });
                 f().nodeify(done);
             });
@@ -293,14 +300,21 @@ function testPlatform(id) {
                     assert(v1 === v * v);
                 }
 
+                // Let's do some indexing:
                 let v = array2.valueSync();
                 assert(v === 0.0);
 
-                /*v = array2.at(0, 1).valueSync();
+                v = array.at(1).valueSync();
                 assert(v === 1.0);
 
-                v = array2.at(0, 2).scalarSync();
-                assert(v === 4.0);*/
+                v = array2.at(2).scalarSync();
+                assert(v === 4.0);
+
+                v = array2.at("end").scalarSync();
+                assert(v === 9.0 * 9.0);
+
+                v = array2.at(fire.end - 1).scalarSync();
+                assert(v === 8.0 * 8.0);
             });
 
             it("should be tests for assignment operators", function() {

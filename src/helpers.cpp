@@ -19,7 +19,6 @@ limitations under the License.
 #include "errors.h"
 #include "arraywrapper.h"
 #include "symbols.h"
-#include "arrayorproxyholder.h"
 
 using namespace std;
 using namespace v8;
@@ -225,7 +224,7 @@ af::index ToIndex(v8::Local<v8::Value> value)
     }
     if (value->IsNumber())
     {
-        return af::index(value->Uint32Value());
+        return af::index(value->Int32Value());
     }
     if (value->IsString())
     {
@@ -233,6 +232,10 @@ af::index ToIndex(v8::Local<v8::Value> value)
         if (strcmp(*str, "span") == 0)
         {
             return af::span;
+        }
+        else if (strcmp(*str, "end") == 0)
+        {
+            return af::end;
         }
     }
     if (value->IsObject())
@@ -343,9 +346,4 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
         return new NanCallback(args[args.Length() - 1].As<Function>());
     }
     FIRE_THROW_CB_EXPECTED();
-}
-
-bool NeedsDouble(const ArrayOrProxyHolder& holder)
-{
-    return holder.NeedsDouble();
 }

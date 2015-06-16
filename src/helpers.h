@@ -62,8 +62,6 @@ inline bool NeedsDouble(const af::array& array) { return array.type() == f64 || 
 
 inline bool NeedsDouble(const af::array::array_proxy& arrayProxy) { return arrayProxy.type() == f64 || arrayProxy.type() == c64 || arrayProxy.type() == s64 || arrayProxy.type() == u64; }
 
-bool NeedsDouble(const ArrayOrProxyHolder& holder);
-
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
 #define FIRE_ASYNC_METHOD_ARR(F, f)\

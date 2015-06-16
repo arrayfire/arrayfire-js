@@ -75,8 +75,7 @@ file(GLOB COMMON_SOURCE_FILES
     "src/functionhelpers.*"
     "src/mathfunctions.*"
     "src/vectoralgorithms.*"
-    "src/statistics.*"
-    "src/arrayorproxyholder.*")
+    "src/statistics.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")

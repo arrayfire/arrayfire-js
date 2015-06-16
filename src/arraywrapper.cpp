@@ -21,7 +21,6 @@ limitations under the License.
 #include "worker.h"
 #include "errors.h"
 #include "symbols.h"
-#include "arrayorproxyholder.h"
 
 using namespace v8;
 using namespace std;
@@ -29,15 +28,15 @@ using namespace node;
 
 Persistent<Function> ArrayWrapper::constructor;
 
-ArrayWrapper::ArrayWrapper(ArrayOrProxyHolder* data) :
-    data(data)
+ArrayWrapper::ArrayWrapper(af::array* array) :
+    _array(array)
 {
-    assert(data);
+    assert(array);
 }
 
 ArrayWrapper::~ArrayWrapper()
 {
-    delete data;
+    delete _array;
 }
 
 void ArrayWrapper::Init(v8::Local<v8::Object> exports)
@@ -131,41 +130,19 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     exports->Set(NanNew("AFArray"), f);
 }
 
-v8::Local<Object> ArrayWrapper::New(af::array* array)
-{
-    assert(array);
-    return New(new ArrayOrProxyHolder(array));
-}
-
 v8::Local<Object> ArrayWrapper::New(const af::array& array)
 {
     return New(new af::array(array));
 }
 
-v8::Local<Object> ArrayWrapper::New(af::array::array_proxy* arrayProxy)
+v8::Local<v8::Object> ArrayWrapper::New(af::array* array)
 {
-    assert(arrayProxy);
-    return New(new ArrayOrProxyHolder(arrayProxy));
-}
-
-v8::Local<Object> ArrayWrapper::New(const af::array::array_proxy& arrayProxy)
-{
-    return New(new af::array::array_proxy(arrayProxy));
-}
-
-v8::Local<v8::Object> ArrayWrapper::New(ArrayOrProxyHolder* holder)
-{
-    assert(holder);
-    Local<Value> args[] = { WrapPointer(holder) };
+    assert(array);
+    Local<Value> args[] = { WrapPointer(array) };
     auto c = NanNew(constructor);
     auto inst = c->NewInstance(1, args);
-    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->data == holder);
+    assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->_array == array);
     return inst;
-}
-
-v8::Local<v8::Object> ArrayWrapper::New(ArrayOrProxyHolder&& holder)
-{
-    return New(new ArrayOrProxyHolder(move(holder)));
 }
 
 void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory)
@@ -183,21 +160,21 @@ void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, con
     }
 }
 
-ArrayOrProxyHolder* ArrayWrapper::GetHolder(v8::Local<v8::Value> value)
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
-    auto array = TryGetHolder(value);
+    auto array = TryGetArray(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-ArrayOrProxyHolder* ArrayWrapper::TryGetHolder(v8::Local<v8::Value> value)
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
 {
     try
     {
         if (value->IsObject())
         {
             auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
-            if (wrapper) return wrapper->data;
+            if (wrapper) return wrapper->_array;
         }
     }
     catch (...)
@@ -206,19 +183,19 @@ ArrayOrProxyHolder* ArrayWrapper::TryGetHolder(v8::Local<v8::Value> value)
     return nullptr;
 }
 
-ArrayOrProxyHolder* ArrayWrapper::GetHolder(v8::Local<v8::Object> value)
+af::array* ArrayWrapper::GetArray(v8::Local<v8::Object> value)
 {
-    auto array = TryGetHolder(value);
+    auto array = TryGetArray(value);
     if (array) return array;
     FIRE_THROW("Argument is not an AFArray instance.");
 }
 
-ArrayOrProxyHolder* ArrayWrapper::TryGetHolder(v8::Local<v8::Object> value)
+af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
 {
     try
     {
         auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
-        if (wrapper) return wrapper->data;
+        if (wrapper) return wrapper->_array;
     }
     catch (...)
     {
@@ -226,57 +203,21 @@ ArrayOrProxyHolder* ArrayWrapper::TryGetHolder(v8::Local<v8::Object> value)
     return nullptr;
 }
 
-ArrayOrProxyHolder* ArrayWrapper::GetHolderAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
 {
-    auto array = TryGetHolderAt(args, index);
+    auto array = TryGetArrayAt(args, index);
     if (array) return array;
     stringstream ss;
     ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
     FIRE_THROW(ss.str().c_str());
 }
 
-ArrayOrProxyHolder* ArrayWrapper::TryGetHolderAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
 {
     if (index < args.Length())
     {
-        return GetHolder(args[index]);
+        return GetArray(args[index]);
     }
-    return nullptr;
-}
-
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
-{
-    return GetHolder(value)->GetArray();
-}
-
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
-{
-    auto data = TryGetHolder(value);
-    if (data) return data->GetArray();
-    return nullptr;
-}
-
-af::array* ArrayWrapper::GetArray(v8::Local<v8::Object> value)
-{
-    return GetHolder(value)->GetArray();
-}
-
-af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
-{
-    auto data = TryGetHolder(value);
-    if (data) return data->GetArray();
-    return nullptr;
-}
-
-af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
-{
-    return GetHolderAt(args, index)->GetArray();
-}
-
-af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
-{
-    auto data = TryGetHolderAt(args, index);
-    if (data) return data->GetArray();
     return nullptr;
 }
 
@@ -292,13 +233,13 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         {
             if (args.Length() == 0)
             {
-                instance = new ArrayWrapper(new ArrayOrProxyHolder(new af::array()));
+                instance = new ArrayWrapper(new af::array());
             }
             else if (args.Length() == 1)
             {
                 if (Buffer::HasInstance(args[0]))
                 {
-                    instance = new ArrayWrapper(reinterpret_cast<ArrayOrProxyHolder*>(Buffer::Data(args[0])));
+                    instance = new ArrayWrapper(reinterpret_cast<af::array*>(Buffer::Data(args[0])));
                 }
             }
             else
@@ -316,7 +257,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
                 {
                     // Creating new
                     auto dimAndType = ParseDimAndTypeArgs(args);
-                    instance = new ArrayWrapper(new ArrayOrProxyHolder(new af::array(dimAndType.first, dimAndType.second)));
+                    instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
                 }
             }
         }
@@ -454,7 +395,7 @@ NAN_METHOD(ArrayWrapper::Elements)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetHolder(args.This())->elements()));
+        NanReturnValue(NanNew<Number>(GetArray(args.This())->elements()));
     }
     FIRE_CATCH
 }
@@ -718,7 +659,7 @@ NAN_METHOD(ArrayWrapper::Type)
     try
     {
         Guard();
-        NanReturnValue(GetHolder(args.This())->type());
+        NanReturnValue(GetArray(args.This())->type());
     }
     FIRE_CATCH
 }
@@ -731,10 +672,10 @@ NAN_METHOD(ArrayWrapper::Dims)
     {
         Guard();
 
-        auto pHolder = GetHolder(args.This());
+        auto pArray = GetArray(args.This());
         if (!args.Length())
         {
-            auto dims = pHolder->dims();
+            auto dims = pArray->dims();
             auto jsDims = NanNew<Object>();
             jsDims->Set(NanNew(Symbols::Elements), NanNew<Number>(dims.elements()));
             jsDims->Set(NanNew(Symbols::Ndims), NanNew<Number>(dims.ndims()));
@@ -750,7 +691,7 @@ NAN_METHOD(ArrayWrapper::Dims)
         }
         else
         {
-            NanReturnValue(NanNew<Number>(pHolder->dims(args[0]->Uint32Value())));
+            NanReturnValue(NanNew<Number>(pArray->dims(args[0]->Uint32Value())));
         }
     }
     FIRE_CATCH
@@ -763,7 +704,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetHolder(args.This())->numdims()));
+        NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
     }
     FIRE_CATCH
 }
@@ -775,7 +716,7 @@ NAN_METHOD(ArrayWrapper::Bytes)
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>((unsigned)GetHolder(args.This())->bytes()));
+        NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
     }
     FIRE_CATCH
 }
@@ -787,7 +728,7 @@ NAN_METHOD(ArrayWrapper::Copy)
     try
     {
         Guard();
-        NanReturnValue(New(new af::array(move(GetHolder(args.This())->copy()))));
+        NanReturnValue(New(new af::array(move(GetArray(args.This())->copy()))));
     }
     FIRE_CATCH
 }
@@ -799,7 +740,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isempty()));
+        NanReturnValue(NanNew(GetArray(args.This())->isempty()));
     }
     FIRE_CATCH
 }
@@ -811,7 +752,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isscalar()));
+        NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
     }
     FIRE_CATCH
 }
@@ -823,7 +764,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isvector()));
+        NanReturnValue(NanNew(GetArray(args.This())->isvector()));
     }
     FIRE_CATCH
 }
@@ -835,7 +776,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isrow()));
+        NanReturnValue(NanNew(GetArray(args.This())->isrow()));
     }
     FIRE_CATCH
 }
@@ -847,7 +788,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->iscolumn()));
+        NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
     }
     FIRE_CATCH
 }
@@ -859,7 +800,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->iscomplex()));
+        NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
     }
     FIRE_CATCH
 }
@@ -871,7 +812,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isreal()));
+        NanReturnValue(NanNew(GetArray(args.This())->isreal()));
     }
     FIRE_CATCH
 }
@@ -883,7 +824,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isdouble()));
+        NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
     }
     FIRE_CATCH
 }
@@ -895,7 +836,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->issingle()));
+        NanReturnValue(NanNew(GetArray(args.This())->issingle()));
     }
     FIRE_CATCH
 }
@@ -907,7 +848,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isrealfloating()));
+        NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
     }
     FIRE_CATCH
 }
@@ -919,7 +860,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isfloating()));
+        NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
     }
     FIRE_CATCH
 }
@@ -931,7 +872,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->isinteger()));
+        NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
     }
     FIRE_CATCH
 }
@@ -943,7 +884,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
     try
     {
         Guard();
-        NanReturnValue(NanNew(GetHolder(args.This())->type() == b8));
+        NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
     }
     FIRE_CATCH
 }
@@ -955,7 +896,7 @@ NAN_METHOD(ArrayWrapper::Eval)
     try
     {
         Guard();
-        GetHolder(args.This())->eval();
+        GetArray(args.This())->eval();
         NanReturnUndefined();
     }
     FIRE_CATCH
@@ -978,9 +919,7 @@ NAN_METHOD(ArrayWrapper::At)
         }
         else if (args.Length() < 3)
         {
-            auto p = GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]));
-            auto h = new ArrayOrProxyHolder(p);
-            NanReturnValue(New(h));
+            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]))));
         }
         else if (args.Length() < 4)
         {
@@ -1001,8 +940,8 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(1)\
-        auto pHolder = GetHolder(args.This());\
-        NanReturnValue(New(pHolder->f(args[0]->Int32Value())));\
+        auto pArray = GetArray(args.This());\
+        NanReturnValue(New(pArray->f(args[0]->Int32Value())));\
     }\
     FIRE_CATCH\
 }
@@ -1018,8 +957,8 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(2);\
-        auto pHolder = GetHolder(args.This());\
-        NanReturnValue(New(pHolder->f(args[0]->Int32Value(), args[1]->Int32Value())));\
+        auto pArray = GetArray(args.This());\
+        NanReturnValue(New(pArray->f(args[0]->Int32Value(), args[1]->Int32Value())));\
     }\
     FIRE_CATCH\
 }
@@ -1035,7 +974,7 @@ NAN_METHOD(ArrayWrapper::As)
     {
         ARGS_LEN(1)
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
-        NanReturnValue(New(GetHolder(args.This())->as(type)));
+        NanReturnValue(New(GetArray(args.This())->as(type)));
     }
     FIRE_CATCH
 }
@@ -1047,17 +986,17 @@ NAN_METHOD(ArrayWrapper::F)\
     \
     try\
     {\
-        auto pHolder = GetHolder(args.This());\
-        auto& holder = *pHolder;\
-        bool isDouble = NeedsDouble(holder);\
+        auto pArray = GetArray(args.This());\
+        auto& Array = *pArray;\
+        bool isDouble = NeedsDouble(Array);\
         ARGS_LEN(1)\
         auto value = args[0];\
-        auto pOtherHolder = TryGetHolder(value);\
-        if (pOtherHolder)\
+        auto pOtherArray = TryGetArray(value);\
+        if (pOtherArray)\
         {\
-            auto& otherHolder = *pOtherHolder;\
+            auto& otherArray = *pOtherArray;\
             Guard();\
-            holder Op otherHolder;\
+            Array Op otherArray;\
         }\
         else if (value->IsNumber())\
         {\
@@ -1065,17 +1004,17 @@ NAN_METHOD(ArrayWrapper::F)\
             if (floor(v) == v)\
             {\
                 Guard();\
-                holder Op value->Int32Value();\
+                Array Op value->Int32Value();\
             }\
             else if (isDouble)\
             {\
                 Guard();\
-                holder Op v;\
+                Array Op v;\
             }\
             else\
             {\
                 Guard();\
-                holder Op (float)v;\
+                Array Op (float)v;\
             }\
         }\
         else if (value->IsObject())\
@@ -1084,13 +1023,13 @@ NAN_METHOD(ArrayWrapper::F)\
             {\
                 auto v = ToDComplex(value);\
                 Guard();\
-                holder Op v;\
+                Array Op v;\
             }\
             else\
             {\
                 auto v = ToFComplex(value);\
                 Guard();\
-                holder Op v;\
+                Array Op v;\
             }\
         }\
         else if (value->IsString())\
@@ -1098,7 +1037,7 @@ NAN_METHOD(ArrayWrapper::F)\
             String::Utf8Value str(value);\
             __int64 v = strtoll(*str, nullptr, 10);\
             Guard();\
-            holder Op v;\
+            Array Op v;\
         }\
         else\
         {\
@@ -1127,22 +1066,13 @@ NAN_METHOD(ArrayWrapper::F)\
         bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
         auto value = args[0];\
-        auto pOtherHolder = TryGetHolder(value);\
+        auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
-        if (pOtherHolder)\
+        if (pOtherArray)\
         {\
-            if (pOtherHolder->GetArrayProxy())\
-            {\
-                auto& otherProxy = *pOtherHolder->GetArrayProxy();\
-                Guard();\
-                result = new af::array(array Op otherProxy);\
-            }\
-            else\
-            {\
-                auto& otherArray = *pOtherHolder->GetArray();\
-                Guard();\
-                result = new af::array(array Op otherArray);\
-            }\
+            auto& otherArray = *pOtherArray;\
+            Guard();\
+            result = new af::array(array Op otherArray);\
         }\
         else if (value->IsNumber())\
         {\
