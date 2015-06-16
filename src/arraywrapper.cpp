@@ -50,6 +50,8 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("elements"), NanNew<FunctionTemplate>(Elements), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("host"), NanNew<FunctionTemplate>(Host), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("copyToHost"), NanNew<FunctionTemplate>(Host), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("scalar"), NanNew<FunctionTemplate>(Scalar), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("value"), NanNew<FunctionTemplate>(Scalar), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("write"), NanNew<FunctionTemplate>(Write), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("type"), NanNew<FunctionTemplate>(Type), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("dims"), NanNew<FunctionTemplate>(Dims), v8::ReadOnly);
@@ -411,6 +413,8 @@ NAN_METHOD(ArrayWrapper::Create)
                 case u64:
                     factory = [=]() { return CreateArray<uint64_t>(ptr, src, dimAndType.first); };
                     break;
+                default:
+                    assert(false);
             }
         }
 
@@ -517,6 +521,153 @@ NAN_METHOD(ArrayWrapper::Host)
     }
     FIRE_CATCH
 }
+
+NAN_METHOD(ArrayWrapper::Scalar)
+{
+    NanScope();
+
+    try
+    {
+        ARGS_LEN(1)
+
+        auto pArray = GetArray(args.This());
+        af::array array(*pArray);
+        switch (array.type())
+        {
+            case f32:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<float>();
+                    };
+                    auto worker = new Worker<float>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case f64:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<double>();
+                    };
+                    auto worker = new Worker<double>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case s32:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<int>();
+                    };
+                    auto worker = new Worker<int>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case u32:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<unsigned>();
+                    };
+                    auto worker = new Worker<unsigned>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case u8:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<unsigned char>();
+                    };
+                    auto worker = new Worker<unsigned char>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case b8:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<char>();
+                    };
+                    auto worker = new Worker<char>(GetCallback(args), move(exec));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case c32:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<af::cfloat>();
+                    };
+                    auto conv = [=](Worker<af::cfloat>* w, af::cfloat data)
+                    {
+                        return ToV8Complex(data);
+                    };
+                    auto worker = new Worker<af::cfloat>(GetCallback(args), move(exec), move(conv));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case c64:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<af::cdouble>();
+                    };
+                    auto conv = [=](Worker<af::cdouble>* w, af::cdouble data)
+                    {
+                        return ToV8Complex(data);
+                    };
+                    auto worker = new Worker<af::cdouble>(GetCallback(args), move(exec), move(conv));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case s64:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<int64_t>();
+                    };
+                    auto conv = [=](Worker<int64_t>* w, int64_t data)
+                    {
+                        return NanNew(to_string(data).c_str());
+                    };
+                    auto worker = new Worker<int64_t>(GetCallback(args), move(exec), move(conv));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            case u64:
+                {
+                    auto exec = [=]()
+                    {
+                        Guard();
+                        return array.scalar<uint64_t>();
+                    };
+                    auto conv = [=](Worker<uint64_t>* w, uint64_t data)
+                    {
+                        return NanNew(to_string(data).c_str());
+                    };
+                    auto worker = new Worker<uint64_t>(GetCallback(args), move(exec), move(conv));
+                    NanAsyncQueueWorker(worker);
+                }
+                break;
+            default:
+                assert(false);
+        }
+        NanReturnUndefined();
+    }
+    FIRE_CATCH
+}
+
 
 NAN_METHOD(ArrayWrapper::Write)
 {
@@ -827,7 +978,9 @@ NAN_METHOD(ArrayWrapper::At)
         }
         else if (args.Length() < 3)
         {
-            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]))));
+            auto p = GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]));
+            auto h = new ArrayOrProxyHolder(p);
+            NanReturnValue(New(h));
         }
         else if (args.Length() < 4)
         {

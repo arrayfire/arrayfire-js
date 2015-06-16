@@ -243,6 +243,15 @@ function testPlatform(id) {
                         assert(v1 === v2);
                         assert(v1 === v * v);
                     }
+
+                    let v = yield array2.valueAsync();
+                    assert(v === 0.0);
+
+                    v = yield array2.at(0, 0).valueAsync();
+                    assert(v === 1.0);
+
+                    /*v = yield array2.at(0, 2).scalarAsync();
+                    assert(v === 4.0);*/
                 });
                 f().nodeify(done);
             });
@@ -283,6 +292,15 @@ function testPlatform(id) {
                     assert(v1 === v2);
                     assert(v1 === v * v);
                 }
+
+                let v = array2.valueSync();
+                assert(v === 0.0);
+
+                /*v = array2.at(0, 1).valueSync();
+                assert(v === 1.0);
+
+                v = array2.at(0, 2).scalarSync();
+                assert(v === 4.0);*/
             });
 
             it("should be tests for assignment operators", function() {

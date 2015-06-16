@@ -55,6 +55,7 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
     static NAN_METHOD(Host);
+    static NAN_METHOD(Scalar);
     static NAN_METHOD(Write);
     static NAN_METHOD(Type);
     static NAN_METHOD(Dims);
