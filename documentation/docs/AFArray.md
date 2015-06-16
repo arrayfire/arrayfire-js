@@ -1,5 +1,7 @@
 # AFArray class
 
+[-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mat.htm)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -41,17 +43,17 @@ asynchronous, counterparts: `createAsync`, `createSync`
 
 Creates an AFArray instance of the specified dimensions, and copies data from the location specified by the buffer. Data can be reside on the host or on the device, the `source` argument specifies its location.
 
-- `create(dim0, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f)
-- `create(dim0, dim1, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c)
-- `create(dim0, dim1, dim2, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a)
-- `create(dim0, dim1, dim2, dim3, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
-- `create(dim0, dim1, dim2, dim4, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
+- `create(dim0, type, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#ga8c330c41d6e06b0dea9377ef02762c6f)
+- `create(dim0, dim1, type, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gaa2ebe6a7b991fbe6231321138e79121c)
+- `create(dim0, dim1, dim2, type, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gabd3d95b130bdb2d7e713414687e6b15a)
+- `create(dim0, dim1, dim2, dim3, type, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#gaaa8fab98447367bc4eaf3d7bc61d8ff5)
 - `create(dims, buffer, source, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__construct__mat.htm#ga1144078b1596e7d29f57b1a0a1c9b1a8)
 
 **Arguments:**
 
 - **dim0 .. dim3: Number** - size of the dimension
-- **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimentsions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
+- **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
+- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
 - **buffer: Buffer** - data to copy to the device, or device pointer created by the `alloc` method.
 - **source: value of [source](statics/#typessource)** - can be one of the values of source object (eg. `source.host`)
 
@@ -71,8 +73,7 @@ Arrays could be created as empty ones or by having a specified dimensions and el
 **Arguments:**
 
 - **dim0 .. dim3: Number** - size of the dimension
-- **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimentsions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **buffer: Buffer** - data to copy to the device, or device pointer created by the `alloc` method.
+- **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
 - **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Remarks:**
@@ -110,9 +111,9 @@ alias of [host](#host)
 
 ### scalar()
 
-Get scalar value from the array (if its size is larger than one in any dimensions it gives the first value).
-
 asynchronous, counterparts: `scalarAsync`, `scalarSync`
+
+Get scalar value from the array (if its size is larger than one in any dimensions it gives the first value).
 
 - `scalar(callback)`
 
@@ -120,7 +121,7 @@ asynchronous, counterparts: `scalarAsync`, `scalarSync`
 
 ### value()
 
-alias of [scalar](#scalar)
+alias of [scalar()](#scalar)
 
 ### write()
 

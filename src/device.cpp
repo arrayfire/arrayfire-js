@@ -226,6 +226,7 @@ void InitDevice(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("deviceInfo"), NanNew<FunctionTemplate>(DeviceInfo)->GetFunction());
     exports->Set(NanNew("isDoubleAvailable"), NanNew<FunctionTemplate>(IsDoubleAvailable)->GetFunction());
     exports->Set(NanNew("sync"), NanNew<FunctionTemplate>(Sync)->GetFunction());
+    exports->Set(NanNew("wait"), NanNew<FunctionTemplate>(Sync)->GetFunction());
     exports->Set(NanNew("alloc"), NanNew<FunctionTemplate>(Alloc)->GetFunction());
     exports->Set(NanNew("pinned"), NanNew<FunctionTemplate>(Pinned)->GetFunction());
 }

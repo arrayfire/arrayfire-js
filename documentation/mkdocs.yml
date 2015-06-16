@@ -8,6 +8,8 @@ pages:
   - Seq: Seq.md
   - Complex: Complex.md
 - Functions:
-  - Managing Devices: devices.md
+  - Platform and Device managing: devices.md
+  - Functions to create arrays: create.md
+  - Helper function for arrays: helpers.md
 theme: united
 repo_url: https://github.com/unbornchikken/fire-js

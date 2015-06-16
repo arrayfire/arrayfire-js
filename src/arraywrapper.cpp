@@ -576,13 +576,13 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     auto exec = [=]()
                     {
                         Guard();
-                        return array.scalar<int64_t>();
+                        return array.scalar<__int64>();
                     };
-                    auto conv = [=](Worker<int64_t>* w, int64_t data)
+                    auto conv = [=](Worker<__int64>* w, __int64 data)
                     {
                         return NanNew(to_string(data).c_str());
                     };
-                    auto worker = new Worker<int64_t>(GetCallback(args), move(exec), move(conv));
+                    auto worker = new Worker<__int64>(GetCallback(args), move(exec), move(conv));
                     NanAsyncQueueWorker(worker);
                 }
                 break;
@@ -591,13 +591,13 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     auto exec = [=]()
                     {
                         Guard();
-                        return array.scalar<uint64_t>();
+                        return array.scalar<unsigned long long>();
                     };
-                    auto conv = [=](Worker<uint64_t>* w, uint64_t data)
+                    auto conv = [=](Worker<unsigned long long>* w, unsigned long long data)
                     {
                         return NanNew(to_string(data).c_str());
                     };
-                    auto worker = new Worker<uint64_t>(GetCallback(args), move(exec), move(conv));
+                    auto worker = new Worker<unsigned long long>(GetCallback(args), move(exec), move(conv));
                     NanAsyncQueueWorker(worker);
                 }
                 break;

@@ -133,41 +133,61 @@ NAN_METHOD(Constant)
         auto value = args[0];
         if (value->IsNumber())
         {
-            if (af::isDoubleAvailable(af::getDevice()))
+            double v = value->NumberValue();
+            switch (dimAndType.second)
             {
-                double v = value->NumberValue();
-                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
-            }
-            else
-            {
-                float v = (float)value->NumberValue();
-                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
+                case f32:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<float>(v, dimAndType.first, dimAndType.second))); });
+                case f64:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<double>(v, dimAndType.first, dimAndType.second))); });
+                case s32:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<int>(v, dimAndType.first, dimAndType.second))); });
+                case u32:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned>(v, dimAndType.first, dimAndType.second))); });
+                case u8:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second))); });
+                case b8:
+                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<char>(v, dimAndType.first, dimAndType.second))); });
             }
         }
         else if (value->IsObject())
         {
-            if (af::isDoubleAvailable(af::getDevice()))
+            switch (dimAndType.second)
             {
-                auto v = ToDComplex(value);
-                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
-            }
-            else
-            {
-                auto v = ToFComplex(value);
-                NanReturnValue(ArrayWrapper::New(af::constant(v, dimAndType.first, dimAndType.second)));
+                case c32:
+                    {
+                        auto cv = ToFComplex(value.As<Object>());
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<af::cfloat>(cv, dimAndType.first, dimAndType.second))); });
+                    }
+                case c64:
+                    {
+                        auto cv = ToDComplex(value.As<Object>());
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second))); });
+                    }
             }
         }
         else if (value->IsString())
         {
             String::Utf8Value str(value);
-            intl val = strtoll(*str, nullptr, 10);
-            NanReturnValue(ArrayWrapper::New(af::constant(val, dimAndType.first, dimAndType.second)));
+            switch (dimAndType.second)
+            {
+                case s64:
+                    {
+                        __int64 val = strtoll(*str, nullptr, 10);
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<__int64>(v, dimAndType.first, dimAndType.second))); });
+                    }
+                case u64:
+                    {
+                        long long val = strtoll(*str, nullptr, 10);
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<long long>(v, dimAndType.first, dimAndType.second))); });
+                    }
+            }
         }
         else
         {
             throw new logic_error("Argument at position 0 is not a constant.");
         }
-
+        throw new logic_error("Type is unknown.");
     }
     FIRE_CATCH
 }
