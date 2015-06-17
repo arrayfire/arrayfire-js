@@ -14,21 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef FIRE_JS_GUARD_H
-#define FIRE_JS_GUARD_H
+#ifndef ARRAY_FIRE_JS_GUARD_H
+#define ARRAY_FIRE_JS_GUARD_H
 
-#include <atomic>
+#include <nan.h>
 
-/* The role of this class is not to serve as a syntactic sugar for a mutex.
- * There should be no held mutexes in the application, because if a long running operation
- * holds a mutex in the background, and another lockable operation gets invoked in the main loop,
- * then it will hold the loop until the asynchronous operation gets completed. We will loose asynchronity.
- *
- * But there should be no ArrayFire operations run in parallel, because those are not thread safe.
- * It's the applications responsibility to provide sequentiality. This Guard class is there to enforce this rule.
- * If the application executes an ArrayFire operation while there is an already running asynchronous operation in progress,
- * an exception gets thrown.
- */
 struct Guard
 {
     Guard();
@@ -36,7 +26,9 @@ struct Guard
     Guard(Guard&&) = delete;
     ~Guard();
 private:
-    static std::atomic<int> _inc;
+    static uv_mutex_t lock;
+    static bool isInitialized;
+    static bool Initialize();
 };
 
-#endif // FIRE_JS_GUARD_H
+#endif // ARRAY_FIRE_JS_GUARD_H
