@@ -660,7 +660,6 @@ NAN_METHOD(ArrayWrapper::Type)
 
     try
     {
-        Guard();
         NanReturnValue(GetArray(args.This())->type());
     }
     FIRE_CATCH
@@ -672,8 +671,6 @@ NAN_METHOD(ArrayWrapper::Dims)
 
     try
     {
-        Guard();
-
         auto pArray = GetArray(args.This());
         if (!args.Length())
         {
@@ -705,7 +702,6 @@ NAN_METHOD(ArrayWrapper::NumDims)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
     }
     FIRE_CATCH
@@ -717,7 +713,6 @@ NAN_METHOD(ArrayWrapper::Bytes)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
     }
     FIRE_CATCH
@@ -729,8 +724,9 @@ NAN_METHOD(ArrayWrapper::Copy)
 
     try
     {
-        Guard();
-        NanReturnValue(New(new af::array(move(GetArray(args.This())->copy()))));
+        ARGS_LEN(1);
+        af::array array(*GetArray(args.This()));
+        return NewAsync(args, [=]() { Guard(); return new af::array(array.copy()); });
     }
     FIRE_CATCH
 }
@@ -741,7 +737,6 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isempty()));
     }
     FIRE_CATCH
@@ -753,7 +748,6 @@ NAN_METHOD(ArrayWrapper::IsScalar)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
     }
     FIRE_CATCH
@@ -765,7 +759,6 @@ NAN_METHOD(ArrayWrapper::IsVector)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isvector()));
     }
     FIRE_CATCH
@@ -777,7 +770,6 @@ NAN_METHOD(ArrayWrapper::IsRow)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isrow()));
     }
     FIRE_CATCH
@@ -789,7 +781,6 @@ NAN_METHOD(ArrayWrapper::IsColumn)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
     }
     FIRE_CATCH
@@ -801,7 +792,6 @@ NAN_METHOD(ArrayWrapper::IsComplex)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
     }
     FIRE_CATCH
@@ -813,7 +803,6 @@ NAN_METHOD(ArrayWrapper::IsReal)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isreal()));
     }
     FIRE_CATCH
@@ -825,7 +814,6 @@ NAN_METHOD(ArrayWrapper::IsDouble)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
     }
     FIRE_CATCH
@@ -837,7 +825,6 @@ NAN_METHOD(ArrayWrapper::IsSingle)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->issingle()));
     }
     FIRE_CATCH
@@ -849,7 +836,6 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
     }
     FIRE_CATCH
@@ -861,7 +847,6 @@ NAN_METHOD(ArrayWrapper::IsFloating)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
     }
     FIRE_CATCH
@@ -873,7 +858,6 @@ NAN_METHOD(ArrayWrapper::IsInteger)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
     }
     FIRE_CATCH
@@ -885,7 +869,6 @@ NAN_METHOD(ArrayWrapper::IsBool)
 
     try
     {
-        Guard();
         NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
     }
     FIRE_CATCH

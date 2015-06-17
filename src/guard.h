@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef ARRAY_FIRE_JS_GUARD_H
-#define ARRAY_FIRE_JS_GUARD_H
+#ifndef FIRE_JS_GUARD_H
+#define FIRE_JS_GUARD_H
 
 #include <nan.h>
 
@@ -31,4 +31,4 @@ private:
     static bool Initialize();
 };
 
-#endif // ARRAY_FIRE_JS_GUARD_H
+#endif // FIRE_JS_GUARD_H

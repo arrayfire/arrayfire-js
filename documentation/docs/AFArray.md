@@ -179,7 +179,9 @@ Converts the array into another type.
 
 ### copy()
 
-- `copy()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gad79c786c646fe05a18e208eabf4dae94)
+asynchronous, counterparts: `copyAsync()`, `copySync()`
+
+- `copy(callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gad79c786c646fe05a18e208eabf4dae94)
 
 **Result:** new AFArray instance holding a deep copy of the array
 
