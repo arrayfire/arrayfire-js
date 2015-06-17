@@ -578,13 +578,13 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     auto exec = [=]()
                     {
                         Guard();
-                        return array.scalar<__int64>();
+                        return array.scalar<long long>();
                     };
-                    auto conv = [=](Worker<__int64>* w, __int64 data)
+                    auto conv = [=](Worker<long long>* w, long long data)
                     {
                         return NanNew(to_string(data).c_str());
                     };
-                    auto worker = new Worker<__int64>(GetCallback(args), move(exec), move(conv));
+                    auto worker = new Worker<long long>(GetCallback(args), move(exec), move(conv));
                     NanAsyncQueueWorker(worker);
                 }
                 break;
@@ -1026,7 +1026,7 @@ NAN_METHOD(ArrayWrapper::F)\
         else if (value->IsString())\
         {\
             String::Utf8Value str(value);\
-            __int64 v = strtoll(*str, nullptr, 10);\
+            long long v = strtoll(*str, nullptr, 10);\
             Array Op v;\
         }\
         else\
