@@ -26,8 +26,8 @@ limitations under the License.
  *
  * But there should be no ArrayFire operations run in parallel, because those are not thread safe.
  * It's the applications responsibility to provide sequentiality. This Guard class is there to enforce this rule.
- * If the application executes an ArrayFire operation while there are an already running asynchronous operation in progress,
- * an exception will be thrown.
+ * If the application executes an ArrayFire operation while there is an already running asynchronous operation in progress,
+ * an exception gets thrown.
  */
 struct Guard
 {
