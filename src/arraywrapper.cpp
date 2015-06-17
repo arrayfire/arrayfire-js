@@ -233,6 +233,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         {
             if (args.Length() == 0)
             {
+                Guard();
                 instance = new ArrayWrapper(new af::array());
             }
             else if (args.Length() == 1)
@@ -244,6 +245,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
             }
             else
             {
+                Guard();
                 for (int i = 0; i < args.Length(); i++)
                 {
                     if (Buffer::HasInstance(args[i]))
@@ -895,8 +897,16 @@ NAN_METHOD(ArrayWrapper::Eval)
 
     try
     {
-        Guard();
-        GetArray(args.This())->eval();
+        ARGS_LEN(1);
+        af::array array(*GetArray(args.This()));
+        auto exec = [=]()
+        {
+            Guard();
+            array.eval();
+        };
+        auto worker = new Worker<void>(GetCallback(args), move(exec));
+
+        NanAsyncQueueWorker(worker);
         NanReturnUndefined();
     }
     FIRE_CATCH
@@ -909,9 +919,9 @@ NAN_METHOD(ArrayWrapper::At)
 
     try
     {
-        Guard();
-
         ARGS_LEN(1)
+
+        Guard();
 
         if (args.Length() < 2)
         {
@@ -940,6 +950,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(1)\
+        Guard();\
         auto pArray = GetArray(args.This());\
         NanReturnValue(New(pArray->f(args[0]->Int32Value())));\
     }\
@@ -957,6 +968,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(2);\
+        Guard();\
         auto pArray = GetArray(args.This());\
         NanReturnValue(New(pArray->f(args[0]->Int32Value(), args[1]->Int32Value())));\
     }\
@@ -972,9 +984,10 @@ NAN_METHOD(ArrayWrapper::As)
     NanScope();
     try
     {
-        ARGS_LEN(1)
+        ARGS_LEN(2);
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
-        NanReturnValue(New(GetArray(args.This())->as(type)));
+        af::array array(*GetArray(args.This()));
+        return NewAsync(args, [=]() { Guard(); return new af::array(array.as(type)); });
     }
     FIRE_CATCH
 }
@@ -992,10 +1005,10 @@ NAN_METHOD(ArrayWrapper::F)\
         ARGS_LEN(1)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
+        Guard();\
         if (pOtherArray)\
         {\
             auto& otherArray = *pOtherArray;\
-            Guard();\
             Array Op otherArray;\
         }\
         else if (value->IsNumber())\
@@ -1003,17 +1016,14 @@ NAN_METHOD(ArrayWrapper::F)\
             double v = value->NumberValue();\
             if (floor(v) == v)\
             {\
-                Guard();\
                 Array Op value->Int32Value();\
             }\
             else if (isDouble)\
             {\
-                Guard();\
                 Array Op v;\
             }\
             else\
             {\
-                Guard();\
                 Array Op (float)v;\
             }\
         }\
@@ -1022,13 +1032,11 @@ NAN_METHOD(ArrayWrapper::F)\
             if (isDouble)\
             {\
                 auto v = ToDComplex(value);\
-                Guard();\
                 Array Op v;\
             }\
             else\
             {\
                 auto v = ToFComplex(value);\
-                Guard();\
                 Array Op v;\
             }\
         }\
@@ -1036,7 +1044,6 @@ NAN_METHOD(ArrayWrapper::F)\
         {\
             String::Utf8Value str(value);\
             __int64 v = strtoll(*str, nullptr, 10);\
-            Guard();\
             Array Op v;\
         }\
         else\
@@ -1068,10 +1075,10 @@ NAN_METHOD(ArrayWrapper::F)\
         auto value = args[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
+        Guard();\
         if (pOtherArray)\
         {\
             auto& otherArray = *pOtherArray;\
-            Guard();\
             result = new af::array(array Op otherArray);\
         }\
         else if (value->IsNumber())\
@@ -1079,17 +1086,14 @@ NAN_METHOD(ArrayWrapper::F)\
             double v = value->NumberValue();\
             if (floor(v) == v)\
             {\
-                Guard();\
                 result = new af::array(array Op value->Int32Value());\
             }\
             else if (isDouble)\
             {\
-                Guard();\
                 result = new af::array(array Op v);\
             }\
             else\
             {\
-                Guard();\
                 result = new af::array(array Op (float)v);\
             }\
         }\
@@ -1098,13 +1102,11 @@ NAN_METHOD(ArrayWrapper::F)\
             if (isDouble)\
             {\
                 auto v = ToDComplex(value);\
-                Guard();\
                 result = new af::array(array Op v);\
             }\
             else\
             {\
                 auto v = ToFComplex(value);\
-                Guard();\
                 result = new af::array(array Op v);\
             }\
         }\
@@ -1112,7 +1114,6 @@ NAN_METHOD(ArrayWrapper::F)\
         {\
             String::Utf8Value str(value);\
             intl v = strtoll(*str, nullptr, 10);\
-            Guard();\
             result = new af::array(array Op v);\
         }\
         else\
@@ -1152,6 +1153,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(args.This());\
+        Guard();\
         NanReturnValue(New(array.operator Op()));\
     }\
     FIRE_CATCH\

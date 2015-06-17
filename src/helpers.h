@@ -22,7 +22,6 @@ limitations under the License.
 #include <nan.h>
 #include <complex>
 #include <functional>
-#include "types.h"
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 

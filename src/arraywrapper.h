@@ -20,7 +20,6 @@ limitations under the License.
 #include <nan.h>
 #include <arrayfire.h>
 #include <functional>
-#include "types.h"
 
 struct ArrayWrapper : public node::ObjectWrap
 {

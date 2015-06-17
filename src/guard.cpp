@@ -16,24 +16,19 @@ limitations under the License.
 
 #include "ext.h"
 #include "guard.h"
+#include "errors.h"
 
-uv_mutex_t Guard::lock;
+using namespace std;
 
-bool Guard::isInitialized(Guard::Initialize());
+atomic<int> Guard::_inc;
 
 Guard::Guard()
 {
-    uv_mutex_lock(&Guard::lock);
+    if (_inc++) FIRE_THROW_PARALLEL();
 }
 
 Guard::~Guard()
 {
-    uv_mutex_unlock(&Guard::lock);
-}
-
-bool Guard::Initialize()
-{
-    uv_mutex_init(&Guard::lock);
-    return true;
+    --_inc;
 }
 

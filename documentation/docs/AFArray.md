@@ -165,9 +165,11 @@ alias of [numdims](#numdims)
 
 ### as()
 
+asynchronous, counterparts: `asAsync()`, `asSync()`
+
 Converts the array into another type. 
 
-- `as(type)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga28967fdd5fff8001f4ef6181d9b186fb)
+- `as(type, callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga28967fdd5fff8001f4ef6181d9b186fb)
 
 **Arguments:**
 
@@ -191,7 +193,9 @@ aliases respectively: `isEmpty`, `isScalar`, `isVector`, `isRow`, `isColumn`, `i
 
 ### eval()
 
-- `eval()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581)
+asynchronous, counterparts: `evalAsync()`, `evalSync()`
+
+- `eval(callback)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga01195c59132e1b0af7655075ba770581)
 
 Evaluate any JIT expressions to generate data for the array.
 

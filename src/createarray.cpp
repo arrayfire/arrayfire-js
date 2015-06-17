@@ -174,12 +174,12 @@ NAN_METHOD(Constant)
                 case s64:
                     {
                         __int64 val = strtoll(*str, nullptr, 10);
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<__int64>(v, dimAndType.first, dimAndType.second))); });
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<__int64>(val, dimAndType.first, dimAndType.second))); });
                     }
                 case u64:
                     {
                         unsigned long long val = strtoll(*str, nullptr, 10);
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned long long>(v, dimAndType.first, dimAndType.second))); });
+                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second))); });
                     }
             }
         }

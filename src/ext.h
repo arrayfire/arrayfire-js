@@ -33,5 +33,6 @@ limitations under the License.
 #include <complex>
 #include <sstream>
 #include <math.h>
+#include <atomic>
 
 #endif

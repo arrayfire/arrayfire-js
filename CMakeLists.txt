@@ -62,7 +62,6 @@ include_directories(${CMAKE_JS_INC};${ArrayFire_INCLUDE_DIRS})
 file(GLOB COMMON_SOURCE_FILES
     "src/fire.*"
     "src/ext.*"
-    "src/types.*"
     "src/symbols.*"
     "src/helpers.*"
     "src/guard.*"
