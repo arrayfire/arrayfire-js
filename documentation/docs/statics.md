@@ -39,3 +39,29 @@ alias: `types.dtype`
     afHost: 1
 }
 ```
+
+## types.matchType
+
+```js
+{
+    SAD: 0,     // Match based on Sum of Absolute Differences (SAD)
+    zSAD: 1,    // Match based on Zero mean SAD.
+    lSAD: 2,    // Match based on Locally scaled SAD.
+    SSD: 3,     // Match based on Sum of Squared Differences (SSD)
+    zSSD: 4,    // Match based on Zero mean SSD.
+    lSSD: 5,    // Match based on Locally scaled SSD.
+    NCC: 6,     // Match based on Normalized Cross Correlation (NCC)
+    zNCC: 7,    // Match based on Zero mean NCC.
+    SHD: 8,     // Match based on Sum of Hamming Distances (SHD)
+    // ArrayFire convention compatible aliases:
+    AF_SAD: 0,
+    AF_ZSAD: 1,
+    AF_LSAD: 2,
+    AF_SSD: 3,
+    AF_ZSSD: 4,
+    AF_LSSD: 5,
+    AF_NCC: 6,
+    AF_ZNCC: 7,
+    AF_SHD: 8
+}
+```
