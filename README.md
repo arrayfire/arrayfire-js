@@ -12,7 +12,7 @@ Fire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github
 
 ## Requirements
 
-- [Download](http://arrayfire.com/download/) and install ArrayFire (3.0 RTM is supported right now). Don't forget to add `%AF_PATH%\lib` directory to PATH on Windows!    
+- [Download](http://arrayfire.com/download/) and install ArrayFire (3.x RTM is supported right now). Don't forget to add `%AF_PATH%\lib` directory to PATH on Windows!    
 - On Linux or Mac install dependencies (see [Linux](https://github.com/arrayfire/arrayfire/wiki/Build-Instructions-for-Linux#installing-dependencies) and [Mac docs](https://github.com/arrayfire/arrayfire/wiki/Build-Instructions-for-OSX#installing-dependencies))
 - Don't forget to install [CMake](http://www.cmake.org/)
 
