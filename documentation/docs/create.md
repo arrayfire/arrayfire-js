@@ -19,15 +19,13 @@
 
 ## randu()
 
-asynchronous, counterparts: `randuAsync()`, `randuSync()`
-
 Create a random array sampled from uniform distribution.
 
-- `randu(dim0, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gab3e2105aec551cb0bbcf104d437c0481)
-- `randu(dim0, dim1, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#ga9a08025609da7db72c3a22493f85a171)
-- `randu(dim0, dim1, dim2, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gae0d335466e5f5a1cb821dc241804923b)
-- `randu(dim0, dim1, dim2, dim3, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gac05c5b2de1cfc2d763b7d2943e9deee3)
-- `randu(dims, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#ga15a5110a447509cab9589b2ad56c5e55)
+- `randu(dim0, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gab3e2105aec551cb0bbcf104d437c0481)
+- `randu(dim0, dim1, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#ga9a08025609da7db72c3a22493f85a171)
+- `randu(dim0, dim1, dim2, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gae0d335466e5f5a1cb821dc241804923b)
+- `randu(dim0, dim1, dim2, dim3, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#gac05c5b2de1cfc2d763b7d2943e9deee3)
+- `randu(dims, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randu.htm#ga15a5110a447509cab9589b2ad56c5e55)
 
 **Arguments:**
 
@@ -43,15 +41,13 @@ alias of [randu()](#randu)
 
 ## randn()
 
-asynchronous, counterparts: `randnAsync()`, `randnSync()`
-
 Create a random array sampled from normal distribution.
 
-- `randn(dim0, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga5d7b55d3d0f34d71f30a70ed7a2d928d)
-- `randn(dim0, dim1, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga5fe422f8cf2acc3c6f782f9148360f6c)
-- `randn(dim0, dim1, dim2, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga150fb95ddda0e37e8961254ca7afc8e5)
-- `randn(dim0, dim1, dim2, dim3, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga9bc154f0bf07116ad208b2da4b71c3d8)
-- `randn(dims, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#gae8aa1f5ec310aeb9e4cbd19d63998349)
+- `randn(dim0, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga5d7b55d3d0f34d71f30a70ed7a2d928d)
+- `randn(dim0, dim1, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga5fe422f8cf2acc3c6f782f9148360f6c)
+- `randn(dim0, dim1, dim2, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga150fb95ddda0e37e8961254ca7afc8e5)
+- `randn(dim0, dim1, dim2, dim3, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#ga9bc154f0bf07116ad208b2da4b71c3d8)
+- `randn(dims, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__randn.htm#gae8aa1f5ec310aeb9e4cbd19d63998349)
 
 **Arguments:**
 
@@ -67,15 +63,13 @@ alias of [randn()](#randn)
 
 ## identity()
 
-asynchronous, counterparts: `identityAsync()`, `identitySync()`
-
 Create an identity matrix (array with diagonal values 1).
 
-- `identity(dim0, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga3f69c0a0ab7ba0c8c1ee3223772234b8)
-- `identity(dim0, dim1, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#gaff9da6e4b83772359d748a4df66ec571)
-- `identity(dim0, dim1, dim2, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga405b89c8f04901d58287fd6a8f5612c3)
-- `identity(dim0, dim1, dim2, dim3, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga8e6605d76748c5fff365830e1a153132)
-- `identity(dims, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#gafd8247e22fdb50218926d5d9391fa678)
+- `identity(dim0, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga3f69c0a0ab7ba0c8c1ee3223772234b8)
+- `identity(dim0, dim1, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#gaff9da6e4b83772359d748a4df66ec571)
+- `identity(dim0, dim1, dim2, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga405b89c8f04901d58287fd6a8f5612c3)
+- `identity(dim0, dim1, dim2, dim3, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#ga8e6605d76748c5fff365830e1a153132)
+- `identity(dims, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__identity.htm#gafd8247e22fdb50218926d5d9391fa678)
 
 **Arguments:**
 
@@ -87,15 +81,13 @@ Create an identity matrix (array with diagonal values 1).
 
 ## range()
 
-asynchronous, counterparts: `rangeAsync()`, `rangeSync()`
-
 Creates an array with [0, n] values along the seqDim which is tiled across other dimensions.
 
-- `range(dim0, seqDim, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
-- `range(dim0, dim1, seqDim, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
-- `range(dim0, dim1, dim2, seqDim, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
-- `range(dim0, dim1, dim2, dim3, seqDim, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
-- `range(dims, seqDim, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga3789475e962b4c31e07c1c3bdab8498b)
+- `range(dim0, seqDim, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
+- `range(dim0, dim1, seqDim, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
+- `range(dim0, dim1, dim2, seqDim, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
+- `range(dim0, dim1, dim2, dim3, seqDim, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga1e2ae1f90d99f42854a19877261ac455)
+- `range(dims, seqDim, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__range.htm#ga3789475e962b4c31e07c1c3bdab8498b)
 
 **Arguments:**
 
@@ -108,11 +100,9 @@ Creates an array with [0, n] values along the seqDim which is tiled across other
 
 ## iota()
 
-asynchronous, counterparts: `iotaAsync()`, `iotaSync()`
-
 Create an sequence [0, dims.elements - 1] and modify to specified dimensions dims and then tile it according to tileDims.
 
-- `iota(dims, tileDims, type, callback)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__iota.htm#ga8f7c55a54d1f93e55340f59b61662f29)
+- `iota(dims, tileDims, type)`: [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__data__func__iota.htm#ga8f7c55a54d1f93e55340f59b61662f29)
 
 **Arguments:**
 
@@ -123,8 +113,6 @@ Create an sequence [0, dims.elements - 1] and modify to specified dimensions dim
 **Result**: the created AFArray instance.
 
 ## diag()
-
-asynchronous, counterparts: `diagAsync()`, `diagSync()`
 
 Extract diagonal from a matrix when `extract` is set to `true`. 
 
@@ -140,15 +128,13 @@ Create a diagonal marix from input array when `extract` is set to `false`.
 
 ## constant()
 
-asynchronous, counterparts: `constantAsync()`, `constantSync()`
-
 Create an array filled with the specified value.
 
-- `constant(value, dim0, type, callback)`
-- `constant(value, dim0, dim1, type, callback)`
-- `constant(value, dim0, dim1, dim2, type, callback)`
-- `constant(value, dim0, dim1, dim2, dim3, type, callback)`
-- `constant(value, dims, type, callback)`
+- `constant(value, dim0, type)`
+- `constant(value, dim0, dim1, type)`
+- `constant(value, dim0, dim1, dim2, type)`
+- `constant(value, dim0, dim1, dim2, dim3, type)`
+- `constant(value, dims, type)`
 
 **Arguments:**
 

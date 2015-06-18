@@ -253,7 +253,7 @@ NAN_METHOD(F)\
         ARGS_LEN(2);\
         \
         auto array = *ArrayWrapper::GetArrayAt(args, 0);\
-        if (af::isDoubleAvailable(af::getDevice()))\
+        if (NeedsDouble(array))\
         {\
             typedef std::pair<double, unsigned> PairT;\
             typedef Worker<PairT> WorkerT;\

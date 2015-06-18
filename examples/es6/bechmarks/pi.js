@@ -14,11 +14,11 @@ let pi = async(function*(fire, deviceInfo) {
     common.printDeviceInfo(deviceInfo);
     console.log("");
 
-    let x = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
-    let y = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
+    let x = fire.randu(numberOfPoints, fire.types.dtype.f32);
+    let y = fire.randu(numberOfPoints, fire.types.dtype.f32);
     let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
-    let num_inside = yield fire.sumAsync(dist.lt(1));
-    let piVal = (4.0 *  num_inside) / numberOfPoints;
+    let numInside = yield fire.sumAsync(dist.lt(1));
+    let piVal = (4.0 *  numInside) / numberOfPoints;
 
     console.log(`PI = ${piVal}`);
 });

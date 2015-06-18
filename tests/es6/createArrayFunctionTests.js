@@ -1,5 +1,5 @@
 /*
-Copyright 2015 Gábor Mezõ aka unbornchikken (gabor.mezo@outlook.com)
+Copyright 2015 Gï¿½bor Mezï¿½ aka unbornchikken (gabor.mezo@outlook.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ function testPlatform (id) {
             describe("randu", function () {
                 it("should yield uniform random int array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = yield fire.randuAsync(2, 4, fire.types.dtype.s32);
+                        let array = fire.randu(2, 4, fire.types.dtype.s32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * int.size);
@@ -47,7 +47,7 @@ function testPlatform (id) {
                 });
                 it("should yield uniform random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = yield fire.randuAsync([2, 4], fire.types.dtype.f32);
+                        let array = fire.randu([2, 4], fire.types.dtype.f32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);
@@ -62,27 +62,25 @@ function testPlatform (id) {
             });
 
             describe("randf", function () {
-                it("should throw error when invoking normal random int array with 2 dimensions", function (done) {
-                    let f = async(function*() {
-                        let array = yield fire.randnAsync(2, 4, fire.types.dtype.s32);
-                    });
-                    f()
-                        .then(function () {
-                            done(new Error("This should throw."));
-                        },
-                        function (e) {
-                            if (/invalid dtype argument/ig.test(e.message)) {
-                                done();
-                            }
-                            else {
-                                done(new Error("This should throw appropriate error."));
-                            }
-                        });
+                it("should throw error when invoking normal random int array with 2 dimensions", function () {
+                    try {
+                        let array = fire.randn(2, 4, fire.types.dtype.s32);
+                        return;
+                    }
+                    catch(e) {
+                        if (/invalid dtype argument/ig.test(e.message)) {
+                            return;
+                        }
+                        else {
+                            throw new Error("This should throw appropriate error.");
+                        }
+                    }
+                    throw new Error("This should throw.");
 
                 });
                 it("should yield normal random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = yield fire.randnAsync([2, 4], fire.types.dtype.f32);
+                        let array = fire.randn([2, 4], fire.types.dtype.f32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);

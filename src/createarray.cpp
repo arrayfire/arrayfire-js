@@ -33,8 +33,10 @@ NAN_METHOD(RandU)
 
     try
     {
+        ARGS_LEN(2);
         auto dimAndType = ParseDimAndTypeArgs(args);
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randu(dimAndType.first, dimAndType.second))); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::randu(dimAndType.first, dimAndType.second)));
     }
     FIRE_CATCH
 }
@@ -45,10 +47,13 @@ NAN_METHOD(RandN)
 
     try
     {
+        ARGS_LEN(2);
         auto dimAndType = ParseDimAndTypeArgs(args);
         if (dimAndType.second == f32 || dimAndType.second == f64)
         {
-            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::randn(dimAndType.first, dimAndType.second))); });
+            Guard();
+            NanReturnValue(ArrayWrapper::New(af::randn(dimAndType.first, dimAndType.second)));
+            return;
         }
         return NAN_THROW_INVALID_DTYPE();
     }
@@ -61,8 +66,10 @@ NAN_METHOD(Identity)
 
     try
     {
+        ARGS_LEN(2);
         auto dimAndType = ParseDimAndTypeArgs(args);
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::identity(dimAndType.first, dimAndType.second))); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::identity(dimAndType.first, dimAndType.second)));
     }
     FIRE_CATCH
 }
@@ -73,10 +80,11 @@ NAN_METHOD(Range)
 
     try
     {
-        ARGS_LEN(4);
+        ARGS_LEN(3);
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 1);
-        af_dtype seqDim = (af_dtype)args[args.Length() - 3]->Uint32Value();
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::range(dimAndType.first, seqDim, dimAndType.second))); });
+        af_dtype seqDim = (af_dtype)args[args.Length() - 2]->Uint32Value();
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::range(dimAndType.first, seqDim, dimAndType.second)));
     }
     FIRE_CATCH
 }
@@ -87,11 +95,12 @@ NAN_METHOD(Iota)
 
     try
     {
-        ARGS_LEN(4);
+        ARGS_LEN(3);
         auto dims = ToDim4(args[0]);
         auto titleDims = ToDim4(args[1]);
         auto type = GetDTypeInfo(args[3]->Uint32Value());
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::iota(dims, titleDims, type.first))); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::iota(dims, titleDims, type.first)));
     }
     FIRE_CATCH
 }
@@ -114,8 +123,8 @@ NAN_METHOD(Diag)
         {
             extract = args[2]->BooleanValue();
         }
-        af::array array(*pArray);
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::diag(array, num, extract))); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::diag(*pArray, num, extract)));
     }
     FIRE_CATCH
 }
@@ -131,23 +140,30 @@ NAN_METHOD(Constant)
         ARGS_LEN(3);
         auto dimAndType = ParseDimAndTypeArgs(args, -1, 0, 1);
         auto value = args[0];
+        Guard();
         if (value->IsNumber())
         {
             double v = value->NumberValue();
             switch (dimAndType.second)
             {
                 case f32:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<float>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<float>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 case f64:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<double>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<double>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 case s32:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<int>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<int>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 case u32:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<unsigned>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 case u8:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 case b8:
-                    return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<char>(v, dimAndType.first, dimAndType.second))); });
+                    NanReturnValue(ArrayWrapper::New(af::constant<char>(v, dimAndType.first, dimAndType.second)));
+                    return;
                 default:
                     break;
             }
@@ -159,12 +175,14 @@ NAN_METHOD(Constant)
                 case c32:
                     {
                         auto cv = ToFComplex(value.As<Object>());
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<af::cfloat>(cv, dimAndType.first, dimAndType.second))); });
+                        NanReturnValue(ArrayWrapper::New(af::constant<af::cfloat>(cv, dimAndType.first, dimAndType.second)));
+                        return;
                     }
                 case c64:
                     {
                         auto cv = ToDComplex(value.As<Object>());
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second))); });
+                        NanReturnValue(ArrayWrapper::New(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second)));
+                        return;
                     }
                 default:
                     break;
@@ -178,12 +196,14 @@ NAN_METHOD(Constant)
                 case s64:
                     {
                         long long val = strtoll(*str, nullptr, 10);
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<long long>(val, dimAndType.first, dimAndType.second))); });
+                        NanReturnValue(ArrayWrapper::New(af::constant<long long>(val, dimAndType.first, dimAndType.second)));
+                        return;
                     }
                 case u64:
                     {
                         unsigned long long val = strtoll(*str, nullptr, 10);
-                        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second))); });
+                        NanReturnValue(ArrayWrapper::New(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second)));
+                        return;
                     }
                 default:
                     break;
@@ -191,9 +211,9 @@ NAN_METHOD(Constant)
         }
         else
         {
-            throw new logic_error("Argument at position 0 is not a constant.");
+            FIRE_THROW("Argument at position 0 is not a constant.");
         }
-        throw new logic_error("Type is unknown.");
+        FIRE_THROW("Type is unknown.");
     }
     FIRE_CATCH
 }
