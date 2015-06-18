@@ -231,7 +231,7 @@ function testPlatform(id) {
                         assert(v1 === v * v);
                     }
 
-                    let array2 = yield array.copyAsync();
+                    let array2 = array.copy();
                     assert(array2 instanceof AFArray);
                     assert(array2.bytes() === array.bytes());
                     let buff3 = yield array2.hostAsync();
@@ -287,7 +287,7 @@ function testPlatform(id) {
                     assert(v1 === v * v);
                 }
 
-                let array2 = array.copySync();
+                let array2 = array.copy();
                 assert(array2 instanceof AFArray);
                 assert(array2.bytes() === array.bytes());
                 let buff3 = array2.hostSync();

@@ -724,9 +724,8 @@ NAN_METHOD(ArrayWrapper::Copy)
 
     try
     {
-        ARGS_LEN(1);
-        af::array array(*GetArray(args.This()));
-        return NewAsync(args, [=]() { Guard(); return new af::array(array.copy()); });
+        Guard();
+        NanReturnValue(New(GetArray(args.This())->copy()));
     }
     FIRE_CATCH
 }
@@ -880,16 +879,8 @@ NAN_METHOD(ArrayWrapper::Eval)
 
     try
     {
-        ARGS_LEN(1);
-        af::array array(*GetArray(args.This()));
-        auto exec = [=]()
-        {
-            Guard();
-            array.eval();
-        };
-        auto worker = new Worker<void>(GetCallback(args), move(exec));
-
-        NanAsyncQueueWorker(worker);
+        Guard();
+        GetArray(args.This())->eval();
         NanReturnUndefined();
     }
     FIRE_CATCH
@@ -967,10 +958,10 @@ NAN_METHOD(ArrayWrapper::As)
     NanScope();
     try
     {
-        ARGS_LEN(2);
+        ARGS_LEN(1);
         af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
-        af::array array(*GetArray(args.This()));
-        return NewAsync(args, [=]() { Guard(); return new af::array(array.as(type)); });
+        Guard();
+        NanReturnValue(New(GetArray(args.This())->as(type)));
     }
     FIRE_CATCH
 }

@@ -148,6 +148,8 @@ NAN_METHOD(Constant)
                     return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second))); });
                 case b8:
                     return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<char>(v, dimAndType.first, dimAndType.second))); });
+                default:
+                    break;
             }
         }
         else if (value->IsObject())
@@ -164,6 +166,8 @@ NAN_METHOD(Constant)
                         auto cv = ToDComplex(value.As<Object>());
                         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second))); });
                     }
+                default:
+                    break;
             }
         }
         else if (value->IsString())
@@ -181,6 +185,8 @@ NAN_METHOD(Constant)
                         unsigned long long val = strtoll(*str, nullptr, 10);
                         return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second))); });
                     }
+                default:
+                    break;
             }
         }
         else
