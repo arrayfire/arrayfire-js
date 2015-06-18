@@ -54,7 +54,6 @@ inline void _NanThrow(const char* what, const char* file, int line)
 #define FIRE_THROW_ARG_IS_NOT_A_SEQ() FIRE_THROW("Argument is not a Seq object.");
 #define FIRE_THROW_ARG_IS_NOT_AN_INDEX() FIRE_THROW("Argument is not an Index.");
 #define FIRE_THROW_CB_EXPECTED() FIRE_THROW("Callback argument expected.");
-#define FIRE_THROW_PARALLEL() FIRE_THROW("Execute ArrayFire operations in parallel is forbidden.");
 
 #define FIRE_CATCH \
     catch(fire_error &ex) { return NanThrowError(ex.what()); } \
