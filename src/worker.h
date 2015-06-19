@@ -37,14 +37,28 @@ struct Worker : public NanAsyncWorker
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
-        resultConvFunc(ConvResult(resultConvFunc))
+        resultConvFunc(std::move(ConvResult(resultConvFunc)))
     {
     }
 
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
-        resultConvFunc(ConvResult([](Worker<T>* w, T v) { return NanNew(v); }))
+        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return NanNew(v); })))
+    {
+    }
+
+    Worker(NanCallback *callback, ExecuteFunc&& executeFunc, const ResultConvFunc& resultConvFunc) :
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+        executeFunc(std::move(executeFunc)),
+        resultConvFunc(std::move(ConvResult(resultConvFunc)))
+    {
+    }
+
+    Worker(NanCallback *callback, ExecuteFunc&& executeFunc) :
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+        executeFunc(std::move(executeFunc)),
+        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return NanNew(v); })))
     {
     }
 
@@ -65,7 +79,7 @@ struct Worker : public NanAsyncWorker
         }
         catch(...)
         {
-           SetErrorMessage("Unknown error!");
+            SetErrorMessage("Unknown error!");
         }
     }
 
@@ -94,7 +108,7 @@ private:
 
     ResultConvFunc ConvResult(const ResultConvFunc& resultConvFunc)
     {
-        return [=](Worker<T>* i, T result)
+        return std::move([=](Worker<T>* i, T result)
         {
             try
             {
@@ -112,7 +126,7 @@ private:
             {
                 return NanError("Unknown error!");
             }
-        };
+        });
     }
 };
 
@@ -124,6 +138,12 @@ struct Worker<void> : public NanAsyncWorker
     Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
         NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc)
+    {
+    }
+
+    Worker(NanCallback *callback, ExecuteFunc&& executeFunc) :
+        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+        executeFunc(std::move(executeFunc))
     {
     }
 

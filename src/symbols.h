@@ -37,6 +37,8 @@ struct Symbols
     static v8::Persistent<v8::String> Compute;
     static v8::Persistent<v8::String> IsDoubleAvailable;
     static v8::Persistent<v8::String> Cpu;
+    static v8::Persistent<v8::String> Index;
+    static v8::Persistent<v8::String> Value;
 
     static void Init();
 };

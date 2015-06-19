@@ -22,6 +22,7 @@ limitations under the License.
 #include <nan.h>
 #include <complex>
 #include <functional>
+#include "symbols.h"
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 
@@ -268,8 +269,8 @@ NAN_METHOD(F)\
             auto conv = [=](WorkerT* w, PairT p)\
             {\
                 auto obj = NanNew<Object>();\
-                obj->Set(NanNew("value"), NanNew(p.first));\
-                obj->Set(NanNew("index"), NanNew(p.second));\
+                obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
+                obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
                 return obj;\
             };\
             auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
@@ -291,8 +292,8 @@ NAN_METHOD(F)\
             auto conv = [=](WorkerT* w, PairT p)\
             {\
                 auto obj = NanNew<Object>();\
-                obj->Set(NanNew("value"), NanNew(p.first));\
-                obj->Set(NanNew("index"), NanNew(p.second));\
+                obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
+                obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
                 return obj;\
             };\
             auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
