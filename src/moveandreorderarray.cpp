@@ -31,13 +31,13 @@ NAN_METHOD(Join)
 
     try
     {
-        ARGS_LEN(4);
+        ARGS_LEN(3);
 
         af::dtype dim = GetDTypeInfo(args[0]).first;
-        af::array array1 = *ArrayWrapper::GetArrayAt(args, 1);
-        af::array array2 = *ArrayWrapper::GetArrayAt(args, 2);
-
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::join(dim, array1, array2))); });
+        auto pArray1 = ArrayWrapper::GetArrayAt(args, 1);
+        auto pArray2 = ArrayWrapper::GetArrayAt(args, 2);
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::join(dim, *pArray1, *pArray2)));;
     }
     FIRE_CATCH
 }
@@ -58,12 +58,12 @@ NAN_METHOD(Flip)
 
     try
     {
-        ARGS_LEN(3);
+        ARGS_LEN(2);
 
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
         af::dtype dim = GetDTypeInfo(args[1]).first;
-
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::flip(array, dim))); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::flip(*pArray, dim)));;
     }
     FIRE_CATCH
 }

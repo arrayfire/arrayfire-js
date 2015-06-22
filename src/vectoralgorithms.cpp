@@ -41,11 +41,11 @@ NAN_METHOD(Sort)
     NanScope();
     try
     {
-        ARGS_LEN(2);
-        auto array = *ArrayWrapper::GetArrayAt(args, 0);
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
         unsigned dim = 0;
         bool asc = true;
-        if (args[1]->IsNumber())
+        if (args.Length() > 1 && args[1]->IsNumber())
         {
             dim = args[1]->Uint32Value();
         }
@@ -53,7 +53,8 @@ NAN_METHOD(Sort)
         {
             asc = args[2]->BooleanValue();
         }
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::sort(array, dim, asc)); });
+        Guard();
+        NanReturnValue(ArrayWrapper::New(af::sort(*pArray, dim, asc)));;
     }
     FIRE_CATCH
 }
@@ -63,9 +64,9 @@ NAN_METHOD(SortByKey)
     NanScope();
     try
     {
-        ARGS_LEN(3);
-        auto keys = *ArrayWrapper::GetArrayAt(args, 0);
-        auto values = *ArrayWrapper::GetArrayAt(args, 1);
+        ARGS_LEN(2);
+        auto pKeys = ArrayWrapper::GetArrayAt(args, 0);
+        auto pValues = ArrayWrapper::GetArrayAt(args, 1);
         unsigned dim = 0;
         bool asc = true;
         if (args.Length() > 2 && args[2]->IsNumber())
@@ -76,25 +77,16 @@ NAN_METHOD(SortByKey)
         {
             asc = args[3]->BooleanValue();
         }
-        auto exec = [=]()
-        {
-            Guard();
-            af::array outKeys, outValues;
-            af::sort(outKeys, outValues, keys, values, dim, asc);
-            return make_pair(outKeys, outValues);
-        };
-        typedef pair<af::array, af::array> PairT;
-        typedef Worker<PairT> WorkerT;
-        auto conv = [=](WorkerT* w, PairT p)
-        {
-            auto result = NanNew<Object>();
-            result->Set(NanNew("keys"), NanNew(ArrayWrapper::New(p.first)));
-            result->Set(NanNew("values"), NanNew(ArrayWrapper::New(p.second)));
-            return result;
-        };
-        auto worker = new WorkerT(GetCallback(args), move(exec), move(conv));
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+
+        Guard();
+        af::array outKeys, outValues;
+        af::sort(outKeys, outValues, *pKeys, *pValues, dim, asc);
+
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Keys), NanNew(ArrayWrapper::New(outKeys)));
+        result->Set(NanNew(Symbols::Values), NanNew(ArrayWrapper::New(outValues)));
+
+        NanReturnValue(result);
     }
     FIRE_CATCH
 }
@@ -104,11 +96,11 @@ NAN_METHOD(SortIndex)
     NanScope();
     try
     {
-        ARGS_LEN(2);
-        auto array = *ArrayWrapper::GetArrayAt(args, 0);
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
         unsigned dim = 0;
         bool asc = true;
-        if (args[1]->IsNumber())
+        if (args.Length() > 1 && args[1]->IsNumber())
         {
             dim = args[1]->Uint32Value();
         }
@@ -116,25 +108,15 @@ NAN_METHOD(SortIndex)
         {
             asc = args[2]->BooleanValue();
         }
-        auto exec = [=]()
-        {
-            Guard();
-            af::array outValues, outIndices;
-            af::sort(outValues, outIndices, array, dim, asc);
-            return make_pair(outValues, outIndices);
-        };
-        typedef pair<af::array, af::array> PairT;
-        typedef Worker<PairT> WorkerT;
-        auto conv = [=](WorkerT* w, PairT p)
-        {
-            auto result = NanNew<Object>();
-            result->Set(NanNew("values"), NanNew(ArrayWrapper::New(p.first)));
-            result->Set(NanNew("indices"), NanNew(ArrayWrapper::New(p.second)));
-            return result;
-        };
-        auto worker = new WorkerT(GetCallback(args), move(exec), move(conv));
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+
+        Guard();
+        af::array outValues, outIndices;
+        af::sort(outValues, outIndices, *pArray, dim, asc);
+
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Values), NanNew(ArrayWrapper::New(outValues)));
+        result->Set(NanNew(Symbols::Indices), NanNew(ArrayWrapper::New(outIndices)));
+        NanReturnValue(result);
     }
     FIRE_CATCH
 }
@@ -153,27 +135,17 @@ NAN_METHOD(Grad)
     NanScope();
     try
     {
-        ARGS_LEN(2);
-        auto array = *ArrayWrapper::GetArrayAt(args, 0);
-        auto exec = [=]()
-        {
-            Guard();
-            af::array dx, dy;
-            af::grad(dx, dy, array);
-            return make_pair(dx, dy);
-        };
-        typedef pair<af::array, af::array> PairT;
-        typedef Worker<PairT> WorkerT;
-        auto conv = [=](WorkerT* w, PairT p)
-        {
-            auto result = NanNew<Object>();
-            result->Set(NanNew("dx"), NanNew(ArrayWrapper::New(p.first)));
-            result->Set(NanNew("dy"), NanNew(ArrayWrapper::New(p.second)));
-            return result;
-        };
-        auto worker = new WorkerT(GetCallback(args), move(exec), move(conv));
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+
+        Guard();
+        af::array dx, dy;
+        af::grad(dx, dy, *pArray);
+
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::DX), NanNew(ArrayWrapper::New(dx)));
+        result->Set(NanNew(Symbols::DY), NanNew(ArrayWrapper::New(dy)));
+        NanReturnValue(result);
     }
     FIRE_CATCH
 }

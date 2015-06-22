@@ -78,7 +78,7 @@ NAN_METHOD(CorrCoef)
 
         auto array1 = *ArrayWrapper::GetArrayAt(args, 0);
         auto array2 = *ArrayWrapper::GetArrayAt(args, 1);
-       if (NeedsDouble(array1))
+        if (NeedsDouble(array1))
         {
             auto exec = [=]() { Guard(); return af::corrcoef<double>(array1, array2); };
             auto worker = new Worker<double>(GetCallback(args), std::move(exec));

@@ -39,6 +39,11 @@ Persistent<String> Symbols::IsDoubleAvailable;
 Persistent<String> Symbols::Cpu;
 Persistent<String> Symbols::Index;
 Persistent<String> Symbols::Value;
+Persistent<String> Symbols::Keys;
+Persistent<String> Symbols::Values;
+Persistent<String> Symbols::Indices;
+Persistent<String> Symbols::DX;
+Persistent<String> Symbols::DY;
 
 void Symbols::Init()
 {
@@ -60,4 +65,9 @@ void Symbols::Init()
     NanAssignPersistent(Cpu, NanNew("CPU"));
     NanAssignPersistent(Index, NanNew("index"));
     NanAssignPersistent(Value, NanNew("value"));
+    NanAssignPersistent(Keys, NanNew("keys"));
+    NanAssignPersistent(Values, NanNew("values"));
+    NanAssignPersistent(Indices, NanNew("indices"));
+    NanAssignPersistent(DX, NanNew("dx"));
+    NanAssignPersistent(DY, NanNew("dy"));
 }

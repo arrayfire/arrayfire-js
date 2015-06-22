@@ -39,6 +39,11 @@ struct Symbols
     static v8::Persistent<v8::String> Cpu;
     static v8::Persistent<v8::String> Index;
     static v8::Persistent<v8::String> Value;
+    static v8::Persistent<v8::String> Keys;
+    static v8::Persistent<v8::String> Values;
+    static v8::Persistent<v8::String> Indices;
+    static v8::Persistent<v8::String> DX;
+    static v8::Persistent<v8::String> DY;
 
     static void Init();
 };
