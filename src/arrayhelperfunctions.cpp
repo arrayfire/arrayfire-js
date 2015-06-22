@@ -25,9 +25,9 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_ASYNC_METHOD_ARR(IsZero, iszero)
-FIRE_ASYNC_METHOD_ARR(IsInf, isInf)
-FIRE_ASYNC_METHOD_ARR(IsNaN, isNaN)
+FIRE_SYNC_METHOD_ARR(IsZero, iszero)
+FIRE_SYNC_METHOD_ARR(IsInf, isInf)
+FIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
 
 void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)
 {

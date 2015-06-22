@@ -64,18 +64,17 @@ inline bool NeedsDouble(const af::array::array_proxy& arrayProxy) { return array
 
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
-#define FIRE_ASYNC_METHOD_ARR(F, f)\
+#define FIRE_SYNC_METHOD_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
     \
     try\
     {\
-        ARGS_LEN(2);\
+        ARGS_LEN(1);\
         \
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array))); });\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0))));\
     }\
     FIRE_CATCH\
 }

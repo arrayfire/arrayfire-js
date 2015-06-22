@@ -140,7 +140,7 @@ NAN_METHOD(SortIndex)
 }
 
 FIRE_ASYNC_METHOD_ARR_DIM(Accum, accum)
-FIRE_ASYNC_METHOD_ARR(Where, where)
+FIRE_SYNC_METHOD_ARR(Where, where)
 
 FIRE_ASYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
 FIRE_ASYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)

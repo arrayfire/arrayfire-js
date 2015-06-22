@@ -50,7 +50,7 @@ FIRE_ASYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
 
 FIRE_ASYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
 
-FIRE_ASYNC_METHOD_ARR(Flat, flat)
+FIRE_SYNC_METHOD_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {
