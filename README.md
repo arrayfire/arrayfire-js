@@ -1,3 +1,7 @@
+# STATUS
+
+I'm in a negotiation with guys at ArrayFire to apply this project under company of theirs by using the name ArrayFire.js. Until then the development of this project is not stagnated of course, I'm on way toward to be able to release feature complete 1.0.0 with 100% documentation. Please support the development and my standpoint by starring this repo. Thank you.
+
 # Fire.js
 
 ## About ArrayFire
