@@ -42,13 +42,13 @@ NAN_METHOD(Join)
     FIRE_CATCH
 }
 
-FIRE_ASYNC_METHOD_XYZW(Tile, tile, 1, 1, 1)
+FIRE_SYNC_METHOD_XYZW(Tile, tile, 1, 1, 1)
 
-FIRE_ASYNC_METHOD_XYZW(Reorder, reorder, 1, 2, 3)
+FIRE_SYNC_METHOD_XYZW(Reorder, reorder, 1, 2, 3)
 
-FIRE_ASYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
+FIRE_SYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
 
-FIRE_ASYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
+FIRE_SYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
 
 FIRE_SYNC_METHOD_ARR(Flat, flat)
 

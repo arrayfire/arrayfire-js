@@ -162,28 +162,32 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ARR_DOUBLE_COMB(F, f)\
+#define FIRE_SYNC_METHOD_ARR_DOUBLE_COMB(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
     try\
     {\
-        ARGS_LEN(3)\
+        ARGS_LEN(2)\
         \
         auto pArray1 = ArrayWrapper::TryGetArrayAt(args, 0);\
         auto pArray2 = ArrayWrapper::TryGetArrayAt(args, 1);\
+        Guard();\
         if (pArray1)\
         {\
-            auto array1 = *pArray1;\
             if (pArray2)\
             {\
-                auto array2 = *pArray2;\
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::f(array1, array2)); });\
+                NanReturnValue(ArrayWrapper::New(af::f(*pArray1, *pArray2)));\
+                return;\
             }\
             else if (args[1]->IsNumber())\
             {\
                 double d = args[1]->NumberValue();\
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::f(array1, d)); });\
+                if (NeedsDouble(*pArray1))\
+                    NanReturnValue(ArrayWrapper::New(af::f(*pArray1, d)));\
+                else\
+                    NanReturnValue(ArrayWrapper::New(af::f(*pArray1, (float)d)));\
+                return;\
             }\
         }\
         else if (args[0]->IsNumber())\
@@ -191,8 +195,11 @@ NAN_METHOD(F)\
             double d = args[0]->NumberValue();\
             if (pArray2)\
             {\
-                auto array2 = *pArray2;\
-                return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::f(d, array2)); });\
+                if (NeedsDouble(*pArray2))\
+                    NanReturnValue(ArrayWrapper::New(af::f(d, *pArray2)));\
+                else\
+                    NanReturnValue(ArrayWrapper::New(af::f((float)d, *pArray2)));\
+                return;\
             }\
         }\
         \
@@ -332,7 +339,7 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_XYZW(F, f, iy, iz, iw)\
+#define FIRE_SYNC_METHOD_XYZW(F, f, iy, iz, iw)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -341,7 +348,7 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(3);\
         \
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
         unsigned x, y, z, w;\
         if (args[1]->IsObject())\
         {\
@@ -370,8 +377,8 @@ NAN_METHOD(F)\
                 w = args[4]->Uint32Value();\
             }\
         }\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(move(af::f(array, x, y, z, w))); });\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*pArray, x, y, z, w)));\
     }\
     FIRE_CATCH\
 }
