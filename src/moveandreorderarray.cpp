@@ -68,7 +68,7 @@ NAN_METHOD(Flip)
     FIRE_CATCH
 }
 
-FIRE_ASYNC_METHOD_ARR_BOOL(Transpose, transpose, false)
+FIRE_SYNC_METHOD_ARR_BOOL(Transpose, transpose, false)
 
 void InitMoveAndReorderArray(v8::Handle<v8::Object> exports)
 {

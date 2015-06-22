@@ -26,7 +26,7 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_ASYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
+FIRE_SYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
 FIRE_ASYNC_METHOD_ALGO_V1(Mean, mean)
 FIRE_ASYNC_METHOD_ALGO_V3(WeightedMean, mean)
 FIRE_ASYNC_METHOD_ALGO_V1(Median, median)

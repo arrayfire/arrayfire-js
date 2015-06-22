@@ -79,7 +79,41 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ARR_DIM(F, f)\
+#define FIRE_SYNC_METHOD_ARR_DIM(F, f)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(1);\
+        \
+        int dim = 0;\
+        if (args.Length() > 1) dim = args[1]->Int32Value();\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), dim)));\
+    }\
+    FIRE_CATCH\
+}
+
+#define FIRE_SYNC_METHOD_ARR_BOOL(F, f, defV)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(1);\
+        \
+        bool v = defV;\
+        if (args.Length() > 1) v = args[1]->BooleanValue();\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), v)));\
+    }\
+    FIRE_CATCH\
+}
+
+#define FIRE_SYNC_METHOD_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -88,16 +122,13 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(2);\
         \
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
-        int dim = 0;\
-        if (args.Length() > 2) dim = args[1]->Int32Value();\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array, dim))); });\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1))));\
     }\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ARR_BOOL(F, f, defV)\
+#define FIRE_SYNC_METHOD_ARR_ARR_DIM(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -106,66 +137,27 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(2);\
         \
-        af::array array = *ArrayWrapper::GetArrayAt(args, 0);\
-        bool v = defV;\
-        if (args.Length() > 2) v = args[1]->BooleanValue();\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array, v))); });\
-    }\
-    FIRE_CATCH\
-}
-
-#define FIRE_ASYNC_METHOD_ARR_ARR(F, f)\
-NAN_METHOD(F)\
-{\
-    NanScope();\
-    \
-    try\
-    {\
-        ARGS_LEN(3);\
-        \
-        af::array array1 = *ArrayWrapper::GetArrayAt(args, 0);\
-        af::array array2 = *ArrayWrapper::GetArrayAt(args, 1);\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array1, array2))); });\
-    }\
-    FIRE_CATCH\
-}
-
-#define FIRE_ASYNC_METHOD_ARR_ARR_DIM(F, f)\
-NAN_METHOD(F)\
-{\
-    NanScope();\
-    \
-    try\
-    {\
-        ARGS_LEN(3);\
-        \
-        af::array array1 = *ArrayWrapper::GetArrayAt(args, 0);\
-        af::array array2 = *ArrayWrapper::GetArrayAt(args, 1);\
         int dim = 0;\
-        if (args.Length() > 3) dim = args[2]->Int32Value();\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array1, array2, dim))); });\
+        if (args.Length() > 2) dim = args[2]->Int32Value();\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), dim)));\
     }\
     FIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ARR_ARR_BOOL(F, f, defV)\
+#define FIRE_SYNC_METHOD_ARR_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     NanScope();\
     \
     try\
     {\
-        ARGS_LEN(3);\
+        ARGS_LEN(2);\
         \
-        af::array array1 = *ArrayWrapper::GetArrayAt(args, 0);\
-        af::array array2 = *ArrayWrapper::GetArrayAt(args, 1);\
         bool v = defV;\
-        if (args.Length() > 3) v = args[2]->BooleanValue();\
-        \
-        return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(std::move(af::f(array1, array2, v))); });\
+        if (args.Length() > 2) v = args[2]->BooleanValue();\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), v)));\
     }\
     FIRE_CATCH\
 }

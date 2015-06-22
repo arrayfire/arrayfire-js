@@ -139,14 +139,14 @@ NAN_METHOD(SortIndex)
     FIRE_CATCH
 }
 
-FIRE_ASYNC_METHOD_ARR_DIM(Accum, accum)
+FIRE_SYNC_METHOD_ARR_DIM(Accum, accum)
 FIRE_SYNC_METHOD_ARR(Where, where)
 
-FIRE_ASYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
-FIRE_ASYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)
-FIRE_ASYNC_METHOD_ARR_BOOL(SetUnique, setUnique, false)
-FIRE_ASYNC_METHOD_ARR_DIM(Diff1, diff1)
-FIRE_ASYNC_METHOD_ARR_DIM(Diff2, diff2)
+FIRE_SYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
+FIRE_SYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)
+FIRE_SYNC_METHOD_ARR_BOOL(SetUnique, setUnique, false)
+FIRE_SYNC_METHOD_ARR_DIM(Diff1, diff1)
+FIRE_SYNC_METHOD_ARR_DIM(Diff2, diff2)
 
 NAN_METHOD(Grad)
 {
