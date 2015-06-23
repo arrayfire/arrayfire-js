@@ -1,8 +1,4 @@
-# STATUS
-
-I'm in a negotiation with guys at ArrayFire to apply this project under company of theirs by using the name ArrayFire.js. Until then the development of this project is not stagnated of course, I'm on way toward to be able to release feature complete 1.0.0 with 100% documentation. Please support the development and my standpoint by starring this repo. Thank you.
-
-# Fire.js
+# ArrayFire.js
 
 ## About ArrayFire
 
@@ -10,7 +6,7 @@ I'm in a negotiation with guys at ArrayFire to apply this project under company 
 
 You can read its introduction [int its documentation's index page](http://www.arrayfire.com/docs/index.htm). It's basically a math accelerator C++ library supporting CPU and GPU based backends on Windows, Linux and Mac. And it's just **awesome**. It's extremely simple to write the most complex mathematical, statistical, logical computations, image transformations and computer vision algorigthms with it, just a few lines of code. It has excellent batching capability that takes simple operations, make a big computation from them, and runs all at once on the GPU device.
 
-## About Fire.js
+## About ArrayFire.js
 
 Fire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance level of x100 (with a good GPU).
 
