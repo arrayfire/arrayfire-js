@@ -74,7 +74,8 @@ file(GLOB COMMON_SOURCE_FILES
     "src/functionhelpers.*"
     "src/mathfunctions.*"
     "src/vectoralgorithms.*"
-    "src/statistics.*")
+    "src/statistics.*"
+    "src/computervision.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")

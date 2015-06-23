@@ -41,9 +41,19 @@ Persistent<String> Symbols::Index;
 Persistent<String> Symbols::Value;
 Persistent<String> Symbols::Keys;
 Persistent<String> Symbols::Values;
+Persistent<String> Symbols::Feat;
+Persistent<String> Symbols::Desc;
 Persistent<String> Symbols::Indices;
 Persistent<String> Symbols::DX;
 Persistent<String> Symbols::DY;
+Persistent<String> Symbols::NumFeatures;
+Persistent<String> Symbols::X;
+Persistent<String> Symbols::Y;
+Persistent<String> Symbols::Score;
+Persistent<String> Symbols::Orientation;
+Persistent<String> Symbols::Size;
+Persistent<String> Symbols::Idx;
+Persistent<String> Symbols::Dist;
 
 void Symbols::Init()
 {
@@ -67,7 +77,17 @@ void Symbols::Init()
     NanAssignPersistent(Value, NanNew("value"));
     NanAssignPersistent(Keys, NanNew("keys"));
     NanAssignPersistent(Values, NanNew("values"));
+    NanAssignPersistent(Feat, NanNew("feat"));
+    NanAssignPersistent(Desc, NanNew("desc"));
     NanAssignPersistent(Indices, NanNew("indices"));
     NanAssignPersistent(DX, NanNew("dx"));
     NanAssignPersistent(DY, NanNew("dy"));
+    NanAssignPersistent(NumFeatures, NanNew("numFeatures"));
+    NanAssignPersistent(X, NanNew("x"));
+    NanAssignPersistent(Y, NanNew("y"));
+    NanAssignPersistent(Score, NanNew("score"));
+    NanAssignPersistent(Orientation, NanNew("orientation"));
+    NanAssignPersistent(Size, NanNew("size"));
+    NanAssignPersistent(Idx, NanNew("idx"));
+    NanAssignPersistent(Dist, NanNew("dist"));
 }

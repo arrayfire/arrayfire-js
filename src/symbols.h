@@ -41,9 +41,19 @@ struct Symbols
     static v8::Persistent<v8::String> Value;
     static v8::Persistent<v8::String> Keys;
     static v8::Persistent<v8::String> Values;
+    static v8::Persistent<v8::String> Feat;
+    static v8::Persistent<v8::String> Desc;
     static v8::Persistent<v8::String> Indices;
     static v8::Persistent<v8::String> DX;
     static v8::Persistent<v8::String> DY;
+    static v8::Persistent<v8::String> NumFeatures;
+    static v8::Persistent<v8::String> X;
+    static v8::Persistent<v8::String> Y;
+    static v8::Persistent<v8::String> Score;
+    static v8::Persistent<v8::String> Orientation;
+    static v8::Persistent<v8::String> Size;
+    static v8::Persistent<v8::String> Idx;
+    static v8::Persistent<v8::String> Dist;
 
     static void Init();
 };

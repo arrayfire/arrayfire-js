@@ -25,6 +25,7 @@ limitations under the License.
 #include "vectoralgorithms.h"
 #include "statistics.h"
 #include "symbols.h"
+#include "computervision.h"
 
 using namespace v8;
 using namespace std;
@@ -47,6 +48,7 @@ void Init(v8::Handle<v8::Object> exports)
     InitMathFunctions(exports);
     InitVectorAlgorithms(exports);
     InitStatistics(exports);
+    InitComputerVision(exports);
 
     // Helpers:
     exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());

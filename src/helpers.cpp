@@ -347,3 +347,15 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
     }
     FIRE_THROW_CB_EXPECTED();
 }
+
+v8::Local<v8::Object> ToV8Features(const af::features& feat)
+{
+    auto obj = NanNew<Object>();
+    obj->Set(NanNew(Symbols::NumFeatures), NanNew((unsigned)feat.getNumFeatures()));
+    obj->Set(NanNew(Symbols::X), ArrayWrapper::New(feat.getX()));
+    obj->Set(NanNew(Symbols::Y), ArrayWrapper::New(feat.getY()));
+    obj->Set(NanNew(Symbols::Score), ArrayWrapper::New(feat.getScore()));
+    obj->Set(NanNew(Symbols::Orientation), ArrayWrapper::New(feat.getOrientation()));
+    obj->Set(NanNew(Symbols::Size), ArrayWrapper::New(feat.getSize()));
+    return obj;
+}

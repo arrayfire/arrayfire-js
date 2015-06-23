@@ -54,6 +54,8 @@ v8::Local<v8::Object> ToV8Complex(const af::af_cdouble& value);
 
 v8::Local<v8::Object> ToV8Complex(const af::af_cfloat& value);
 
+v8::Local<v8::Object> ToV8Features(const af::features& feat);
+
 std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength = -1, int argsFollowingDims = 0, int dimsStartAt = 0);
 
 NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
