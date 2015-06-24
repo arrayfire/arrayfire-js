@@ -102,7 +102,7 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 
 ## API Docs
 
-[In progress ...](http://unbornchikken.github.io/fire-js/) I'll try to put it together soon.
+[In progress ...](http://arrayfire.github.io/arrayfire_js/) We'll try to put it together soon.
 
 ## License
 
