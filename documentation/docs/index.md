@@ -4,11 +4,11 @@
 
 You can read its introduction [int its documentation's index page](http://www.arrayfire.com/docs/index.htm). It's basically a math accelerator C++ library supporting CPU and GPU based backends on Windows, Linux and Mac. And it's just **awesome**. It's extremely simple to write the most complex mathematical, statistical, logical computations, image transformations and computer vision algorigthms with it, just a few lines of code. It has excellent batching capability that takes simple operations, make a big computation from them, and runs all at once on the GPU device.
 
-# About Fire.js
+# About ArrayFire.js
 
-Fire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance of level of x100 (with a good GPU).
+ArrayFire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance of level of x100 (with a good GPU).
 
-Install instructions can be found in the [project's readme at Github](https://github.com/unbornchikken/fire-js#install).
+Install instructions can be found in the [project's readme at Github](https://github.com/arrayfire/arrayfire_js#install).
 
 ## (How To) Use ES6 Generators
 
@@ -25,7 +25,7 @@ fire.srqt(input, function(err, output) {
 });
 ```
 
-Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. Each asynchronous Fire.js method has two counterparts. One synchronous, ends with `"Sync"` (eg. `sqrtSync`). Those are just for supporting REPL prototyping scenarios, not intended to use in production code, because those blocks the event loop and uses spin locks. The other is an asynchronous version that returns a [Bluebird promise](https://www.npmjs.com/package/bluebird), ends with `"Async"` (eg. `sqrtAsync`). Wrap an [ES6 generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) by a [coroutine](https://github.com/petkaantonov/bluebird/blob/master/API.md#promisecoroutinegeneratorfunction-generatorfunction---function), and you can yield those promises from there:
+Yeah, this is annoying and ugly compared to the original (blocking) C++ code. The good news is that can be improved by using ES6 generators. Each asynchronous ArrayFire.js method has two counterparts. One synchronous, ends with `"Sync"` (eg. `sqrtSync`). Those are just for supporting REPL prototyping scenarios, not intended to use in production code, because those blocks the event loop and uses spin locks. The other is an asynchronous version that returns a [Bluebird promise](https://www.npmjs.com/package/bluebird), ends with `"Async"` (eg. `sqrtAsync`). Wrap an [ES6 generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) by a [coroutine](https://github.com/petkaantonov/bluebird/blob/master/API.md#promisecoroutinegeneratorfunction-generatorfunction---function), and you can yield those promises from there:
 
 ```js
 let async = Bluebird.coroutine;
@@ -40,11 +40,11 @@ And voila, you can write asynchronous code that looks like synchronous. It's exa
 
 To run ES6 code you can use io.js that supports it inherently. Or use Node.js 0.12+ with --harmony flag. Or you can go with older Node.js versions with Gulp and Traceur modules.
 
-Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. Fire.js uses that method too. It has been developed in ES6, and uses [Gulp/Traceur](https://github.com/unbornchikken/fire-js/blob/master/gulpfile.js) and [feature detection](https://github.com/unbornchikken/fire-js/blob/master/lib/index.js#L19) to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.
+Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. ArrayFire.js uses that method too. It has been developed in ES6, and uses [Gulp/Traceur](https://github.com/arrayfire/arrayfire_js/blob/master/gulpfile.js) and [feature detection](https://github.com/arrayfire/arrayfire_js/blob/master/lib/index.js#L19) to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.
 
 ## API
 
-In Fire.js all ArrayFire types and functions are ported with respect of the original C++ syntax. There are some exceptions when it was neccessary. Many methods have an alias to provide them a counterpart using Node.js (camelCased) conventions.
+In ArrayFire.js all ArrayFire types and functions are ported with respect of the original C++ syntax. There are some exceptions when it was neccessary. Many methods have an alias to provide them a counterpart using Node.js (camelCased) conventions.
 
 All asynchronous methods have promise based and synhronous counterparts as mentioned in the previous topic with `Async` and `Sync` endings rescpectively. This methods have the same signature like the originals, except the callback at the last argument.
 
@@ -72,16 +72,16 @@ const numberOfPoints = 20000000;
 
 // ...
 
-let x = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
-let y = yield fire.randuAsync(numberOfPoints, fire.types.dtype.f32);
-let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
-let num_inside = yield fire.sumAsync(dist.lt(1));
-let piVal = (4.0 *  num_inside) / numberOfPoints;
+let x = af.randu(numberOfPoints, af.types.dtype.f32);
+let y = af.randu(numberOfPoints, af.types.dtype.f32);
+let dist = af.sqrt(x.mul(x).add(y.mul(y)));
+let numInside = yield af.sumAsync(dist.lt(1));
+let piVal = (4.0 *  numInside) / numberOfPoints;
 
 console.log(`PI = ${piVal}`);
 ```
 
-It's included in the [examples folder](https://github.com/unbornchikken/fire-js/blob/master/examples/es6/bechmarks/pi.js). To run on:
+It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/bechmarks/pi.js). To run on:
 
 - io.js, enter: `iojs examples/es6/bechmarks/pi.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
@@ -89,20 +89,35 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 
 ## License
 
-[Apache 2.0](https://github.com/unbornchikken/fire-js/blob/master/LICENSE)
+[Apache 2.0](https://github.com/arrayfire/arrayfire_js/blob/master/LICENSE)
 
 ```
-Copyright 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
+Copyright (c) 2014-2015, ArrayFire
+Copyright (c) 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
+All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
 
-    http://www.apache.org/licenses/LICENSE-2.0
+ * Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * Redistributions in binary form must reproduce the above copyright notice, this
+  list of conditions and the following disclaimer in the documentation and/or
+  other materials provided with the distribution.
+
+* Neither the name of the ArrayFire nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+ 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 ```

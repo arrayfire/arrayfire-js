@@ -8,7 +8,7 @@ You can read its introduction [int its documentation's index page](http://www.ar
 
 ## About ArrayFire.js
 
-Fire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance level of x100 (with a good GPU).
+ArrayFire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance level of x100 (with a good GPU).
 
 ## Requirements
 
@@ -42,21 +42,21 @@ AF_PATH="path_to_arrayfire_installation_directory"
 
 On Windows the installer do this for you, so there is nothing to do on this platform, though.
 
-The above have to be done only once. After you can install Fire.js from the npm:
+The above have to be done only once. After you can install ArrayFire.js from the npm:
 
 ```
-npm install fire-js --save
+npm install arrayfire_js --save
 ```
 
 ## Usage
 
 ```js
 // CPU
-var fire = require("fire-js")("CPU");
+var af = require("arrayfire_js")("CPU");
 // OpenCL
-var fire = require("fire-js")("OpenCL");
+var af = require("arrayfire_js")("OpenCL");
 // CUDA
-var fire = require("fire-js")("CUDA");
+var af = require("arrayfire_js")("CUDA");
 ```
 
 ### Small Example
@@ -78,23 +78,23 @@ af_print(pi);
 
 **JavaScript**
 
-*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so it is advised to call asynchronous variants of Fire.js functions, however there are synchronous counterparts available too for supporting REPL scenarios. (I suggest use [ES6 generators](http://unbornchikken.github.io/fire-js/#how-to-use-es6-generators) instead of callback hell or even instead of bare promises).*
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so it is advised to call asynchronous variants of ArrayFire.js functions, however there are synchronous counterparts available too for supporting REPL scenarios. (I suggest use [ES6 generators](http://arrayfire.github.io/arrayfire_js/#how-to-use-es6-generators) instead of callback hell or even instead of bare promises).*
 
 ```js
 const numberOfPoints = 20000000;
 
 // ...
 
-let x = fire.randu(numberOfPoints, fire.types.dtype.f32);
-let y = fire.randu(numberOfPoints, fire.types.dtype.f32);
-let dist = yield fire.sqrtAsync((x.mul(x)).add(y.mul(y)));
-let numInside = yield fire.sumAsync(dist.lt(1));
+let x = af.randu(numberOfPoints, af.types.dtype.f32);
+let y = af.randu(numberOfPoints, af.types.dtype.f32);
+let dist = af.sqrt(x.mul(x).add(y.mul(y)));
+let numInside = yield af.sumAsync(dist.lt(1));
 let piVal = (4.0 *  numInside) / numberOfPoints;
 
 console.log(`PI = ${piVal}`);
 ```
 
-It's included in the [examples folder](https://github.com/unbornchikken/fire-js/blob/master/examples/es6/bechmarks/pi.js). To run on:
+It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/bechmarks/pi.js). To run on:
 
 - io.js, enter: `iojs examples/es6/bechmarks/pi.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
@@ -106,20 +106,35 @@ It's included in the [examples folder](https://github.com/unbornchikken/fire-js/
 
 ## License
 
-[Apache 2.0](https://github.com/unbornchikken/fire-js/blob/master/LICENSE)
+[New BSD](https://github.com/arrayfire/arrayfire_js/blob/master/LICENSE)
 
 ```
-Copyright 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
+Copyright (c) 2014-2015, ArrayFire
+Copyright (c) 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
+All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
 
-    http://www.apache.org/licenses/LICENSE-2.0
+ * Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * Redistributions in binary form must reproduce the above copyright notice, this
+  list of conditions and the following disclaimer in the documentation and/or
+  other materials provided with the distribution.
+
+* Neither the name of the ArrayFire nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+ 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 ```
