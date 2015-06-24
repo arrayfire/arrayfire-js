@@ -146,6 +146,8 @@
         
             <li><a href="#typessource">types.source</a></li>
         
+            <li><a href="#typesmatchtype">types.matchType</a></li>
+        
     
     </ul>
 </div></div>
@@ -182,6 +184,30 @@ var dType = fire.types.dType;
     // ArrayFire convention compatible aliases:
     afDevice: 0,  
     afHost: 1
+}
+</code></pre>
+
+<h2 id="typesmatchtype">types.matchType</h2>
+<pre><code class="js">{
+    SAD: 0,     // Match based on Sum of Absolute Differences (SAD)
+    zSAD: 1,    // Match based on Zero mean SAD.
+    lSAD: 2,    // Match based on Locally scaled SAD.
+    SSD: 3,     // Match based on Sum of Squared Differences (SSD)
+    zSSD: 4,    // Match based on Zero mean SSD.
+    lSSD: 5,    // Match based on Locally scaled SSD.
+    NCC: 6,     // Match based on Normalized Cross Correlation (NCC)
+    zNCC: 7,    // Match based on Zero mean NCC.
+    SHD: 8,     // Match based on Sum of Hamming Distances (SHD)
+    // ArrayFire convention compatible aliases:
+    AF_SAD: 0,
+    AF_ZSAD: 1,
+    AF_LSAD: 2,
+    AF_SSD: 3,
+    AF_ZSSD: 4,
+    AF_LSSD: 5,
+    AF_NCC: 6,
+    AF_ZNCC: 7,
+    AF_SHD: 8
 }
 </code></pre></div>
         </div>
