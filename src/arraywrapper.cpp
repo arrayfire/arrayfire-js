@@ -949,6 +949,7 @@ NAN_METHOD(ArrayWrapper::F)\
 AFARRAY_IMPL_IDX1(Row, row)
 AFARRAY_IMPL_IDX1(Col, col)
 AFARRAY_IMPL_IDX1(Slice, slice)
+#undef AFARRAY_IMPL_IDX1
 
 #define AFARRAY_IMPL_IDX2(F, f)\
 NAN_METHOD(ArrayWrapper::F)\
@@ -967,6 +968,7 @@ NAN_METHOD(ArrayWrapper::F)\
 AFARRAY_IMPL_IDX2(Rows, rows)
 AFARRAY_IMPL_IDX2(Cols, cols)
 AFARRAY_IMPL_IDX2(Slices, slices)
+#undef AFARRAY_IMPL_IDX2
 
 NAN_METHOD(ArrayWrapper::As)
 {
@@ -1050,6 +1052,7 @@ AFARRAY_IMPL_ASSIGN(AddAssign, +=)
 AFARRAY_IMPL_ASSIGN(SubAssign, -=)
 AFARRAY_IMPL_ASSIGN(MulAssign, *=)
 AFARRAY_IMPL_ASSIGN(DivAssign, /=)
+#undef AFARRAY_IMPL_ASSIGN
 
 #define AFARRAY_IMPL_BINOP(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
@@ -1133,6 +1136,7 @@ AFARRAY_IMPL_BINOP(Or, ||)
 AFARRAY_IMPL_BINOP(BitAnd, &)
 AFARRAY_IMPL_BINOP(BitOr, |)
 AFARRAY_IMPL_BINOP(BitXor, ^)
+#undef AFARRAY_IMPL_BINOP
 
 #define AFARRAY_IMPL_UNOP(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
@@ -1150,3 +1154,4 @@ NAN_METHOD(ArrayWrapper::F)\
 
 AFARRAY_IMPL_UNOP(Neg, -)
 AFARRAY_IMPL_UNOP(Not, !)
+#undef AFARRAY_IMPL_UNOP
