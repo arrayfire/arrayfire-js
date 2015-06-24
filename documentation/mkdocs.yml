@@ -1,4 +1,4 @@
-site_name: Fire.js Documentation
+site_name: ArrayFire.js Documentation
 pages:
 - Home: index.md
 - Statics: statics.md
@@ -12,4 +12,5 @@ pages:
   - Functions to create arrays: create.md
   - Helper function for arrays: helpers.md
 theme: united
-repo_url: https://github.com/unbornchikken/fire-js
+repo_name: ArrayFire.js
+repo_url: https://github.com/arrayfire/arrayfire_js
