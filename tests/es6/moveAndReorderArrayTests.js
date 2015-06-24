@@ -42,7 +42,7 @@ let float = ref.types.float;
 function testPlatform (id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = require("../..")(id);
+            let af = require("../..")(id);
 
             describe("join", function () {
                 it("should be implemented", function() {

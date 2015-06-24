@@ -27,12 +27,12 @@ let float = ref.types.float;
 function testPlatform (id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = require("../..")(id);
+            let af = require("../..")(id);
 
             describe("randu", function () {
                 it("should yield uniform random int array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = fire.randu(2, 4, fire.types.dtype.s32);
+                        let array = af.randu(2, 4, af.types.dtype.s32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * int.size);
@@ -47,7 +47,7 @@ function testPlatform (id) {
                 });
                 it("should yield uniform random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = fire.randu([2, 4], fire.types.dtype.f32);
+                        let array = af.randu([2, 4], af.types.dtype.f32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);
@@ -64,7 +64,7 @@ function testPlatform (id) {
             describe("randf", function () {
                 it("should throw error when invoking normal random int array with 2 dimensions", function () {
                     try {
-                        let array = fire.randn(2, 4, fire.types.dtype.s32);
+                        let array = af.randn(2, 4, af.types.dtype.s32);
                         return;
                     }
                     catch(e) {
@@ -80,7 +80,7 @@ function testPlatform (id) {
                 });
                 it("should yield normal random float array with 2 dimensions", function (done) {
                     let f = async(function*() {
-                        let array = fire.randn([2, 4], fire.types.dtype.f32);
+                        let array = af.randn([2, 4], af.types.dtype.f32);
                         let data = yield array.copyToHostAsync();
                         assert(data instanceof Buffer);
                         assert(data.length == 2 * 4 * float.size);

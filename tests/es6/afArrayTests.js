@@ -25,8 +25,8 @@ let async = Bluebird.coroutine;
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = require("../..")(id);
-            let AFArray = fire.AFArray;
+            let af = require("../..")(id);
+            let AFArray = af.AFArray;
 
             it("should export AFArray constructor", function() {
                 assert(_.isFunction(AFArray));
@@ -57,11 +57,11 @@ function testPlatform(id) {
             });
 
             it("should create new one dimensional", function() {
-                let array = new AFArray(10, fire.types.dtype.s32);
+                let array = new AFArray(10, af.types.dtype.s32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 4);
                 assert(array.elements() === 10);
-                assert(array.type() === fire.types.dtype.s32);
+                assert(array.type() === af.types.dtype.s32);
                 assert(array.numdims() === 1);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 1);
@@ -91,11 +91,11 @@ function testPlatform(id) {
             });
 
             it("should create new two dimensional", function() {
-                let array = new AFArray(10, 20, fire.types.dtype.f32);
+                let array = new AFArray(10, 20, af.types.dtype.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 4);
                 assert(array.elements() === 10 * 20);
-                assert(array.type() === fire.types.dtype.f32);
+                assert(array.type() === af.types.dtype.f32);
                 assert(array.numdims() === 2);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -125,11 +125,11 @@ function testPlatform(id) {
             });
 
             it("should create new three dimensional", function() {
-                let array = new AFArray(10, 20, 30, fire.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, af.types.dtype.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 4);
                 assert(array.elements() === 10 * 20 * 30);
-                assert(array.type() === fire.types.dtype.f32);
+                assert(array.type() === af.types.dtype.f32);
                 assert(array.numdims() === 3);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -162,7 +162,7 @@ function testPlatform(id) {
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 40 * 4);
                 assert(array.elements() === 10 * 20 * 30 * 40);
-                assert(array.type() === fire.types.dtype.f32);
+                assert(array.type() === af.types.dtype.f32);
                 assert(array.numdims() === 4);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -192,17 +192,17 @@ function testPlatform(id) {
             }
 
             it("should create new four dimensional", function() {
-                let array = new AFArray(10, 20, 30, 40, fire.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, 40, af.types.dtype.f32);
                 verify4(array);
             });
 
             it("should create new four dimensional from dim4", function() {
-                let array = new AFArray({ dims: [10, 20, 30, 40] }, fire.types.dtype.f32);
+                let array = new AFArray({ dims: [10, 20, 30, 40] }, af.types.dtype.f32);
                 verify4(array);
             });
 
             it("should create new four dimensional from dim4 array", function() {
-                let array = new AFArray([10, 20, 30, 40], fire.types.dtype.f32);
+                let array = new AFArray([10, 20, 30, 40], af.types.dtype.f32);
                 verify4(array);
             });
 
@@ -218,9 +218,9 @@ function testPlatform(id) {
                     assert(_.isFunction(AFArray.create));
                     assert(_.isFunction(AFArray.createAsync));
 
-                    let array = yield AFArray.createAsync(count, fire.types.dtype.s32, buff);
+                    let array = yield AFArray.createAsync(count, af.types.dtype.s32, buff);
                     assert(array.bytes() === count * int.size);
-                    assert(array.type() === fire.types.dtype.s32);
+                    assert(array.type() === af.types.dtype.s32);
 
                     let buff2 = new Buffer(int.size * count);
                     yield array.hostAsync(buff2);
@@ -257,7 +257,7 @@ function testPlatform(id) {
                     v = yield array2.at("end").scalarAsync();
                     assert(v === 9.0 * 9.0);
 
-                    v = yield array2.at(fire.end - 1).scalarAsync();
+                    v = yield array2.at(af.end - 1).scalarAsync();
                     assert(v === 8.0 * 8.0);
                 });
                 f().nodeify(done);
@@ -274,9 +274,9 @@ function testPlatform(id) {
                 assert(_.isFunction(AFArray.create));
                 assert(_.isFunction(AFArray.createSync));
 
-                let array = AFArray.createSync(count, fire.types.dtype.s32, buff);
+                let array = AFArray.createSync(count, af.types.dtype.s32, buff);
                 assert(array.bytes() === count * int.size);
-                assert(array.type() === fire.types.dtype.s32);
+                assert(array.type() === af.types.dtype.s32);
 
                 let buff2 = new Buffer(int.size * count);
                 array.hostSync(buff2);
@@ -313,7 +313,7 @@ function testPlatform(id) {
                 v = array2.at("end").scalarSync();
                 assert(v === 9.0 * 9.0);
 
-                v = array2.at(fire.end - 1).scalarSync();
+                v = array2.at(af.end - 1).scalarSync();
                 assert(v === 8.0 * 8.0);
             });
 

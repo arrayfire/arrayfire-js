@@ -38,12 +38,12 @@ let Bluebird = require("bluebird");
 function testPlatform(id) {
     if (process.env["TEST_" + id] === "1") {
         describe(id + " platform", function () {
-            let fire = require("../..")(id);
+            let af = require("../..")(id);
 
             it("should return available devices", function() {
-                let deviceCount = fire.getDeviceCount();
+                let deviceCount = af.getDeviceCount();
                 assert(deviceCount > 0);
-                let infos = fire.getDevices();
+                let infos = af.getDevices();
                 assert(_.isArray(infos));
                 assert(infos.length === deviceCount);
                 for (let info of infos) {
@@ -55,15 +55,15 @@ function testPlatform(id) {
             });
 
             it("should do sync with callback", function(done) {
-                fire.sync(done);
+                af.sync(done);
             });
 
             it("should do sync with promise", function(done) {
-                fire.syncAsync().nodeify(done);
+                af.syncAsync().nodeify(done);
             });
 
             it("sync should failed if device is out of range", function(done) {
-                fire.syncAsync(100)
+                af.syncAsync(100)
                     .then(function() {
                         done(new Error("This should fail!"));
                     },

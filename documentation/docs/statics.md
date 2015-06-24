@@ -3,10 +3,10 @@
 They are accessible from the main Fire.js context object, eg.:
 
 ```js
-var fire = require("arrayfire_js")("CPU");
+var af = require("arrayfire_js")("CPU");
 
 // dType:
-var dType = fire.types.dType;
+var dType = af.types.dType;
 ```
 
 ## types.dType
