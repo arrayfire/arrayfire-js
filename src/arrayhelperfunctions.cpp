@@ -44,10 +44,24 @@ FIRE_SYNC_METHOD_ARR(IsZero, iszero)
 FIRE_SYNC_METHOD_ARR(IsInf, isInf)
 FIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
 
+NAN_METHOD(Print)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        Guard();
+        af_print(*ArrayWrapper::GetArrayAt(args, 0));
+        NanReturnUndefined();
+    }
+    FIRE_CATCH;
+}
+
 void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew("iszero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
     exports->Set(NanNew("isZero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
     exports->Set(NanNew("isInf"), NanNew<FunctionTemplate>(IsInf)->GetFunction());
     exports->Set(NanNew("isNaN"), NanNew<FunctionTemplate>(IsNaN)->GetFunction());
+    exports->Set(NanNew("print"), NanNew<FunctionTemplate>(Print)->GetFunction());
 }

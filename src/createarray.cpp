@@ -233,6 +233,45 @@ NAN_METHOD(Constant)
     FIRE_CATCH
 }
 
+FIRE_SYNC_METHOD_ARR_BOOL(Lower, lower, false)
+FIRE_SYNC_METHOD_ARR_BOOL(Upper, upper, false)
+
+NAN_METHOD(GetSeed)
+{
+    NanScope();
+    try
+    {
+        NanReturnValue(to_string(af::getSeed()));
+    }
+    FIRE_CATCH;
+}
+
+NAN_METHOD(SetSeed)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        if (args[0]->IsNumber())
+        {
+            long long seed = args[0]->NumberValue();
+            af::setSeed(seed);
+        }
+        else if (args[0]->IsString())
+        {
+            String::Utf8Value str(args[0]);
+            long long seed = strtoll(*str, nullptr, 10);
+            af::setSeed(seed);
+        }
+        else
+        {
+            return NAN_THROW_INVALID_ARGS();
+        }
+        NanReturnUndefined();
+    }
+    FIRE_CATCH;
+}
+
 void InitCreateArray(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
@@ -244,4 +283,8 @@ void InitCreateArray(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("iota"), NanNew<FunctionTemplate>(Iota)->GetFunction());
     exports->Set(NanNew("diag"), NanNew<FunctionTemplate>(Diag)->GetFunction());
     exports->Set(NanNew("constant"), NanNew<FunctionTemplate>(Constant)->GetFunction());
+    exports->Set(NanNew("lower"), NanNew<FunctionTemplate>(Lower)->GetFunction());
+    exports->Set(NanNew("upper"), NanNew<FunctionTemplate>(Upper)->GetFunction());
+    exports->Set(NanNew("getSeed"), NanNew<FunctionTemplate>(GetSeed)->GetFunction());
+    exports->Set(NanNew("setSeed"), NanNew<FunctionTemplate>(SetSeed)->GetFunction());
 }
