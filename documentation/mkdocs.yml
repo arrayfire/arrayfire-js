@@ -12,5 +12,4 @@ pages:
   - Functions to create arrays: create.md
   - Helper function for arrays: helpers.md
 theme: united
-repo_name: ArrayFire.js
 repo_url: https://github.com/arrayfire/arrayfire_js
