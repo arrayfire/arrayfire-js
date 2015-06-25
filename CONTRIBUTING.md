@@ -99,6 +99,6 @@ mkdocs serve
 
 ### Documentation Rules
 
-- All new functionality covered by documentation
-- Functionality changes have to involve appropriate changes at the documentation also
+- All functionality covered by documentation
+- Functionality changes have to involve appropriate changes in the documentation also
 - All documented functionality refer to appropriate chapter of the [ArrayFire documentation](http://www.arrayfire.com/docs/index.htm) if available
