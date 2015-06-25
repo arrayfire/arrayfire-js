@@ -29,26 +29,12 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ARRAY_FIRE_JS_EXT_H
-#define ARRAY_FIRE_JS_EXT_H
+#ifndef ARRAYFIRE_JS_IMAGEPROCESSING_H
+#define ARRAYFIRE_JS_IMAGEPROCESSING_H
 
-#ifdef WIN32
-#define _WINSOCKAPI_
-#define NOMINMAX
-#endif
-
-#include <arrayfire.h>
 #include <nan.h>
-#include <functional>
-#include <stdexcept>
-#include <utility>
-#include <string>
-#include <tuple>
-#include <cassert>
-#include <complex>
-#include <sstream>
-#include <math.h>
-#include <atomic>
-#include <limits>
 
-#endif
+void InitImageProcessing(v8::Handle<v8::Object> exports);
+
+#endif // ARRAYFIRE_JS_IMAGEPROCESSING_H
+

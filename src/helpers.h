@@ -130,6 +130,27 @@ NAN_METHOD(F)\
     FIRE_CATCH\
 }
 
+#define FIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(F, f, defV1, defV2, defV3)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(1);\
+        \
+        float v1 = defV1;\
+        float v2 = defV2;\
+        float v3 = defV3;\
+        if (args.Length() > 1) v1 = args[1]->NumberValue();\
+        if (args.Length() > 2) v1 = args[2]->NumberValue();\
+        if (args.Length() > 3) v1 = args[3]->NumberValue();\
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), v1, v2, v3)));\
+    }\
+    FIRE_CATCH\
+}
+
 #define FIRE_SYNC_METHOD_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\

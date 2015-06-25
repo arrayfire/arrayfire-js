@@ -90,6 +90,7 @@ file(GLOB COMMON_SOURCE_FILES
     "src/mathfunctions.*"
     "src/vectoralgorithms.*"
     "src/statistics.*"
+    "src/imageprocessing.*"
     "src/computervision.*")
 
 file(GLOB TRAN_SOURCE_FILES
