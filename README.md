@@ -106,7 +106,7 @@ It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js
 
 ## Wanna Contribute?
 
-PRs are welcome, but please read the [Contributing Rules](https://github.com/arrayfire/arrayfire_js/blob/master/CONTRIBUTING.md) first.
+PRs are welcome, but please read the [Contributing Guide](https://github.com/arrayfire/arrayfire_js/blob/master/CONTRIBUTING.md) first.
 
 ## License
 
