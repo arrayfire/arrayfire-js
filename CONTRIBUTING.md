@@ -6,6 +6,7 @@ Every source file starts with ArrayFire.js' license, which template can be found
 
 Other rules:
 
+- UTF8
 - Max 100 chars per source lines
 - Use 4 spaces instead of tabs
 - Only English text is allowed
