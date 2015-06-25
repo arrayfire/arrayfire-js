@@ -65,7 +65,7 @@ for more information, or refer to its [readme on Github](https://github.com/unbo
 
 ### ECMAScript 2015 (aka ES6)
 
-**Language of development is ECMAScript 2015 (aka ES6).** However ES5 is supported by manually compiled code using Gulp. Library's runtime will autodetect if ES6 is available or not and uses appropriate code path for execution. So with io.js and Node.js 0.12 with harmony, ES6 source will run, so it's advides to use those platforms for development to have ability to debug the original code.
+**Language of development is ECMAScript 2015 (aka ES6).** However ES5 is supported by manually compiled code using Gulp. Library's runtime will autodetect if ES6 is available or not and uses appropriate code path for execution. So with io.js and Node.js 0.12 with harmony, ES6 source will run, so it's advised to use those platforms for development to have ability to debug the original code.
 
 To compile ES5 from ES6 first install Gulp from the npm:
 
