@@ -82,6 +82,7 @@ gulp
 - Library's source files are put to `lib/es6` directory
 - Unit tests' source files are put to `tests/es6` directory
 - Examples' source files are put to `examples/es6` directory
+- File names are written in lower camel case
 - Standard JS coding rules apply (that every IDE uses as default)
 - All source files must pass ESLint and JSHint validation with the included .eslintrc and .jshintrc rules
 - New functionality should be covered by unit tests that must pass on atleast two supported HW platforms at your side
