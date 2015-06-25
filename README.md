@@ -104,6 +104,10 @@ It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js
 
 [In progress ...](http://arrayfire.github.io/arrayfire_js/) We'll try to put it together soon.
 
+## Wanna Contribute?
+
+PRs are welcome, but please read the [Contributing Rules](https://github.com/arrayfire/arrayfire_js/blob/master/CONTRIBUTING.md) first.
+
 ## License
 
 [New BSD](https://github.com/arrayfire/arrayfire_js/blob/master/LICENSE)

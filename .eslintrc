@@ -1,0 +1,40 @@
+{
+  "ecmaFeatures": {
+    "arrowFunctions": true,
+    "binaryLiterals": true,
+    "blockBindings": true,
+    "defaultParams": true,
+    "forOf": true,
+    "generators": true,
+    "objectLiteralComputedProperties": true,
+    "objectLiteralDuplicateProperties": true,
+    "objectLiteralShorthandMethods": true,
+    "objectLiteralShorthandProperties": true,
+    "octalLiterals": true,
+    "regexUFlag": true,
+    "regexYFlag": true,
+    "superInFunctions": true,
+    "templateStrings": true,
+    "unicodeCodePointEscapes": true,
+    "globalReturn": true,
+    "jsx": true
+  },
+  "rules": {
+    "no-underscore-dangle": false,
+    "no-unused-vars": false,
+    "no-duplicate-case": false,
+    "no-new-func": false,
+    "no-loop-func": false,
+    "no-eval": false,
+    "camelcase": false,
+    "eol-last": false,
+    "semi": 2,
+    "quotes": false,
+    "strict": 0,
+    "no-alert": false
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
