@@ -13,7 +13,7 @@ Other rules:
 - Don't overuse comments, write clean, good structured code instead
 - KISS
 - YAGNI
-- DRY if it's not contradicts with KISS
+- DRY if it not contradicts with KISS
 
 ## C++
 
