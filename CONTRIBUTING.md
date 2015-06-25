@@ -49,7 +49,8 @@ for more information, or refer to its [readme on Github](https://github.com/unbo
 - File names are written in lower case
 - Files are put to `src` directory
 - Headers have `.h` extension and use guarding macros
-- Source files have `.cpp` extension
+- Source files have `.cpp` extension, and includes `ext.h` at first
+- `ext.h` should contain all external includes
 - Addon code are put into the global namespace
 - Prefer `struct` instead of `class`
 - Braces are start on new line
