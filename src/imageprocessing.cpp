@@ -219,26 +219,173 @@ NAN_METHOD(Histogram)
     FIRE_CATCH;
 }
 
-//AFAPI array 	resize (const array &in, const dim_t odim0, const dim_t odim1, const interpType method=AF_INTERP_NEAREST)
-//AFAPI array 	resize (const float scale, const array &in, const interpType method=AF_INTERP_NEAREST)
-//AFAPI array 	resize (const float scale0, const float scale1, const array &in, const interpType method=AF_INTERP_NEAREST)
+NAN_METHOD(Resize)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+        auto pIn = ArrayWrapper::TryGetArrayAt(args, 0);
+        af::interpType method = AF_INTERP_NEAREST;
+        if (pIn)
+        {
+            dim_t odim0 = args[1]->Uint32Value();
+            dim_t odim1 = args[2]->Uint32Value();
+            if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+            Guard();
+            ArrayWrapper::New(af::resize(*pIn, odim0, odim1, method));
+        }
+        else
+        {
+            pIn = ArrayWrapper::TryGetArrayAt(args, 1);
+            if (pIn)
+            {
+                float scale = args[0]->NumberValue();
+                if (args.Length() > 2) method = (af::interpType)args[2]->Uint32Value();
+                Guard();
+                ArrayWrapper::New(af::resize(scale, *pIn, method));
+            }
+            else
+            {
+                float scale0 = args[0]->NumberValue();
+                float scale1 = args[1]->NumberValue();
+                pIn = ArrayWrapper::GetArrayAt(args, 2);
+                if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+                Guard();
+                ArrayWrapper::New(af::resize(scale0, scale1, *pIn, method));
+            }
+        }
+    }
+    FIRE_CATCH;
+}
 
-//AFAPI array 	rotate (const array &in, const float theta, const bool crop=true, const interpType method=AF_INTERP_NEAREST)
+NAN_METHOD(Rotate)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        float theta = args[1]->NumberValue();
+        bool crop = true;
+        af::interpType method = AF_INTERP_NEAREST;
+        if (args.Length() > 2) crop = args[2]->BooleanValue();
+        if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::rotate(*pArray, theta, crop, method));
+    }
+    FIRE_CATCH;
+}
 
-//AFAPI array 	scale (const array &in, const float scale0, const float scale1, const dim_t odim0=0, const dim_t odim1=0, const interpType method=AF_INTERP_NEAREST)
+NAN_METHOD(Scale)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(3);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        float scale0 = args[1]->NumberValue();
+        float scale1 = args[2]->NumberValue();
+        dim_t odim0 = 0;
+        dim_t odim1 = 0;
+        af::interpType method = AF_INTERP_NEAREST;
+        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
+        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
+        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::scale(*pArray, scale0, scale1, odim0, odim1, method));
+    }
+    FIRE_CATCH;
+}
 
-//AFAPI array 	skew (const array &in, const float skew0, const float skew1, const dim_t odim0=0, const dim_t odim1=0, const bool inverse=true, const interpType method=AF_INTERP_NEAREST)
+NAN_METHOD(Skew)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(3);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        float skew0 = args[1]->NumberValue();
+        float skew1 = args[2]->NumberValue();
+        dim_t odim0 = 0;
+        dim_t odim1 = 0;
+        bool inverse = true;
+        af::interpType method = AF_INTERP_NEAREST;
+        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
+        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
+        if (args.Length() > 5) inverse = args[5]->BooleanValue();
+        if (args.Length() > 6) method = (af::interpType)args[6]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::skew(*pArray, skew0, skew1, odim0, odim1, inverse, method));
+    }
+    FIRE_CATCH;
+}
 
-//AFAPI array 	transform (const array &in, const array &transform, const dim_t odim0=0, const dim_t odim1=0, const interpType method=AF_INTERP_NEAREST, const bool inverse=true)
+NAN_METHOD(Transform)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
+        dim_t odim0 = 0;
+        dim_t odim1 = 0;
+        bool inverse = true;
+        af::interpType method = AF_INTERP_NEAREST;
+        if (args.Length() > 2) odim0 = args[2]->Uint32Value();
+        if (args.Length() > 3) odim1 = args[3]->Uint32Value();
+        if (args.Length() > 4) inverse = args[4]->BooleanValue();
+        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::transform(*pArray1, *pArray2, odim0, odim1, method, inverse));
+    }
+    FIRE_CATCH;
+}
 
-//AFAPI array 	translate (const array &in, const float trans0, const float trans1, const dim_t odim0=0, const dim_t odim1=0, const interpType method=AF_INTERP_NEAREST)
+NAN_METHOD(Translate)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(3);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        float trans0 = args[1]->NumberValue();
+        float trans1 = args[2]->NumberValue();
+        dim_t odim0 = 0;
+        dim_t odim1 = 0;
+        af::interpType method = AF_INTERP_NEAREST;
+        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
+        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
+        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::translate(*pArray, trans0, trans1, odim0, odim1, method));
+    }
+    FIRE_CATCH;
+}
 
 FIRE_SYNC_METHOD_ARR_ARR(Dilate, dilate)
 FIRE_SYNC_METHOD_ARR_ARR(Dilate3, dilate3)
 FIRE_SYNC_METHOD_ARR_ARR(Erode, erode)
 FIRE_SYNC_METHOD_ARR_ARR(Erode3, erode3)
 
-//AFAPI array 	gaussiankernel (const int rows, const int cols, const double sig_r=0, const double sig_c=0)
+NAN_METHOD(GaussianKernel)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+        int rows = args[0]->Int32Value();
+        int cols = args[1]->Int32Value();
+        double sigR = 0;
+        double sigC = 0;
+        if (args.Length() > 2) sigR = args[2]->NumberValue();
+        if (args.Length() > 3) sigC = args[3]->NumberValue();
+        Guard();
+        ArrayWrapper::New(af::gaussianKernel(rows, cols, sigR, sigC));
+    }
+    FIRE_CATCH;
+}
 
 void InitImageProcessing(v8::Handle<v8::Object> exports)
 {
@@ -250,4 +397,23 @@ void InitImageProcessing(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("hsv2rgb"), NanNew<FunctionTemplate>(HSV2RGB)->GetFunction());
     exports->Set(NanNew("rgb2hsv"), NanNew<FunctionTemplate>(RGB2HSV)->GetFunction());
     exports->Set(NanNew("regions"), NanNew<FunctionTemplate>(Regions)->GetFunction());
+    exports->Set(NanNew("bilateral"), NanNew<FunctionTemplate>(Bilateral)->GetFunction());
+    exports->Set(NanNew("maxFilt"), NanNew<FunctionTemplate>(MaxFilt)->GetFunction());
+    exports->Set(NanNew("minFilt"), NanNew<FunctionTemplate>(MinFilt)->GetFunction());
+    exports->Set(NanNew("medFilt"), NanNew<FunctionTemplate>(MedFilt)->GetFunction());
+    exports->Set(NanNew("meanShift"), NanNew<FunctionTemplate>(MeanShift)->GetFunction());
+    exports->Set(NanNew("sobel"), NanNew<FunctionTemplate>(Sobel)->GetFunction());
+    exports->Set(NanNew("histEqual"), NanNew<FunctionTemplate>(HistEqual)->GetFunction());
+    exports->Set(NanNew("histogram"), NanNew<FunctionTemplate>(Histogram)->GetFunction());
+    exports->Set(NanNew("resize"), NanNew<FunctionTemplate>(Resize)->GetFunction());
+    exports->Set(NanNew("rotate"), NanNew<FunctionTemplate>(Rotate)->GetFunction());
+    exports->Set(NanNew("scale"), NanNew<FunctionTemplate>(Scale)->GetFunction());
+    exports->Set(NanNew("skew"), NanNew<FunctionTemplate>(Skew)->GetFunction());
+    exports->Set(NanNew("transform"), NanNew<FunctionTemplate>(Transform)->GetFunction());
+    exports->Set(NanNew("translate"), NanNew<FunctionTemplate>(Translate)->GetFunction());
+    exports->Set(NanNew("dilate"), NanNew<FunctionTemplate>(Dilate)->GetFunction());
+    exports->Set(NanNew("dilate3"), NanNew<FunctionTemplate>(Dilate3)->GetFunction());
+    exports->Set(NanNew("erode"), NanNew<FunctionTemplate>(Erode)->GetFunction());
+    exports->Set(NanNew("erode3"), NanNew<FunctionTemplate>(Erode3)->GetFunction());
+    exports->Set(NanNew("gaussianKernel"), NanNew<FunctionTemplate>(GaussianKernel)->GetFunction());
 }
