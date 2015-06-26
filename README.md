@@ -8,7 +8,7 @@ You can read its introduction [int its documentation's index page](http://www.ar
 
 ## About ArrayFire.js
 
-ArrayFire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance level of x100 (with a good GPU).
+ArrayFire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance level of x100+ compared to V8 computation preformance (with a good GPU).
 
 ## Requirements
 
