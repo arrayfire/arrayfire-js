@@ -74,6 +74,9 @@ struct Symbols
     static v8::Persistent<v8::String> Upper;
     static v8::Persistent<v8::String> Lower;
     static v8::Persistent<v8::String> Pivot;
+    static v8::Persistent<v8::String> Q;
+    static v8::Persistent<v8::String> R;
+    static v8::Persistent<v8::String> Tau;
 
     static void Init();
 };

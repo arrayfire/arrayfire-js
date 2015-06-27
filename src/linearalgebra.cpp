@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "arraywrapper.h"
 #include "errors.h"
 #include "guard.h"
+#include "worker.h"
 
 using namespace v8;
 using namespace std;
@@ -172,22 +173,216 @@ NAN_METHOD(CholeskyInPlace)
     ARRAYFIRE_CATCH;
 }
 
-//AFAPI void 	lu (array &out, array &pivot, const array &in, const bool is_lapack_piv=true)
-//AFAPI void 	lu (array &lower, array &upper, array &pivot, const array &in)
+NAN_METHOD(LuPacked)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        bool isLapackPiv = true;
+        if (args.Length() > 1) isLapackPiv = args[1]->BooleanValue();
+        Guard();
+        af::array out, pivot;
+        af::lu(out, pivot, (const af::array&)*pArray, isLapackPiv);
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Result), ArrayWrapper::New(out));
+        result->Set(NanNew(Symbols::Pivot), ArrayWrapper::New(pivot));
+        NanReturnValue(result);
+    }
+    ARRAYFIRE_CATCH;
+}
 
-//AFAPI void 	qr (array &out, array &tau, const array &in)
-//AFAPI void 	qr (array &q, array &r, array &tau, const array &in)
-//AFAPI void 	qrInPlace (array &tau, array &in)
+NAN_METHOD(Lu)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        Guard();
+        af::array lower, upper, pivot;
+        af::lu(lower, upper, pivot, *pArray);
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Lower), ArrayWrapper::New(lower));
+        result->Set(NanNew(Symbols::Upper), ArrayWrapper::New(upper));
+        result->Set(NanNew(Symbols::Pivot), ArrayWrapper::New(pivot));
+        NanReturnValue(result);
+    }
+    ARRAYFIRE_CATCH;
+}
 
-//template<typename T >
-//T 	det (const array &in)
+NAN_METHOD(LuInPlace)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        bool isLapackPiv = true;
+        if (args.Length() > 1) isLapackPiv = args[1]->BooleanValue();
+        Guard();
+        af::array pivot;
+        af::luInPlace(pivot, *pArray, isLapackPiv);
+        NanReturnValue(ArrayWrapper::New(pivot));
+    }
+    ARRAYFIRE_CATCH;
+}
 
-//AFAPI array 	inverse (const array &in, const matProp options=AF_MAT_NONE)
+NAN_METHOD(QrPacked)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        Guard();
+        af::array out, tau;
+        af::qr(out, tau, *pArray);
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Result), ArrayWrapper::New(out));
+        result->Set(NanNew(Symbols::Tau), ArrayWrapper::New(tau));
+        NanReturnValue(result);
+    }
+    ARRAYFIRE_CATCH;
+}
 
-//AFAPI double 	norm (const array &in, const normType type=AF_NORM_EUCLID, const double p=1, const double q=1)
+NAN_METHOD(Qr)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        Guard();
+        af::array q, r, tau;
+        af::qr(q, r, tau, *pArray);
+        auto result = NanNew<Object>();
+        result->Set(NanNew(Symbols::Q), ArrayWrapper::New(q));
+        result->Set(NanNew(Symbols::R), ArrayWrapper::New(r));
+        result->Set(NanNew(Symbols::Tau), ArrayWrapper::New(tau));
+        NanReturnValue(result);
+    }
+    ARRAYFIRE_CATCH;
+}
 
-//AFAPI unsigned 	rank (const array &in, const double tol=1E-5)
+NAN_METHOD(QrInPlace)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        Guard();
+        af::array tau;
+        af::qrInPlace(tau, *pArray);
+        NanReturnValue(ArrayWrapper::New(tau));
+    }
+    ARRAYFIRE_CATCH;
+}
+
+NAN_METHOD(Det)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+
+        auto array = *ArrayWrapper::GetArrayAt(args, 0);
+        if (NeedsDouble(array))
+        {
+            auto exec = [=]() { Guard(); return af::det<double>(array); };
+            auto worker = new Worker<double>(GetCallback(args), std::move(exec));
+            NanAsyncQueueWorker(worker);
+            NanReturnUndefined();
+        }
+        else
+        {
+            auto exec = [=]() { Guard(); return af::det<float>(array); };
+            auto worker = new Worker<float>(GetCallback(args), std::move(exec));
+            NanAsyncQueueWorker(worker);
+            NanReturnUndefined();
+        }
+    }
+    ARRAYFIRE_CATCH
+}
+
+NAN_METHOD(Inverse)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(1);
+        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        af::matProp options = AF_MAT_NONE;
+        if (args.Length() > 1) options = (af::matProp)args[1]->Uint32Value();
+        Guard();
+        ArrayWrapper::New(af::inverse(*pArray, options));
+    }
+    ARRAYFIRE_CATCH;
+}
+
+NAN_METHOD(Norm)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+
+        auto array = *ArrayWrapper::GetArrayAt(args, 0);
+        af::normType type = AF_NORM_EUCLID;
+        double p = 1;
+        double q = 1;
+        if (args.Length() > 1) type = (af::normType)args[1]->Uint32Value();
+        if (args.Length() > 2) p = args[2]->NumberValue();
+        if (args.Length() > 3) q = args[3]->NumberValue();
+        auto exec = [=]() { Guard(); return af::norm(array, type, p, q); };
+        auto worker = new Worker<double>(GetCallback(args), std::move(exec));
+        NanAsyncQueueWorker(worker);
+        NanReturnUndefined();
+    }
+    ARRAYFIRE_CATCH
+}
+
+NAN_METHOD(Rank)
+{
+    NanScope();
+    try
+    {
+        ARGS_LEN(2);
+
+        auto array = *ArrayWrapper::GetArrayAt(args, 0);
+        double tol = 1E-5;
+        if (args.Length() > 1) tol = args[1]->NumberValue();
+        auto exec = [=]() { Guard(); return af::rank(array, tol); };
+        auto worker = new Worker<double>(GetCallback(args), std::move(exec));
+        NanAsyncQueueWorker(worker);
+        NanReturnUndefined();
+    }
+    ARRAYFIRE_CATCH
+}
 
 void InitLinearAlgebra(v8::Handle<v8::Object> exports)
 {
+    exports->Set(NanNew("dot"), NanNew<FunctionTemplate>(Dot)->GetFunction());
+    exports->Set(NanNew("matMul"), NanNew<FunctionTemplate>(MatMul)->GetFunction());
+    exports->Set(NanNew("matMulNT"), NanNew<FunctionTemplate>(MatMulNT)->GetFunction());
+    exports->Set(NanNew("matMulTN"), NanNew<FunctionTemplate>(MatMulTN)->GetFunction());
+    exports->Set(NanNew("matMulTT"), NanNew<FunctionTemplate>(MatMulTT)->GetFunction());
+    exports->Set(NanNew("transpose"), NanNew<FunctionTemplate>(Transpose)->GetFunction());
+    exports->Set(NanNew("transposeInPlace"), NanNew<FunctionTemplate>(TransposeInPlace)->GetFunction());
+    exports->Set(NanNew("solve"), NanNew<FunctionTemplate>(Solve)->GetFunction());
+    exports->Set(NanNew("solveLU"), NanNew<FunctionTemplate>(SolveLU)->GetFunction());
+    exports->Set(NanNew("cholesky"), NanNew<FunctionTemplate>(Cholesky)->GetFunction());
+    exports->Set(NanNew("choleskyInPlace"), NanNew<FunctionTemplate>(CholeskyInPlace)->GetFunction());
+    exports->Set(NanNew("luPacked"), NanNew<FunctionTemplate>(LuPacked)->GetFunction());
+    exports->Set(NanNew("lu"), NanNew<FunctionTemplate>(Lu)->GetFunction());
+    exports->Set(NanNew("luInPlace"), NanNew<FunctionTemplate>(LuInPlace)->GetFunction());
+    exports->Set(NanNew("qrPacked"), NanNew<FunctionTemplate>(QrPacked)->GetFunction());
+    exports->Set(NanNew("qr"), NanNew<FunctionTemplate>(Qr)->GetFunction());
+    exports->Set(NanNew("qrInPlace"), NanNew<FunctionTemplate>(QrInPlace)->GetFunction());
+    exports->Set(NanNew("det"), NanNew<FunctionTemplate>(Det)->GetFunction());
+    exports->Set(NanNew("inverse"), NanNew<FunctionTemplate>(Inverse)->GetFunction());
+    exports->Set(NanNew("norm"), NanNew<FunctionTemplate>(Norm)->GetFunction());
+    exports->Set(NanNew("rank"), NanNew<FunctionTemplate>(Rank)->GetFunction());
 }

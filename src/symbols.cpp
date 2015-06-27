@@ -115,4 +115,7 @@ void Symbols::Init()
     NanAssignPersistent(Upper, NanNew("upper"));
     NanAssignPersistent(Lower, NanNew("lower"));
     NanAssignPersistent(Pivot, NanNew("pivot"));
+    NanAssignPersistent(Q, NanNew("q"));
+    NanAssignPersistent(R, NanNew("r"));
+    NanAssignPersistent(Tau, NanNew("tau"));
 }
