@@ -364,22 +364,11 @@ NAN_METHOD(ArrayWrapper::Create)
             return NAN_THROW_INVALID_ARGS();
         }
 
-        NanCallback *callback = nullptr;
-        if (args[args.Length() - 1]->IsFunction())
-        {
-            callback = new NanCallback(args[args.Length() - 1].As<Function>());
-        }
-
-        if (!callback)
-        {
-            return NAN_THROW_CB_EXPECTED();
-        }
-
         auto conv = [](Worker<af::array*>* w, af::array* a)
         {
             return New(a);
         };
-        auto worker = new Worker<af::array*>(callback, move(factory), move(conv));
+        auto worker = new Worker<af::array*>(GetCallback(args), move(factory), move(conv));
         worker->SaveToPersistent("data", args[buffIdx]->ToObject());
 
         NanAsyncQueueWorker(worker);
