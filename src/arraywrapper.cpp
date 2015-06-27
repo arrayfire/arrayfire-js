@@ -243,7 +243,6 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
     try
     {
         ArrayWrapper* instance = nullptr;
-        int buffIdx = -1;
         try
         {
             if (args.Length() == 0)
@@ -261,21 +260,8 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
             else
             {
                 Guard();
-                for (int i = 0; i < args.Length(); i++)
-                {
-                    if (Buffer::HasInstance(args[i]))
-                    {
-                        buffIdx = i;
-                        break;
-                    }
-                }
-
-                if (buffIdx == -1)
-                {
-                    // Creating new
-                    auto dimAndType = ParseDimAndTypeArgs(args);
-                    instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
-                }
+                auto dimAndType = ParseDimAndTypeArgs(args);
+                instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
             }
         }
         catch (...)
@@ -290,9 +276,6 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         }
 
         instance->Wrap(args.Holder());
-
-        //Set instance props: NanObjectWrapHandle(obj)->Set(NanNew(symbol), value);
-
         NanReturnValue(args.Holder());
     }
     ARRAYFIRE_CATCH
