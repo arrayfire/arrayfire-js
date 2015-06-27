@@ -41,11 +41,11 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_SYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
-FIRE_ASYNC_METHOD_ALGO_V1(Mean, mean)
-FIRE_ASYNC_METHOD_ALGO_V3(WeightedMean, mean)
-FIRE_ASYNC_METHOD_ALGO_V1(Median, median)
-FIRE_ASYNC_METHOD_ALGO_V1(StDev, stdev)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Mean, mean)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V3(WeightedMean, mean)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Median, median)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(StDev, stdev)
 
 NAN_METHOD(Var)
 {
@@ -79,10 +79,10 @@ NAN_METHOD(Var)
             }
         }
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
-FIRE_ASYNC_METHOD_ALGO_V3(WeightedVar, var)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V3(WeightedVar, var)
 
 NAN_METHOD(CorrCoef)
 {
@@ -108,7 +108,7 @@ NAN_METHOD(CorrCoef)
             NanReturnUndefined();
         }
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 void InitStatistics(v8::Handle<v8::Object> exports)

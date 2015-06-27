@@ -29,8 +29,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef FIRE_JS_HELPERS_H
-#define FIRE_JS_HELPERS_H
+#ifndef ARRAYFIRE_JS_HELPERS_H
+#define ARRAYFIRE_JS_HELPERS_H
 
 #include <utility>
 #include <arrayfire.h>
@@ -81,7 +81,7 @@ inline bool NeedsDouble(const af::array::array_proxy& arrayProxy) { return array
 
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
-#define FIRE_SYNC_METHOD_ARR(F, f)\
+#define ARRAYFIRE_SYNC_METHOD_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -93,10 +93,10 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0))));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_DIM(F, f)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_DIM(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -110,10 +110,10 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), dim)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_BOOL(F, f, defV)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -127,10 +127,28 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), v)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(F, f, defV1, defV2, defV3)\
+#define ARRAYFIRE_SYNC_METHOD_VOID_ARR_BOOL(F, f, defV)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(1);\
+        \
+        bool v = defV;\
+        if (args.Length() > 1) v = args[1]->BooleanValue();\
+        Guard();\
+        af::f(*ArrayWrapper::GetArrayAt(args, 0), v);\
+        NanReturnUndefined();\
+    }\
+    ARRAYFIRE_CATCH\
+}
+
+#define ARRAYFIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(F, f, defV1, defV2, defV3)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -148,10 +166,10 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), v1, v2, v3)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_ARR(F, f)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -163,10 +181,40 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1))));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_ARR_DIM(F, f)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_ARR(F, f)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(3);\
+        \
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), *ArrayWrapper::GetArrayAt(args, 2))));\
+    }\
+    ARRAYFIRE_CATCH\
+}
+
+#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_ARR_ARR(F, f)\
+NAN_METHOD(F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        ARGS_LEN(4);\
+        \
+        Guard();\
+        NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), *ArrayWrapper::GetArrayAt(args, 2), *ArrayWrapper::GetArrayAt(args, 3))));\
+    }\
+    ARRAYFIRE_CATCH\
+}
+
+#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_DIM(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -180,10 +228,10 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), dim)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_ARR_BOOL(F, f, defV)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -197,10 +245,10 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(args, 0), *ArrayWrapper::GetArrayAt(args, 1), v)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_ARR_DOUBLE_COMB(F, f)\
+#define ARRAYFIRE_SYNC_METHOD_ARR_DOUBLE_COMB(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -243,10 +291,10 @@ NAN_METHOD(F)\
         \
         NAN_THROW_INVALID_ARGS();\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ALGO_V1(F, f)\
+#define ARRAYFIRE_ASYNC_METHOD_ALGO_V1(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -278,10 +326,10 @@ NAN_METHOD(F)\
             }\
         }\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_ASYNC_METHOD_ALGO_V2(F, f)\
+#define ARRAYFIRE_ASYNC_METHOD_ALGO_V2(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -337,11 +385,11 @@ NAN_METHOD(F)\
             NanReturnUndefined();\
         }\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 // weighted mean like stuff:
-#define FIRE_ASYNC_METHOD_ALGO_V3(F, f)\
+#define ARRAYFIRE_ASYNC_METHOD_ALGO_V3(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -374,10 +422,10 @@ NAN_METHOD(F)\
             }\
         }\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#define FIRE_SYNC_METHOD_XYZW(F, f, iy, iz, iw)\
+#define ARRAYFIRE_SYNC_METHOD_XYZW(F, f, iy, iz, iw)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -418,7 +466,7 @@ NAN_METHOD(F)\
         Guard();\
         NanReturnValue(ArrayWrapper::New(af::f(*pArray, x, y, z, w)));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
-#endif // FIRE_JS_HELPERS_H
+#endif // ARRAYFIRE_JS_HELPERS_H

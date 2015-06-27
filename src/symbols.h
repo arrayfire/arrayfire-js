@@ -29,8 +29,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef FIRE_JS_SYMBOLS_H
-#define FIRE_JS_SYMBOLS_H
+#ifndef ARRAYFIRE_JS_SYMBOLS_H
+#define ARRAYFIRE_JS_SYMBOLS_H
 
 #include <nan.h>
 
@@ -69,8 +69,13 @@ struct Symbols
     static v8::Persistent<v8::String> Size;
     static v8::Persistent<v8::String> Idx;
     static v8::Persistent<v8::String> Dist;
+    static v8::Persistent<v8::String> Succeeded;
+    static v8::Persistent<v8::String> Result;
+    static v8::Persistent<v8::String> Upper;
+    static v8::Persistent<v8::String> Lower;
+    static v8::Persistent<v8::String> Pivot;
 
     static void Init();
 };
 
-#endif // FIRE_JS_SYMBOLS_H
+#endif // ARRAYFIRE_JS_SYMBOLS_H

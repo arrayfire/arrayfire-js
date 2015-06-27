@@ -42,6 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "symbols.h"
 #include "computervision.h"
 #include "imageprocessing.h"
+#include "linearalgebra.h"
 
 using namespace v8;
 using namespace std;
@@ -66,6 +67,7 @@ void Init(v8::Handle<v8::Object> exports)
     InitStatistics(exports);
     InitComputerVision(exports);
     InitImageProcessing(exports);
+    InitLinearAlgebra(exports);
 
     // Helpers:
     exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());

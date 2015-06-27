@@ -179,7 +179,7 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
-    FIRE_THROW("Argument is not an AFArray instance.");
+    ARRAYFIRE_THROW("Argument is not an AFArray instance.");
 }
 
 af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
@@ -202,7 +202,7 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Object> value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
-    FIRE_THROW("Argument is not an AFArray instance.");
+    ARRAYFIRE_THROW("Argument is not an AFArray instance.");
 }
 
 af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
@@ -224,7 +224,7 @@ af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& a
     if (array) return array;
     stringstream ss;
     ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
-    FIRE_THROW(ss.str().c_str());
+    ARRAYFIRE_THROW(ss.str().c_str());
 }
 
 af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
@@ -295,7 +295,7 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
 
         NanReturnValue(args.Holder());
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 template<typename T>
@@ -402,7 +402,7 @@ NAN_METHOD(ArrayWrapper::Create)
         NanAsyncQueueWorker(worker);
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Elements)
@@ -414,7 +414,7 @@ NAN_METHOD(ArrayWrapper::Elements)
         Guard();
         NanReturnValue(NanNew<Number>(GetArray(args.This())->elements()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Host)
@@ -477,7 +477,7 @@ NAN_METHOD(ArrayWrapper::Host)
             }
         }
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Scalar)
@@ -623,7 +623,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
         }
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 
@@ -666,7 +666,7 @@ NAN_METHOD(ArrayWrapper::Write)
         NanAsyncQueueWorker(worker);
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Type)
@@ -677,7 +677,7 @@ NAN_METHOD(ArrayWrapper::Type)
     {
         NanReturnValue(GetArray(args.This())->type());
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Dims)
@@ -708,7 +708,7 @@ NAN_METHOD(ArrayWrapper::Dims)
             NanReturnValue(NanNew<Number>(pArray->dims(args[0]->Uint32Value())));
         }
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::NumDims)
@@ -719,7 +719,7 @@ NAN_METHOD(ArrayWrapper::NumDims)
     {
         NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Bytes)
@@ -730,7 +730,7 @@ NAN_METHOD(ArrayWrapper::Bytes)
     {
         NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Copy)
@@ -742,7 +742,7 @@ NAN_METHOD(ArrayWrapper::Copy)
         Guard();
         NanReturnValue(New(GetArray(args.This())->copy()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsEmpty)
@@ -753,7 +753,7 @@ NAN_METHOD(ArrayWrapper::IsEmpty)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isempty()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsScalar)
@@ -764,7 +764,7 @@ NAN_METHOD(ArrayWrapper::IsScalar)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsVector)
@@ -775,7 +775,7 @@ NAN_METHOD(ArrayWrapper::IsVector)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isvector()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsRow)
@@ -786,7 +786,7 @@ NAN_METHOD(ArrayWrapper::IsRow)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isrow()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsColumn)
@@ -797,7 +797,7 @@ NAN_METHOD(ArrayWrapper::IsColumn)
     {
         NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsComplex)
@@ -808,7 +808,7 @@ NAN_METHOD(ArrayWrapper::IsComplex)
     {
         NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsReal)
@@ -819,7 +819,7 @@ NAN_METHOD(ArrayWrapper::IsReal)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isreal()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsDouble)
@@ -830,7 +830,7 @@ NAN_METHOD(ArrayWrapper::IsDouble)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsSingle)
@@ -841,7 +841,7 @@ NAN_METHOD(ArrayWrapper::IsSingle)
     {
         NanReturnValue(NanNew(GetArray(args.This())->issingle()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsRealFloating)
@@ -852,7 +852,7 @@ NAN_METHOD(ArrayWrapper::IsRealFloating)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsFloating)
@@ -863,7 +863,7 @@ NAN_METHOD(ArrayWrapper::IsFloating)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsInteger)
@@ -874,7 +874,7 @@ NAN_METHOD(ArrayWrapper::IsInteger)
     {
         NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsBool)
@@ -885,7 +885,7 @@ NAN_METHOD(ArrayWrapper::IsBool)
     {
         NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Eval)
@@ -898,7 +898,7 @@ NAN_METHOD(ArrayWrapper::Eval)
         GetArray(args.This())->eval();
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::At)
@@ -929,7 +929,7 @@ NAN_METHOD(ArrayWrapper::At)
             NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2]), ToIndex(args[3]))));
         }
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 #define AFARRAY_IMPL_IDX1(F, f)\
@@ -943,7 +943,7 @@ NAN_METHOD(ArrayWrapper::F)\
         auto pArray = GetArray(args.This());\
         NanReturnValue(New(pArray->f(args[0]->Int32Value())));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 AFARRAY_IMPL_IDX1(Row, row)
@@ -962,7 +962,7 @@ NAN_METHOD(ArrayWrapper::F)\
         auto pArray = GetArray(args.This());\
         NanReturnValue(New(pArray->f(args[0]->Int32Value(), args[1]->Int32Value())));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 AFARRAY_IMPL_IDX2(Rows, rows)
@@ -980,7 +980,7 @@ NAN_METHOD(ArrayWrapper::As)
         Guard();
         NanReturnValue(New(GetArray(args.This())->as(type)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 #define AFARRAY_IMPL_ASSIGN(F, Op)\
@@ -1044,7 +1044,7 @@ NAN_METHOD(ArrayWrapper::F)\
         \
         NanReturnValue(args.This());\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 AFARRAY_IMPL_ASSIGN(Assign, =)
@@ -1115,7 +1115,7 @@ NAN_METHOD(ArrayWrapper::F)\
         \
         NanReturnValue(New(result));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 AFARRAY_IMPL_BINOP(Add, +)
@@ -1149,7 +1149,7 @@ NAN_METHOD(ArrayWrapper::F)\
         Guard();\
         NanReturnValue(New(array.operator Op()));\
     }\
-    FIRE_CATCH\
+    ARRAYFIRE_CATCH\
 }
 
 AFARRAY_IMPL_UNOP(Neg, -)

@@ -54,18 +54,18 @@ NAN_METHOD(Join)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::join(dim, *pArray1, *pArray2)));;
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
-FIRE_SYNC_METHOD_XYZW(Tile, tile, 1, 1, 1)
+ARRAYFIRE_SYNC_METHOD_XYZW(Tile, tile, 1, 1, 1)
 
-FIRE_SYNC_METHOD_XYZW(Reorder, reorder, 1, 2, 3)
+ARRAYFIRE_SYNC_METHOD_XYZW(Reorder, reorder, 1, 2, 3)
 
-FIRE_SYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
+ARRAYFIRE_SYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
 
-FIRE_SYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
+ARRAYFIRE_SYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
 
-FIRE_SYNC_METHOD_ARR(Flat, flat)
+ARRAYFIRE_SYNC_METHOD_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {
@@ -80,10 +80,8 @@ NAN_METHOD(Flip)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::flip(*pArray, dim)));;
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
-
-FIRE_SYNC_METHOD_ARR_BOOL(Transpose, transpose, false)
 
 void InitMoveAndReorderArray(v8::Handle<v8::Object> exports)
 {
@@ -95,5 +93,4 @@ void InitMoveAndReorderArray(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("modDims"), NanNew<FunctionTemplate>(ModDims)->GetFunction());
     exports->Set(NanNew("flat"), NanNew<FunctionTemplate>(Flat)->GetFunction());
     exports->Set(NanNew("flip"), NanNew<FunctionTemplate>(Flip)->GetFunction());
-    exports->Set(NanNew("transpose"), NanNew<FunctionTemplate>(Transpose)->GetFunction());
 }

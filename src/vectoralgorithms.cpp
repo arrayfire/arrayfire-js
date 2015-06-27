@@ -41,15 +41,15 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_ASYNC_METHOD_ALGO_V1(AllTrue, allTrue)
-FIRE_ASYNC_METHOD_ALGO_V1(AnyTrue, anyTrue)
-FIRE_ASYNC_METHOD_ALGO_V1(Count, count)
-FIRE_ASYNC_METHOD_ALGO_V1(FindMax, max)
-FIRE_ASYNC_METHOD_ALGO_V1(FindMin, min)
-FIRE_ASYNC_METHOD_ALGO_V1(Product, product)
-FIRE_ASYNC_METHOD_ALGO_V1(Sum, sum)
-FIRE_ASYNC_METHOD_ALGO_V2(FindMinAt, min)
-FIRE_ASYNC_METHOD_ALGO_V2(FindMaxAt, max)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(AllTrue, allTrue)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(AnyTrue, anyTrue)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Count, count)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(FindMax, max)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(FindMin, min)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Product, product)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Sum, sum)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V2(FindMinAt, min)
+ARRAYFIRE_ASYNC_METHOD_ALGO_V2(FindMaxAt, max)
 
 NAN_METHOD(Sort)
 {
@@ -71,7 +71,7 @@ NAN_METHOD(Sort)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::sort(*pArray, dim, asc)));;
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(SortByKey)
@@ -103,7 +103,7 @@ NAN_METHOD(SortByKey)
 
         NanReturnValue(result);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(SortIndex)
@@ -133,17 +133,17 @@ NAN_METHOD(SortIndex)
         result->Set(NanNew(Symbols::Indices), NanNew(ArrayWrapper::New(outIndices)));
         NanReturnValue(result);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
-FIRE_SYNC_METHOD_ARR_DIM(Accum, accum)
-FIRE_SYNC_METHOD_ARR(Where, where)
+ARRAYFIRE_SYNC_METHOD_ARR_DIM(Accum, accum)
+ARRAYFIRE_SYNC_METHOD_ARR(Where, where)
 
-FIRE_SYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
-FIRE_SYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)
-FIRE_SYNC_METHOD_ARR_BOOL(SetUnique, setUnique, false)
-FIRE_SYNC_METHOD_ARR_DIM(Diff1, diff1)
-FIRE_SYNC_METHOD_ARR_DIM(Diff2, diff2)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)
+ARRAYFIRE_SYNC_METHOD_ARR_BOOL(SetUnique, setUnique, false)
+ARRAYFIRE_SYNC_METHOD_ARR_DIM(Diff1, diff1)
+ARRAYFIRE_SYNC_METHOD_ARR_DIM(Diff2, diff2)
 
 NAN_METHOD(Grad)
 {
@@ -162,7 +162,7 @@ NAN_METHOD(Grad)
         result->Set(NanNew(Symbols::DY), NanNew(ArrayWrapper::New(dy)));
         NanReturnValue(result);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 void InitVectorAlgorithms(v8::Handle<v8::Object> exports)

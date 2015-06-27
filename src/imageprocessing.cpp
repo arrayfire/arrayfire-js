@@ -58,7 +58,7 @@ NAN_METHOD(LoadImage)
                 args,
                 [=](){ Guard(); return new af::array(af::loadImage(fn.c_str(), isColor)); });
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(SaveImage)
@@ -79,7 +79,7 @@ NAN_METHOD(SaveImage)
         NanAsyncQueueWorker(worker);
         NanReturnUndefined();
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(ColorSpace)
@@ -94,13 +94,13 @@ NAN_METHOD(ColorSpace)
         Guard();
         ArrayWrapper::New(af::colorSpace(*pArray, to, from));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
-FIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(Gray2RGB, gray2rgb, 1.0f, 1.0f, 1.0f)
-FIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(RGB2Gray, rgb2gray, 0.2126f, 0.7152f, 0.0722f)
-FIRE_SYNC_METHOD_ARR(HSV2RGB, hsv2rgb)
-FIRE_SYNC_METHOD_ARR(RGB2HSV, rgb2hsv)
+ARRAYFIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(Gray2RGB, gray2rgb, 1.0f, 1.0f, 1.0f)
+ARRAYFIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(RGB2Gray, rgb2gray, 0.2126f, 0.7152f, 0.0722f)
+ARRAYFIRE_SYNC_METHOD_ARR(HSV2RGB, hsv2rgb)
+ARRAYFIRE_SYNC_METHOD_ARR(RGB2HSV, rgb2hsv)
 
 NAN_METHOD(Regions)
 {
@@ -116,7 +116,7 @@ NAN_METHOD(Regions)
         Guard();
         ArrayWrapper::New(af::regions(*pArray, conn, dtype));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Bilateral)
@@ -133,10 +133,10 @@ NAN_METHOD(Bilateral)
         Guard();
         ArrayWrapper::New(af::bilateral(*pArray, spatialSigma, chromaticSigma, isColor));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
-#define FIRE_FILT_METHOD(F, f)\
+#define ARRAYFIRE_FILT_METHOD(F, f)\
 NAN_METHOD(F)\
 {\
     NanScope();\
@@ -153,13 +153,13 @@ NAN_METHOD(F)\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, windLength, windWidth, edgePad));\
     }\
-    FIRE_CATCH;\
+    ARRAYFIRE_CATCH;\
 }
 
-FIRE_FILT_METHOD(MaxFilt, maxfilt)
-FIRE_FILT_METHOD(MinFilt, minfilt)
-FIRE_FILT_METHOD(MedFilt, medfilt)
-#undef FIRE_FILT_METHOD
+ARRAYFIRE_FILT_METHOD(MaxFilt, maxfilt)
+ARRAYFIRE_FILT_METHOD(MinFilt, minfilt)
+ARRAYFIRE_FILT_METHOD(MedFilt, medfilt)
+#undef ARRAYFIRE_FILT_METHOD
 
 NAN_METHOD(MeanShift)
 {
@@ -176,7 +176,7 @@ NAN_METHOD(MeanShift)
         Guard();
         ArrayWrapper::New(af::meanShift(*pArray, spatialSigma, chromaticSigma, iter, isColor));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Sobel)
@@ -196,10 +196,10 @@ NAN_METHOD(Sobel)
         result->Set(NanNew(Symbols::DY), ArrayWrapper::New(dy));
         NanReturnValue(result);
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
-FIRE_SYNC_METHOD_ARR_ARR(HistEqual, histEqual)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR(HistEqual, histEqual)
 
 NAN_METHOD(Histogram)
 {
@@ -216,7 +216,7 @@ NAN_METHOD(Histogram)
         Guard();
         ArrayWrapper::New(af::histogram(*pArray, nbins, minval, maxval));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Resize)
@@ -256,7 +256,7 @@ NAN_METHOD(Resize)
             }
         }
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Rotate)
@@ -274,7 +274,7 @@ NAN_METHOD(Rotate)
         Guard();
         ArrayWrapper::New(af::rotate(*pArray, theta, crop, method));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Scale)
@@ -295,7 +295,7 @@ NAN_METHOD(Scale)
         Guard();
         ArrayWrapper::New(af::scale(*pArray, scale0, scale1, odim0, odim1, method));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Skew)
@@ -318,7 +318,7 @@ NAN_METHOD(Skew)
         Guard();
         ArrayWrapper::New(af::skew(*pArray, skew0, skew1, odim0, odim1, inverse, method));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Transform)
@@ -340,7 +340,7 @@ NAN_METHOD(Transform)
         Guard();
         ArrayWrapper::New(af::transform(*pArray1, *pArray2, odim0, odim1, method, inverse));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(Translate)
@@ -361,13 +361,13 @@ NAN_METHOD(Translate)
         Guard();
         ArrayWrapper::New(af::translate(*pArray, trans0, trans1, odim0, odim1, method));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
-FIRE_SYNC_METHOD_ARR_ARR(Dilate, dilate)
-FIRE_SYNC_METHOD_ARR_ARR(Dilate3, dilate3)
-FIRE_SYNC_METHOD_ARR_ARR(Erode, erode)
-FIRE_SYNC_METHOD_ARR_ARR(Erode3, erode3)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR(Dilate, dilate)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR(Dilate3, dilate3)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR(Erode, erode)
+ARRAYFIRE_SYNC_METHOD_ARR_ARR(Erode3, erode3)
 
 NAN_METHOD(GaussianKernel)
 {
@@ -384,7 +384,7 @@ NAN_METHOD(GaussianKernel)
         Guard();
         ArrayWrapper::New(af::gaussianKernel(rows, cols, sigR, sigC));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 void InitImageProcessing(v8::Handle<v8::Object> exports)
@@ -398,8 +398,11 @@ void InitImageProcessing(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("rgb2hsv"), NanNew<FunctionTemplate>(RGB2HSV)->GetFunction());
     exports->Set(NanNew("regions"), NanNew<FunctionTemplate>(Regions)->GetFunction());
     exports->Set(NanNew("bilateral"), NanNew<FunctionTemplate>(Bilateral)->GetFunction());
+    exports->Set(NanNew("maxfilt"), NanNew<FunctionTemplate>(MaxFilt)->GetFunction());
     exports->Set(NanNew("maxFilt"), NanNew<FunctionTemplate>(MaxFilt)->GetFunction());
+    exports->Set(NanNew("minfilt"), NanNew<FunctionTemplate>(MinFilt)->GetFunction());
     exports->Set(NanNew("minFilt"), NanNew<FunctionTemplate>(MinFilt)->GetFunction());
+    exports->Set(NanNew("medfilt"), NanNew<FunctionTemplate>(MedFilt)->GetFunction());
     exports->Set(NanNew("medFilt"), NanNew<FunctionTemplate>(MedFilt)->GetFunction());
     exports->Set(NanNew("meanShift"), NanNew<FunctionTemplate>(MeanShift)->GetFunction());
     exports->Set(NanNew("sobel"), NanNew<FunctionTemplate>(Sobel)->GetFunction());

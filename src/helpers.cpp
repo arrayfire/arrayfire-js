@@ -86,7 +86,7 @@ pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype)
             sizeOf = 64 / 8;
             break;
         default:
-            FIRE_THROW("DType is out of range.");
+            ARRAYFIRE_THROW("DType is out of range.");
     }
     return move(make_pair(dtype, sizeOf));
 }
@@ -97,7 +97,7 @@ std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value)
     {
         return GetDTypeInfo(value->Uint32Value());
     }
-    FIRE_THROW("Value is not a number.");
+    ARRAYFIRE_THROW("Value is not a number.");
 }
 
 string ErrToString(af_err err)
@@ -160,7 +160,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
         }
         else
         {
-            FIRE_THROW_ARG_IS_NOT_A_DIM4();
+            ARRAYFIRE_THROW_ARG_IS_NOT_A_DIM4();
         }
     }
     int dim0 = 1;
@@ -192,7 +192,7 @@ af::dim4 ToDim4(v8::Local<v8::Value> value)
     {
         return ToDim4(value.As<Object>());
     }
-    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 af::seq ToSeq(v8::Local<v8::Object> obj)
@@ -219,7 +219,7 @@ af::seq ToSeq(v8::Local<v8::Object> obj)
         }
         return move(af::seq(begin->NumberValue(), end->NumberValue(), stepValue));
     }
-    FIRE_THROW_ARG_IS_NOT_A_SEQ();
+    ARRAYFIRE_THROW_ARG_IS_NOT_A_SEQ();
 }
 
 af::seq ToSeq(v8::Local<v8::Value> value)
@@ -228,7 +228,7 @@ af::seq ToSeq(v8::Local<v8::Value> value)
     {
         return ToSeq(value.As<Object>());
     }
-    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 af::index ToIndex(v8::Local<v8::Value> value)
@@ -262,7 +262,7 @@ af::index ToIndex(v8::Local<v8::Value> value)
         }
         return ToSeq(value.As<Object>());
     }    
-    FIRE_THROW_ARG_IS_NOT_AN_INDEX();
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
 
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
@@ -273,7 +273,7 @@ af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
     {
         return { real->NumberValue(), imag->NumberValue() };
     }
-    FIRE_THROW_ARG_IS_NOT_A_CPLX();
+    ARRAYFIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
 af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
@@ -282,7 +282,7 @@ af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
     {
         return ToDComplex(value.As<Object>());
     }
-    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
@@ -293,7 +293,7 @@ af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
     {
         return { (float)real->NumberValue(), (float)imag->NumberValue() };
     }
-    FIRE_THROW_ARG_IS_NOT_A_CPLX();
+    ARRAYFIRE_THROW_ARG_IS_NOT_A_CPLX();
 }
 
 af::af_cfloat ToFComplex(v8::Local<v8::Value> value)
@@ -302,7 +302,7 @@ af::af_cfloat ToFComplex(v8::Local<v8::Value> value)
     {
         return ToFComplex(value.As<Object>());
     }
-    FIRE_THROW_ARG_IS_NOT_AN_OBJ();
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }
 
 v8::Local<v8::Object> ToV8Complex(const af::af_cdouble& value)
@@ -351,7 +351,7 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
         af::dtype type = GetDTypeInfo(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
         return move(make_pair(move(dims), type));
     }
-    FIRE_THROW("Cannot extract dimensions and dtype from argumens.");
+    ARRAYFIRE_THROW("Cannot extract dimensions and dtype from argumens.");
 }
 
 NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -360,7 +360,7 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
     {
         return new NanCallback(args[args.Length() - 1].As<Function>());
     }
-    FIRE_THROW_CB_EXPECTED();
+    ARRAYFIRE_THROW_CB_EXPECTED();
 }
 
 v8::Local<v8::Object> ToV8Features(const af::features& feat)

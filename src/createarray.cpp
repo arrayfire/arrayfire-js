@@ -53,7 +53,7 @@ NAN_METHOD(RandU)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::randu(dimAndType.first, dimAndType.second)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(RandN)
@@ -72,7 +72,7 @@ NAN_METHOD(RandN)
         }
         return NAN_THROW_INVALID_DTYPE();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Identity)
@@ -86,7 +86,7 @@ NAN_METHOD(Identity)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::identity(dimAndType.first, dimAndType.second)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Range)
@@ -101,7 +101,7 @@ NAN_METHOD(Range)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::range(dimAndType.first, seqDim, dimAndType.second)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Iota)
@@ -117,7 +117,7 @@ NAN_METHOD(Iota)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::iota(dims, titleDims, type.first)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Diag)
@@ -141,7 +141,7 @@ NAN_METHOD(Diag)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::diag(*pArray, num, extract)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Constant)
@@ -226,15 +226,15 @@ NAN_METHOD(Constant)
         }
         else
         {
-            FIRE_THROW("Argument at position 0 is not a constant.");
+            ARRAYFIRE_THROW("Argument at position 0 is not a constant.");
         }
-        FIRE_THROW("Type is unknown.");
+        ARRAYFIRE_THROW("Type is unknown.");
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
-FIRE_SYNC_METHOD_ARR_BOOL(Lower, lower, false)
-FIRE_SYNC_METHOD_ARR_BOOL(Upper, upper, false)
+ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Lower, lower, false)
+ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Upper, upper, false)
 
 NAN_METHOD(GetSeed)
 {
@@ -243,7 +243,7 @@ NAN_METHOD(GetSeed)
     {
         NanReturnValue(to_string(af::getSeed()));
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(SetSeed)
@@ -269,7 +269,7 @@ NAN_METHOD(SetSeed)
         }
         NanReturnUndefined();
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 void InitCreateArray(v8::Handle<v8::Object> exports)

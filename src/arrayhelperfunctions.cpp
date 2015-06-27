@@ -40,9 +40,9 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-FIRE_SYNC_METHOD_ARR(IsZero, iszero)
-FIRE_SYNC_METHOD_ARR(IsInf, isInf)
-FIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
+ARRAYFIRE_SYNC_METHOD_ARR(IsZero, iszero)
+ARRAYFIRE_SYNC_METHOD_ARR(IsInf, isInf)
+ARRAYFIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
 
 NAN_METHOD(Print)
 {
@@ -54,7 +54,7 @@ NAN_METHOD(Print)
         af_print(*ArrayWrapper::GetArrayAt(args, 0));
         NanReturnUndefined();
     }
-    FIRE_CATCH;
+    ARRAYFIRE_CATCH;
 }
 
 void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)

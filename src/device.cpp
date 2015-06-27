@@ -54,7 +54,7 @@ NAN_METHOD(GetDeviceCount)
         NanReturnValue(NanNew<Number>(af::getDeviceCount()));
 #endif
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(GetDevice)
@@ -70,7 +70,7 @@ NAN_METHOD(GetDevice)
         NanReturnValue(NanNew<Number>(af::getDevice()));
 #endif
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(SetDevice)
@@ -87,7 +87,7 @@ NAN_METHOD(SetDevice)
 
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(DeviceInfo)
@@ -119,7 +119,7 @@ NAN_METHOD(DeviceInfo)
 
         NanReturnValue(info);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(IsDoubleAvailable)
@@ -132,7 +132,7 @@ NAN_METHOD(IsDoubleAvailable)
 
         NanReturnValue(NanNew<Number>(af::isDoubleAvailable(args[0]->Uint32Value())));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Sync)
@@ -177,7 +177,7 @@ NAN_METHOD(Sync)
         NanAsyncQueueWorker(new Worker<void>(callback, move(exec)));
         NanReturnUndefined();
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 pair<af::dtype, unsigned> getAllocPars(unsigned elements, unsigned udtype)
@@ -208,7 +208,7 @@ NAN_METHOD(Alloc)
 
         NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Pinned)
@@ -230,7 +230,7 @@ NAN_METHOD(Pinned)
 
         NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 void InitDevice(v8::Handle<v8::Object> exports)

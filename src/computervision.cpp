@@ -81,7 +81,7 @@ NAN_METHOD(Orb)
         result->Set(NanNew(Symbols::Desc), ArrayWrapper::New(desc));
         NanReturnValue(result);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Fast)
@@ -120,7 +120,7 @@ NAN_METHOD(Fast)
         auto feat = af::fast(*pArray, thr, arcLength, nonMax, featureRatio, edge);
         NanReturnValue(ToV8Features(feat));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(HammingMatcher)
@@ -149,7 +149,7 @@ NAN_METHOD(HammingMatcher)
         result->Set(NanNew(Symbols::Dist), ArrayWrapper::New(dist));
         NanReturnValue(result);
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(MatchTemplate)
@@ -168,7 +168,7 @@ NAN_METHOD(MatchTemplate)
         Guard();
         NanReturnValue(ArrayWrapper::New(af::matchTemplate(*pArray1, *pArray2, mType)));
     }
-    FIRE_CATCH
+    ARRAYFIRE_CATCH
 }
 
 void InitComputerVision(v8::Handle<v8::Object> exports)

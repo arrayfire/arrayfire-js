@@ -69,6 +69,11 @@ Persistent<String> Symbols::Orientation;
 Persistent<String> Symbols::Size;
 Persistent<String> Symbols::Idx;
 Persistent<String> Symbols::Dist;
+Persistent<String> Symbols::Succeeded;
+Persistent<String> Symbols::Result;
+Persistent<String> Symbols::Upper;
+Persistent<String> Symbols::Lower;
+Persistent<String> Symbols::Pivot;
 
 void Symbols::Init()
 {
@@ -105,4 +110,9 @@ void Symbols::Init()
     NanAssignPersistent(Size, NanNew("size"));
     NanAssignPersistent(Idx, NanNew("idx"));
     NanAssignPersistent(Dist, NanNew("dist"));
+    NanAssignPersistent(Succeeded, NanNew("succeeded"));
+    NanAssignPersistent(Result, NanNew("result"));
+    NanAssignPersistent(Upper, NanNew("upper"));
+    NanAssignPersistent(Lower, NanNew("lower"));
+    NanAssignPersistent(Pivot, NanNew("pivot"));
 }
