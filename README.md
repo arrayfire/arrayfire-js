@@ -1,5 +1,7 @@
 # ArrayFire.js
 
+In progress towards release of 1.0.0-beta. Please follow [this issue](https://github.com/arrayfire/arrayfire_js/issues/1) for tracking the progress.
+
 ## About ArrayFire
 
 *"ArrayFire is a high performance software library for parallel computing with an easy-to-use API. Its array based function set makes parallel programming more accessible."*
