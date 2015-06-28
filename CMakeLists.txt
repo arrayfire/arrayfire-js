@@ -92,7 +92,8 @@ file(GLOB COMMON_SOURCE_FILES
     "src/statistics.*"
     "src/imageprocessing.*"
     "src/computervision.*"
-    "src/linearalgebra.*")
+    "src/linearalgebra.*"
+    "src/signalprocessing.*")
 
 file(GLOB TRAN_SOURCE_FILES
     "src/device.*")

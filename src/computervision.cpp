@@ -175,5 +175,6 @@ void InitComputerVision(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew("orb"), NanNew<FunctionTemplate>(Orb)->GetFunction());
     exports->Set(NanNew("fast"), NanNew<FunctionTemplate>(Fast)->GetFunction());
+    exports->Set(NanNew("hammingMatcher"), NanNew<FunctionTemplate>(HammingMatcher)->GetFunction());
     exports->Set(NanNew("matchTemplate"), NanNew<FunctionTemplate>(MatchTemplate)->GetFunction());
 }

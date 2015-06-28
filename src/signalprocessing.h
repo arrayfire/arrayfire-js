@@ -29,48 +29,12 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "ext.h"
-#include "fire.h"
-#include "device.h"
-#include "arraywrapper.h"
-#include "createarray.h"
-#include "moveandreorderarray.h"
-#include "arrayhelperfunctions.h"
-#include "mathfunctions.h"
-#include "vectoralgorithms.h"
-#include "statistics.h"
-#include "symbols.h"
-#include "computervision.h"
-#include "imageprocessing.h"
-#include "linearalgebra.h"
-#include "signalprocessing.h"
+#ifndef ARRAYFIRE_SIGNALPROCESSING_H
+#define ARRAYFIRE_SIGNALPROCESSING_H
 
-using namespace v8;
-using namespace std;
+#include <nan.h>
 
-NAN_METHOD(_DoEvents)
-{
-    NanScope();
-    uv_run(uv_default_loop(), UV_RUN_ONCE);
-    NanReturnUndefined();
-}
+void InitSignalProcessing(v8::Handle<v8::Object> exports);
 
-void Init(v8::Handle<v8::Object> exports)
-{
-    Symbols::Init();
-    InitDevice(exports);
-    ArrayWrapper::Init(exports);
-    InitCreateArray(exports);
-    InitMoveAndReorderArray(exports);
-    InitArrayHelperFunctions(exports);
-    InitMathFunctions(exports);
-    InitVectorAlgorithms(exports);
-    InitStatistics(exports);
-    InitComputerVision(exports);
-    InitImageProcessing(exports);
-    InitLinearAlgebra(exports);
-    InitSignalProcessing(exports);
+#endif // ARRAYFIRE_SIGNALPROCESSING_H
 
-    // Helpers:
-    exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
-}
