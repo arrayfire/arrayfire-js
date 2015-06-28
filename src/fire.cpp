@@ -55,6 +55,13 @@ NAN_METHOD(_DoEvents)
     NanReturnUndefined();
 }
 
+NAN_METHOD(_GforToggle)
+{
+    NanScope();
+    af::gforToggle();
+    NanReturnUndefined();
+}
+
 void Init(v8::Handle<v8::Object> exports)
 {
     Symbols::Init();
@@ -73,4 +80,5 @@ void Init(v8::Handle<v8::Object> exports)
 
     // Helpers:
     exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
+    exports->Set(NanNew("_gforToggle"), NanNew<FunctionTemplate>(_GforToggle)->GetFunction());
 }
