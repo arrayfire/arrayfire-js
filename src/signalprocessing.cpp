@@ -317,4 +317,30 @@ NAN_METHOD(Approx2)
 
 void InitSignalProcessing(v8::Handle<v8::Object> exports)
 {
+    exports->Set(NanNew("convolveSeparable"), NanNew<FunctionTemplate>(ConvolveSeparable)->GetFunction());
+    exports->Set(NanNew("convolve"), NanNew<FunctionTemplate>(Convolve)->GetFunction());
+    exports->Set(NanNew("convolve1"), NanNew<FunctionTemplate>(Convolve1)->GetFunction());
+    exports->Set(NanNew("convolve2"), NanNew<FunctionTemplate>(Convolve2)->GetFunction());
+    exports->Set(NanNew("convolve3"), NanNew<FunctionTemplate>(Convolve3)->GetFunction());
+    exports->Set(NanNew("fftConvolve"), NanNew<FunctionTemplate>(FFTConvolve)->GetFunction());
+    exports->Set(NanNew("fftConvolve2"), NanNew<FunctionTemplate>(FFTConvolve2)->GetFunction());
+    exports->Set(NanNew("fftConvolve3"), NanNew<FunctionTemplate>(FFTConvolve3)->GetFunction());
+    exports->Set(NanNew("fftNorm"), NanNew<FunctionTemplate>(FFTNorm)->GetFunction());
+    exports->Set(NanNew("iFFTNorm"), NanNew<FunctionTemplate>(IFFTNorm)->GetFunction());
+    exports->Set(NanNew("fft"), NanNew<FunctionTemplate>(FFT)->GetFunction());
+    exports->Set(NanNew("iFFT"), NanNew<FunctionTemplate>(IFFT)->GetFunction());
+    exports->Set(NanNew("dFT"), NanNew<FunctionTemplate>(DFT)->GetFunction());
+    exports->Set(NanNew("iDFT"), NanNew<FunctionTemplate>(IDFT)->GetFunction());
+    exports->Set(NanNew("fft2"), NanNew<FunctionTemplate>(FFT2)->GetFunction());
+    exports->Set(NanNew("iFFT2"), NanNew<FunctionTemplate>(IFFT2)->GetFunction());
+    exports->Set(NanNew("fft3"), NanNew<FunctionTemplate>(FFT3)->GetFunction());
+    exports->Set(NanNew("iFFT3"), NanNew<FunctionTemplate>(IFFT3)->GetFunction());
+    exports->Set(NanNew("fft2Norm"), NanNew<FunctionTemplate>(FFT2Norm)->GetFunction());
+    exports->Set(NanNew("iFFT2Norm"), NanNew<FunctionTemplate>(IFFT2Norm)->GetFunction());
+    exports->Set(NanNew("fft3Norm"), NanNew<FunctionTemplate>(FFT3Norm)->GetFunction());
+    exports->Set(NanNew("iFFT3Norm"), NanNew<FunctionTemplate>(IFFT3Norm)->GetFunction());
+    exports->Set(NanNew("fir"), NanNew<FunctionTemplate>(FIR)->GetFunction());
+    exports->Set(NanNew("iir"), NanNew<FunctionTemplate>(IIR)->GetFunction());
+    exports->Set(NanNew("approx1"), NanNew<FunctionTemplate>(Approx1)->GetFunction());
+    exports->Set(NanNew("approx2"), NanNew<FunctionTemplate>(Approx2)->GetFunction());
 }
