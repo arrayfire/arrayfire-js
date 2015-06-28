@@ -884,15 +884,15 @@ NAN_METHOD(ArrayWrapper::At)
 
         Guard();
 
-        if (args.Length() < 2)
+        if (args.Length() == 1)
         {
             NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]))));
         }
-        else if (args.Length() < 3)
+        else if (args.Length() == 2)
         {
             NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]))));
         }
-        else if (args.Length() < 4)
+        else if (args.Length() == 3)
         {
             NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2]))));
         }
@@ -963,55 +963,268 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto pArray = GetArray(args.This());\
-        auto& Array = *pArray;\
-        bool isDouble = NeedsDouble(Array);\
+        auto& array = *pArray;\
+        bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
-        auto value = args[0];\
-        auto pOtherArray = TryGetArray(value);\
-        Guard();\
-        if (pOtherArray)\
+        if (args.Length() == 1)\
         {\
-            auto& otherArray = *pOtherArray;\
-            Array Op otherArray;\
-        }\
-        else if (value->IsNumber())\
-        {\
-            double v = value->NumberValue();\
-            if (floor(v) == v)\
+            auto value = args[0];\
+            auto pOtherArray = TryGetArray(value);\
+            Guard();\
+            if (pOtherArray)\
             {\
-                Array Op value->Int32Value();\
+                auto& otherArray = *pOtherArray;\
+                array Op otherArray;\
             }\
-            else if (isDouble)\
+            else if (value->IsNumber())\
             {\
-                Array Op v;\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    array Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    array Op v;\
+                }\
+                else\
+                {\
+                    array Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (isDouble)\
+                {\
+                    auto v = ToDComplex(value);\
+                    array Op v;\
+                }\
+                else\
+                {\
+                    auto v = ToFComplex(value);\
+                    array Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                long long v = strtoll(*str, nullptr, 10);\
+                array Op v;\
             }\
             else\
             {\
-                Array Op (float)v;\
+                return NAN_THROW_INVALID_ARGS();\
             }\
         }\
-        else if (value->IsObject())\
+        else if (args.Length() == 2)\
         {\
-            if (isDouble)\
+            auto idx0 = ToIndex(args[0]);\
+            auto value = args[1];\
+            auto pOtherArray = TryGetArray(value);\
+            Guard();\
+            if (pOtherArray)\
             {\
-                auto v = ToDComplex(value);\
-                Array Op v;\
+                auto& otherArray = *pOtherArray;\
+                array(idx0) Op otherArray;\
+            }\
+            else if (value->IsNumber())\
+            {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    array(idx0) Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    array(idx0) Op v;\
+                }\
+                else\
+                {\
+                    array(idx0) Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (isDouble)\
+                {\
+                    auto v = ToDComplex(value);\
+                    array(idx0) Op v;\
+                }\
+                else\
+                {\
+                    auto v = ToFComplex(value);\
+                    array(idx0) Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                long long v = strtoll(*str, nullptr, 10);\
+                array(idx0) Op v;\
             }\
             else\
             {\
-                auto v = ToFComplex(value);\
-                Array Op v;\
+                return NAN_THROW_INVALID_ARGS();\
             }\
         }\
-        else if (value->IsString())\
+        else if (args.Length() == 3)\
         {\
-            String::Utf8Value str(value);\
-            long long v = strtoll(*str, nullptr, 10);\
-            Array Op v;\
+            auto idx0 = ToIndex(args[0]);\
+            auto idx1 = ToIndex(args[1]);\
+            auto value = args[2];\
+            auto pOtherArray = TryGetArray(value);\
+            Guard();\
+            if (pOtherArray)\
+            {\
+                auto& otherArray = *pOtherArray;\
+                array(idx0, idx1) Op otherArray;\
+            }\
+            else if (value->IsNumber())\
+            {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    array(idx0, idx1) Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    array(idx0, idx1) Op v;\
+                }\
+                else\
+                {\
+                    array(idx0, idx1) Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (isDouble)\
+                {\
+                    auto v = ToDComplex(value);\
+                    array(idx0, idx1) Op v;\
+                }\
+                else\
+                {\
+                    auto v = ToFComplex(value);\
+                    array(idx0, idx1) Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                long long v = strtoll(*str, nullptr, 10);\
+                array(idx0, idx1) Op v;\
+            }\
+            else\
+            {\
+                return NAN_THROW_INVALID_ARGS();\
+            }\
+        }\
+        else if (args.Length() == 4)\
+        {\
+            auto idx0 = ToIndex(args[0]);\
+            auto idx1 = ToIndex(args[1]);\
+            auto idx2 = ToIndex(args[2]);\
+            auto value = args[3];\
+            auto pOtherArray = TryGetArray(value);\
+            Guard();\
+            if (pOtherArray)\
+            {\
+                auto& otherArray = *pOtherArray;\
+                array(idx0, idx1, idx2) Op otherArray;\
+            }\
+            else if (value->IsNumber())\
+            {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    array(idx0, idx1, idx2) Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    array(idx0, idx1, idx2) Op v;\
+                }\
+                else\
+                {\
+                    array(idx0, idx1, idx2) Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (isDouble)\
+                {\
+                    auto v = ToDComplex(value);\
+                    array(idx0, idx1, idx2) Op v;\
+                }\
+                else\
+                {\
+                    auto v = ToFComplex(value);\
+                    array(idx0, idx1, idx2) Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                long long v = strtoll(*str, nullptr, 10);\
+                array(idx0, idx1, idx2) Op v;\
+            }\
+            else\
+            {\
+                return NAN_THROW_INVALID_ARGS();\
+            }\
         }\
         else\
         {\
-            return NAN_THROW_INVALID_ARGS();\
+            auto idx0 = ToIndex(args[0]);\
+            auto idx1 = ToIndex(args[1]);\
+            auto idx2 = ToIndex(args[2]);\
+            auto idx3 = ToIndex(args[3]);\
+            auto value = args[4];\
+            auto pOtherArray = TryGetArray(value);\
+            Guard();\
+            if (pOtherArray)\
+            {\
+                auto& otherArray = *pOtherArray;\
+                array(idx0, idx1, idx2, idx3) Op otherArray;\
+            }\
+            else if (value->IsNumber())\
+            {\
+                double v = value->NumberValue();\
+                if (floor(v) == v)\
+                {\
+                    array(idx0, idx1, idx2, idx3) Op value->Int32Value();\
+                }\
+                else if (isDouble)\
+                {\
+                    array(idx0, idx1, idx2, idx3) Op v;\
+                }\
+                else\
+                {\
+                    array(idx0, idx1, idx2, idx3) Op (float)v;\
+                }\
+            }\
+            else if (value->IsObject())\
+            {\
+                if (isDouble)\
+                {\
+                    auto v = ToDComplex(value);\
+                    array(idx0, idx1, idx2, idx3) Op v;\
+                }\
+                else\
+                {\
+                    auto v = ToFComplex(value);\
+                    array(idx0, idx1, idx2, idx3) Op v;\
+                }\
+            }\
+            else if (value->IsString())\
+            {\
+                String::Utf8Value str(value);\
+                long long v = strtoll(*str, nullptr, 10);\
+                array(idx0, idx1, idx2, idx3) Op v;\
+            }\
+            else\
+            {\
+                return NAN_THROW_INVALID_ARGS();\
+            }\
         }\
         \
         NanReturnValue(args.This());\
