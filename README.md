@@ -1,6 +1,6 @@
 # ArrayFire.js
 
-In progress towards release of 1.0.0-beta. Please follow [this issue](https://github.com/arrayfire/arrayfire_js/issues/1) for tracking the progress.
+**Please follow [this issue](https://github.com/arrayfire/arrayfire_js/issues/1) for tracking the progress towards release of 1.0.0-beta.**
 
 ## About ArrayFire
 
