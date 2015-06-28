@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015, ArrayFire
-Copyright (c) 2015 G·bor Mezı aka unbornchikken (gabor.mezo@outlook.com)
+Copyright (c) 2015 G√°bor Mez≈ë aka unbornchikken (gabor.mezo@outlook.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
