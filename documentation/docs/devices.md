@@ -122,7 +122,7 @@ Allocates memory on the device.
 **Arguments:**
 
 - **elements: Number** - number of elements to allocate
-- **type: value of [dType](statics/#typesdtype)** - type of the elements, can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - type of the elements, can be one of the values of dType object (eg. `dType.f32`)
 
 **Result: Buffer** - device memory pointer
 
@@ -137,7 +137,7 @@ Allocates pinned memory on the host by using ArrayFire's memory manager.
 **Arguments:**
 
 - **elements: Number** - number of elements to allocate
-- **type: value of [dType](statics/#typesdtype)** - type of the elements, can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - type of the elements, can be one of the values of dType object (eg. `dType.f32`)
 
 **Result: Buffer** - memory pointer
 

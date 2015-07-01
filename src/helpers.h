@@ -39,6 +39,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <functional>
 #include "symbols.h"
 
+enum class Region
+{
+    None, Row, Rows, Col, Cols, Slice, Slices
+};
+
+typedef std::tuple<Region, unsigned, unsigned> RegionIndex;
+
 std::pair<af::dtype, unsigned> GetDTypeInfo(unsigned udtype);
 
 std::pair<af::dtype, unsigned> GetDTypeInfo(v8::Local<v8::Value> value);
@@ -59,9 +66,9 @@ af::index ToIndex(v8::Local<v8::Value> value);
 
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj);
 
-af::af_cdouble  ToDComplex(v8::Local<v8::Value> value);
+af::af_cdouble ToDComplex(v8::Local<v8::Value> value);
 
-af::af_cfloat  ToFComplex(v8::Local<v8::Object> obj);
+af::af_cfloat ToFComplex(v8::Local<v8::Object> obj);
 
 af::af_cfloat ToFComplex(v8::Local<v8::Value> value);
 
@@ -78,6 +85,10 @@ NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 inline bool NeedsDouble(const af::array& array) { return array.type() == f64 || array.type() == c64 || array.type() == s64 || array.type() == u64; }
 
 inline bool NeedsDouble(const af::array::array_proxy& arrayProxy) { return arrayProxy.type() == f64 || arrayProxy.type() == c64 || arrayProxy.type() == s64 || arrayProxy.type() == u64; }
+
+RegionIndex ToRegionIndex(v8::Local<v8::Object> obj);
+
+RegionIndex ToRegionIndex(v8::Local<v8::Value> value);
 
 #define ARGS_LEN(n) if (args.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 

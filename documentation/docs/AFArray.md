@@ -2,6 +2,8 @@
 
 [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__array__mat.htm)
 
+## TOC
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -53,9 +55,9 @@ Creates an AFArray instance of the specified dimensions, and copies data from th
 
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 - **buffer: Buffer** - data to copy to the device, or device pointer created by the `alloc` method.
-- **source: value of [source](statics/#typessource)** - can be one of the values of source object (eg. `source.host`)
+- **source: value of [source](enums/#source)** - can be one of the values of source object (eg. `source.host`)
 
 **Result**: the created AFArray instance.
 
@@ -74,7 +76,7 @@ Arrays could be created as empty ones or by having a specified dimensions and el
 
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Remarks:**
 
@@ -133,13 +135,13 @@ Perform deep copy from host/device pointer to an existing array.
 
 - **buffer: Buffer** - data to copy to the array, or device pointer created by the `alloc` method.
 - **bytesToCopy**: bytes to copy
-- **source: value of [source](statics/#typessource)** - can be one of the values of source object (eg. `source.host`)
+- **source: value of [source](enums/#source)** - can be one of the values of source object (eg. `source.host`)
 
 ### type()
 
 - `type()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga0844daa9b8cc7b7912e89a3d8ddf1a4b)
 
-**Result:** array's element type, can be one of the values of **[dType](statics/#typesdtype)** object
+**Result:** array's element type, can be one of the values of **[dType](enums/#dtype)** object
 
 ### dims()
 
@@ -171,7 +173,7 @@ Converts the array into another type.
 
 **Arguments:**
 
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result:** AFArray instance holding reference the converted array
 
@@ -209,7 +211,6 @@ Evaluate any JIT expressions to generate data for the array.
 **Arguments**:
 
 - **s0 .. s3: null|String|Number|[Seq](Seq)|AFArray** 
-
     - **null:** means `"span"`
     - **String:** can be `"span"`
     - **Number:** element's index, or -1 which means the last element
@@ -273,11 +274,40 @@ Gets a reference of a matrix in a 3D AFArray.
 - `subAssign(other)` operator -=
 - `mulAssign(other)` operator *=
 - `divAssign(other)` operator /=
+- `assign(s0, other)` operator =
+- `set(s0, other)` operator = (alias of assign)
+- `addAssign(s0, other)` operator +=
+- `subAssign(s0, other)` operator -=
+- `mulAssign(s0, other)` operator *=
+- `divAssign(s0, other)` operator /=
+- `assign(s0, s1, other)` operator =
+- `set(s0, s1, other)` operator = (alias of assign)
+- `addAssign(s0, s1, other)` operator +=
+- `subAssign(s0, s1, other)` operator -=
+- `mulAssign(s0, s1, other)` operator *=
+- `divAssign(s0, s1, other)` operator /=
+- `assign(s0, s1, s2, other)` operator =
+- `set(s0, s1, s2, other)` operator = (alias of assign)
+- `addAssign(s0, s1, s2, other)` operator +=
+- `subAssign(s0, s1, s2, other)` operator -=
+- `mulAssign(s0, s1, s2, other)` operator *=
+- `divAssign(s0, s1, s2, other)` operator /=
+- `assign(s0, s1, s2, s3, other)` operator =
+- `set(s0, s1, s2, s3, other)` operator = (alias of assign)
+- `addAssign(s0, s1, s2, s3, other)` operator +=
+- `subAssign(s0, s1, s2, s3, other)` operator -=
+- `mulAssign(s0, s1, s2, s3, other)` operator *=
+- `divAssign(s0, s1, s2, s3, other)` operator /=
 
 **Arguments**:
 
+- **s0 .. s3: null|String|Number|[Seq](Seq)|AFArray** lhs index
+    - **null:** means `"span"`
+    - **String:** can be `"span"`
+    - **Number:** element's index, or -1 which means the last element
+    - **[Seq](Seq):** sequence of values
+    - **AFArray:** array holding the index value
 - **other: AFArray|Number|[Complex](Complex)|String** 
-
     - **AFArray:** rhs array
     - **Number:** rhs number
     - **[Complex](Complex):** rhs complex value
@@ -301,7 +331,6 @@ Gets a reference of a matrix in a 3D AFArray.
 **Arguments**:
 
 - **other: AFArray|Number|[Complex](Complex)|String** 
-
     - **AFArray:** rhs array
     - **Number:** rhs number
     - **[Complex](Complex):** rhs complex value
@@ -330,7 +359,6 @@ Gets a reference of a matrix in a 3D AFArray.
 **Arguments**:
 
 - **other: AFArray|Number|[Complex](Complex)|String** 
-
     - **AFArray:** rhs array
     - **Number:** rhs number
     - **[Complex](Complex):** rhs complex value

@@ -74,6 +74,17 @@ Persistent<String> Symbols::Result;
 Persistent<String> Symbols::Upper;
 Persistent<String> Symbols::Lower;
 Persistent<String> Symbols::Pivot;
+Persistent<String> Symbols::Q;
+Persistent<String> Symbols::R;
+Persistent<String> Symbols::Tau;
+Persistent<String> Symbols::FirstIndex;
+Persistent<String> Symbols::LastIndex;
+Persistent<String> Symbols::RowClass;
+Persistent<String> Symbols::RowsClass;
+Persistent<String> Symbols::ColClass;
+Persistent<String> Symbols::ColsClass;
+Persistent<String> Symbols::SliceClass;
+Persistent<String> Symbols::SlicesClass;
 
 void Symbols::Init()
 {
@@ -118,4 +129,12 @@ void Symbols::Init()
     NanAssignPersistent(Q, NanNew("q"));
     NanAssignPersistent(R, NanNew("r"));
     NanAssignPersistent(Tau, NanNew("tau"));
+    NanAssignPersistent(FirstIndex, NanNew("firstIndex"));
+    NanAssignPersistent(LastIndex, NanNew("lastIndex"));
+    NanAssignPersistent(RowClass, NanNew("Row"));
+    NanAssignPersistent(RowsClass, NanNew("Rows"));
+    NanAssignPersistent(ColClass, NanNew("Col"));
+    NanAssignPersistent(ColsClass, NanNew("Cols"));
+    NanAssignPersistent(SliceClass, NanNew("Slice"));
+    NanAssignPersistent(SlicesClass, NanNew("Slices"));
 }

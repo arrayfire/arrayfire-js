@@ -31,7 +31,7 @@ Create a random array sampled from uniform distribution.
 
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.
 
@@ -53,7 +53,7 @@ Create a random array sampled from normal distribution.
 
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.
 
@@ -75,7 +75,7 @@ Create an identity matrix (array with diagonal values 1).
 
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.
 
@@ -94,7 +94,7 @@ Creates an array with [0, n] values along the seqDim which is tiled across other
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
 - **seqDim: Number** - dimension along which [0, dim[seqDim] - 1] is generated, default is -1, which means the last specified dimension 
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.
 
@@ -108,7 +108,7 @@ Create an sequence [0, dims.elements - 1] and modify to specified dimensions dim
 
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
 - **tileDims: Array|[Dim4](Dim4)** - specifies the tiling dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.
 
@@ -144,6 +144,6 @@ Create an array filled with the specified value.
     - **String:**: number value (to workaround JavaScript inability to hold int64 values)
 - **dim0 .. dim3: Number** - size of the dimension
 - **dims: Array|[Dim4](Dim4)** - specifies sizes of the dimensions, eg: `[2, 1, 1]` or `new Dim4(3, 4)`
-- **type: value of [dType](statics/#typesdtype)** - can be one of the values of dType object (eg. `dType.f32`)
+- **type: value of [dType](enums/#dtype)** - can be one of the values of dType object (eg. `dType.f32`)
 
 **Result**: the created AFArray instance.

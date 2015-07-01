@@ -87,8 +87,8 @@ const numberOfPoints = 20000000;
 
 // ...
 
-let x = af.randu(numberOfPoints, af.types.dtype.f32);
-let y = af.randu(numberOfPoints, af.types.dtype.f32);
+let x = af.randu(numberOfPoints, af.dtype.f32);
+let y = af.randu(numberOfPoints, af.dtype.f32);
 let dist = af.sqrt(x.mul(x).add(y.mul(y)));
 let numInside = yield af.sumAsync(dist.lt(1));
 let piVal = (4.0 *  numInside) / numberOfPoints;

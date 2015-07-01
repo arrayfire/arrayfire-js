@@ -77,6 +77,14 @@ struct Symbols
     static v8::Persistent<v8::String> Q;
     static v8::Persistent<v8::String> R;
     static v8::Persistent<v8::String> Tau;
+    static v8::Persistent<v8::String> FirstIndex;
+    static v8::Persistent<v8::String> LastIndex;
+    static v8::Persistent<v8::String> RowClass;
+    static v8::Persistent<v8::String> RowsClass;
+    static v8::Persistent<v8::String> ColClass;
+    static v8::Persistent<v8::String> ColsClass;
+    static v8::Persistent<v8::String> SliceClass;
+    static v8::Persistent<v8::String> SlicesClass;
 
     static void Init();
 };

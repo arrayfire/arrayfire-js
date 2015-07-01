@@ -261,7 +261,7 @@ af::index ToIndex(v8::Local<v8::Value> value)
             return af::index(*pArray);
         }
         return ToSeq(value.As<Object>());
-    }    
+    }
     ARRAYFIRE_THROW_ARG_IS_NOT_AN_INDEX();
 }
 
@@ -373,4 +373,43 @@ v8::Local<v8::Object> ToV8Features(const af::features& feat)
     obj->Set(NanNew(Symbols::Orientation), ArrayWrapper::New(feat.getOrientation()));
     obj->Set(NanNew(Symbols::Size), ArrayWrapper::New(feat.getSize()));
     return obj;
+}
+
+RegionIndex ToRegionIndex(v8::Local<v8::Object> obj)
+{
+    auto cn = obj->GetConstructorName();
+    if (cn->Equals(NanNew(Symbols::RowClass)))
+    {
+        return make_tuple(Region::Row, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+    }
+    else if (cn->Equals(NanNew(Symbols::RowsClass)))
+    {
+        return make_tuple(Region::Rows, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+    }
+    else if (cn->Equals(NanNew(Symbols::ColClass)))
+    {
+        return make_tuple(Region::Col, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+    }
+    else if (cn->Equals(NanNew(Symbols::ColsClass)))
+    {
+        return make_tuple(Region::Cols, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+    }
+    else if (cn->Equals(NanNew(Symbols::SliceClass)))
+    {
+        return make_tuple(Region::Slice, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+    }
+    else if (cn->Equals(NanNew(Symbols::SlicesClass)))
+    {
+        return make_tuple(Region::Slices, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+    }
+    return make_tuple(Region::None, (unsigned)0, (unsigned)0);
+}
+
+RegionIndex ToRegionIndex(v8::Local<v8::Value> value)
+{
+    if (value->IsObject())
+    {
+        return ToRegionIndex(value.As<Object>());
+    }
+    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
 }

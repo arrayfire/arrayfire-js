@@ -1018,53 +1018,356 @@ NAN_METHOD(ArrayWrapper::F)\
         }\
         else if (args.Length() == 2)\
         {\
-            auto idx0 = ToIndex(args[0]);\
+            auto regIdx = ToRegionIndex(args[0]);\
+            auto reg = get<0>(regIdx);\
             auto value = args[1];\
             auto pOtherArray = TryGetArray(value);\
-            Guard();\
-            if (pOtherArray)\
+            switch(reg)\
             {\
-                auto& otherArray = *pOtherArray;\
-                array(idx0) Op otherArray;\
-            }\
-            else if (value->IsNumber())\
-            {\
-                double v = value->NumberValue();\
-                if (floor(v) == v)\
-                {\
-                    array(idx0) Op value->Int32Value();\
-                }\
-                else if (isDouble)\
-                {\
-                    array(idx0) Op v;\
-                }\
-                else\
-                {\
-                    array(idx0) Op (float)v;\
-                }\
-            }\
-            else if (value->IsObject())\
-            {\
-                if (isDouble)\
-                {\
-                    auto v = ToDComplex(value);\
-                    array(idx0) Op v;\
-                }\
-                else\
-                {\
-                    auto v = ToFComplex(value);\
-                    array(idx0) Op v;\
-                }\
-            }\
-            else if (value->IsString())\
-            {\
-                String::Utf8Value str(value);\
-                long long v = strtoll(*str, nullptr, 10);\
-                array(idx0) Op v;\
-            }\
-            else\
-            {\
-                return NAN_THROW_INVALID_ARGS();\
+                case Region::None:\
+                    {\
+                        auto idx0 = ToIndex(args[0]);\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array(idx0) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array(idx0) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array(idx0) Op v;\
+                            }\
+                            else\
+                            {\
+                                array(idx0) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array(idx0) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array(idx0) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array(idx0) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Row:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.row(get<1>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.row(get<1>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.row(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.row(get<1>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.row(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.row(get<1>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.row(get<1>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Rows:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.rows(get<1>(regIdx), get<2>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.rows(get<1>(regIdx), get<2>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.rows(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.rows(get<1>(regIdx), get<2>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.rows(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.rows(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.rows(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Col:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.col(get<1>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.col(get<1>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.col(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.col(get<1>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.col(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.col(get<1>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.col(get<1>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Cols:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.cols(get<1>(regIdx), get<2>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.cols(get<1>(regIdx), get<2>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.cols(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.cols(get<1>(regIdx), get<2>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.cols(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.cols(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.cols(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Slice:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.slice(get<1>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.slice(get<1>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.slice(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.slice(get<1>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.slice(get<1>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.slice(get<1>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.slice(get<1>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
+                case Region::Slices:\
+                    {\
+                        Guard();\
+                        if (pOtherArray)\
+                        {\
+                            auto& otherArray = *pOtherArray;\
+                            array.slices(get<1>(regIdx), get<2>(regIdx)) Op otherArray;\
+                        }\
+                        else if (value->IsNumber())\
+                        {\
+                            double v = value->NumberValue();\
+                            if (floor(v) == v)\
+                            {\
+                                array.slices(get<1>(regIdx), get<2>(regIdx)) Op value->Int32Value();\
+                            }\
+                            else if (isDouble)\
+                            {\
+                                array.slices(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                array.slices(get<1>(regIdx), get<2>(regIdx)) Op (float)v;\
+                            }\
+                        }\
+                        else if (value->IsObject())\
+                        {\
+                            if (isDouble)\
+                            {\
+                                auto v = ToDComplex(value);\
+                                array.slices(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                            else\
+                            {\
+                                auto v = ToFComplex(value);\
+                                array.slices(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                            }\
+                        }\
+                        else if (value->IsString())\
+                        {\
+                            String::Utf8Value str(value);\
+                            long long v = strtoll(*str, nullptr, 10);\
+                            array.slices(get<1>(regIdx), get<2>(regIdx)) Op v;\
+                        }\
+                        else\
+                        {\
+                            return NAN_THROW_INVALID_ARGS();\
+                        }\
+                    }\
+                    break;\
             }\
         }\
         else if (args.Length() == 3)\
