@@ -1,0 +1,3 @@
+[submodule "examples/ml_lab"]
+	path = examples/ml_lab
+	url = ../ml_lab.git

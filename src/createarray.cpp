@@ -40,8 +40,6 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-// TODO: RND seed functions, when 3.0 gets released
-
 NAN_METHOD(RandU)
 {
     NanScope();
