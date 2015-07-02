@@ -207,6 +207,7 @@ Evaluate any JIT expressions to generate data for the array.
 - `at(s0, s1)`
 - `at(s0, s1, s2)`
 - `at(s0, s1, s2, s3)`
+- `at(def)`
 
 **Arguments**:
 
@@ -216,6 +217,13 @@ Evaluate any JIT expressions to generate data for the array.
     - **Number:** element's index, or -1 which means the last element
     - **[Seq](Seq):** sequence of values
     - **AFArray:** array holding the index value
+- **def**: [Row](Row)|[Rows](Rows)|[Col](Col)|[Cols](Cols)|[Slice](Slice)|[Slices](Slice)
+    - [Row](Row): specified row
+    - [Rows](Rows): specified rows
+    - [Col](Col): specified column
+    - [Cols](Cols): specified columns
+    - [Slice](Slice): specified slice
+    - [Slices](Slices): specified slices
     
 **Result:** AFArray instance holding reference to the the specified region of the original array
 
@@ -298,6 +306,12 @@ Gets a reference of a matrix in a 3D AFArray.
 - `subAssign(s0, s1, s2, s3, other)` operator -=
 - `mulAssign(s0, s1, s2, s3, other)` operator *=
 - `divAssign(s0, s1, s2, s3, other)` operator /=
+- `assign(def, other)` operator =
+- `set(def, other)` operator = (alias of assign)
+- `addAssign(def, other)` operator +=
+- `subAssign(def, other)` operator -=
+- `mulAssign(def, other)` operator *=
+- `divAssign(def, other)` operator /=
 
 **Arguments**:
 
@@ -307,6 +321,13 @@ Gets a reference of a matrix in a 3D AFArray.
     - **Number:** element's index, or -1 which means the last element
     - **[Seq](Seq):** sequence of values
     - **AFArray:** array holding the index value
+- **def**: [Row](Row)|[Rows](Rows)|[Col](Col)|[Cols](Cols)|[Slice](Slice)|[Slices](Slice)
+    - [Row](Row): specified row
+    - [Rows](Rows): specified rows
+    - [Col](Col): specified column
+    - [Cols](Cols): specified columns
+    - [Slice](Slice): specified slice
+    - [Slices](Slices): specified slices
 - **other: AFArray|Number|[Complex](Complex)|String** 
     - **AFArray:** rhs array
     - **Number:** rhs number

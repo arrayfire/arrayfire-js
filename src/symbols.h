@@ -85,6 +85,7 @@ struct Symbols
     static v8::Persistent<v8::String> ColsClass;
     static v8::Persistent<v8::String> SliceClass;
     static v8::Persistent<v8::String> SlicesClass;
+    static v8::Persistent<v8::String> FailedAtRank;
 
     static void Init();
 };

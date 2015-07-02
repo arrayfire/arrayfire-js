@@ -886,7 +886,31 @@ NAN_METHOD(ArrayWrapper::At)
 
         if (args.Length() == 1)
         {
-            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]))));
+            auto ri = ToRegionIndex(args[0]);
+            switch (get<0>(ri))
+            {
+                case Region::Row:
+                    NanReturnValue(New(GetArray(args.This())->row(get<1>(ri))));
+                    break;
+                case Region::Rows:
+                    NanReturnValue(New(GetArray(args.This())->rows(get<1>(ri), get<2>(ri))));
+                    break;
+                case Region::Col:
+                    NanReturnValue(New(GetArray(args.This())->col(get<1>(ri))));
+                    break;
+                case Region::Cols:
+                    NanReturnValue(New(GetArray(args.This())->cols(get<1>(ri), get<2>(ri))));
+                    break;
+                case Region::Slice:
+                    NanReturnValue(New(GetArray(args.This())->slice(get<1>(ri))));
+                    break;
+                case Region::Slices:
+                    NanReturnValue(New(GetArray(args.This())->slices(get<1>(ri), get<2>(ri))));
+                    break;
+                default:
+                    NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]))));
+                    break;
+            }
         }
         else if (args.Length() == 2)
         {

@@ -85,6 +85,7 @@ Persistent<String> Symbols::ColClass;
 Persistent<String> Symbols::ColsClass;
 Persistent<String> Symbols::SliceClass;
 Persistent<String> Symbols::SlicesClass;
+Persistent<String> Symbols::FailedAtRank;
 
 void Symbols::Init()
 {
@@ -137,4 +138,5 @@ void Symbols::Init()
     NanAssignPersistent(ColsClass, NanNew("Cols"));
     NanAssignPersistent(SliceClass, NanNew("Slice"));
     NanAssignPersistent(SlicesClass, NanNew("Slices"));
+    NanAssignPersistent(FailedAtRank, NanNew("failedAtRank"));
 }

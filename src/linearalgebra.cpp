@@ -149,8 +149,8 @@ NAN_METHOD(Cholesky)
         af::array out;
         int r = af::cholesky(out, *pArray, isUpper);
         auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Result), NanNew(r));
-        result->Set(NanNew(Symbols::Succeeded), NanNew((bool)r));
+        result->Set(NanNew(Symbols::Result), ArrayWrapper::New(out));
+        result->Set(NanNew(Symbols::FailedAtRank), NanNew(r));
         NanReturnValue(result);
     }
     ARRAYFIRE_CATCH;
@@ -168,7 +168,7 @@ NAN_METHOD(CholeskyInPlace)
         Guard();
         af::array out;
         int r = af::choleskyInPlace(*pArray, isUpper);
-        NanReturnValue((bool)r);
+        NanReturnValue(r);
     }
     ARRAYFIRE_CATCH;
 }
