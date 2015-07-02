@@ -178,10 +178,6 @@ NAN_METHOD(CholeskyInPlace)
         if (args.Length() > 1) isUpper = args[1]->BooleanValue();
         NanAsyncQueueWorker(new Worker<int>(GetCallback(args), [=]() mutable { Guard(); return af::choleskyInPlace(array, isUpper); }));
         NanReturnUndefined();
-        /*Guard();
-        af::array out;
-        int r = af::choleskyInPlace(*pArray, isUpper);
-        NanReturnValue(r);*/
     }
     ARRAYFIRE_CATCH;
 }
