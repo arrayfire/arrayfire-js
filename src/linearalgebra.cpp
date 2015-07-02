@@ -141,17 +141,28 @@ NAN_METHOD(Cholesky)
     NanScope();
     try
     {
-        ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        ARGS_LEN(2);
+        auto array = *ArrayWrapper::GetArrayAt(args, 0);
         bool isUpper = true;
         if (args.Length() > 1) isUpper = args[1]->BooleanValue();
-        Guard();
-        af::array out;
-        int r = af::cholesky(out, *pArray, isUpper);
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Result), ArrayWrapper::New(out));
-        result->Set(NanNew(Symbols::FailedAtRank), NanNew(r));
-        NanReturnValue(result);
+        typedef pair<af::array, int> ResultT;
+        typedef Worker<ResultT> WorkerT;
+        auto exec = [=]()
+        {
+            Guard();
+            af::array out;
+            int r = af::cholesky(out, array, isUpper);
+            return move(make_pair(out, r));
+        };
+        auto conv = [=](WorkerT* w, ResultT v)
+        {
+            auto result = NanNew<Object>();
+            result->Set(NanNew(Symbols::Result), ArrayWrapper::New(v.first));
+            result->Set(NanNew(Symbols::FailedAtRank), NanNew(v.second));
+            return result;
+        };
+        NanAsyncQueueWorker(new WorkerT(GetCallback(args), move(exec), move(conv)));
+        NanReturnUndefined();
     }
     ARRAYFIRE_CATCH;
 }
@@ -161,14 +172,16 @@ NAN_METHOD(CholeskyInPlace)
     NanScope();
     try
     {
-        ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        ARGS_LEN(2);
+        auto array = *ArrayWrapper::GetArrayAt(args, 0);
         bool isUpper = true;
         if (args.Length() > 1) isUpper = args[1]->BooleanValue();
-        Guard();
+        NanAsyncQueueWorker(new Worker<int>(GetCallback(args), [=]() mutable { Guard(); return af::choleskyInPlace(array, isUpper); }));
+        NanReturnUndefined();
+        /*Guard();
         af::array out;
         int r = af::choleskyInPlace(*pArray, isUpper);
-        NanReturnValue(r);
+        NanReturnValue(r);*/
     }
     ARRAYFIRE_CATCH;
 }
