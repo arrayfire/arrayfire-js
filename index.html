@@ -56,12 +56,6 @@
             
             
             
-                <li >
-                    <a href="statics/">Statics</a>
-                </li>
-            
-            
-            
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -80,6 +74,30 @@
                     
                         <li >
                             <a href="Complex/">Complex</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Row/">Row</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Rows/">Rows</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Col/">Col</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Cols/">Cols</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Slice/">Slice</a>
+                        </li>
+                    
+                        <li >
+                            <a href="Slices/">Slices</a>
                         </li>
                     
                     </ul>
@@ -107,6 +125,12 @@
                 </li>
             
             
+            
+                <li >
+                    <a href="enums/">Enums</a>
+                </li>
+            
+            
             </ul>
 
             <!-- Search, Navigation and Repo links -->
@@ -117,7 +141,7 @@
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="statics/">
+                    <a rel="prev" href="AFArray/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -209,8 +233,8 @@ af_print(pi);
 
 // ...
 
-let x = af.randu(numberOfPoints, af.types.dtype.f32);
-let y = af.randu(numberOfPoints, af.types.dtype.f32);
+let x = af.randu(numberOfPoints, af.dtype.f32);
+let y = af.randu(numberOfPoints, af.dtype.f32);
 let dist = af.sqrt(x.mul(x).add(y.mul(y)));
 let numInside = yield af.sumAsync(dist.lt(1));
 let piVal = (4.0 *  numInside) / numberOfPoints;

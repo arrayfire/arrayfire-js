@@ -56,12 +56,6 @@
             
             
             
-                <li >
-                    <a href="../statics/">Statics</a>
-                </li>
-            
-            
-            
                 <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -80,6 +74,30 @@
                     
                         <li >
                             <a href="../Complex/">Complex</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Row/">Row</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Rows/">Rows</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Col/">Col</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Cols/">Cols</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Slice/">Slice</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Slices/">Slices</a>
                         </li>
                     
                     </ul>
@@ -107,12 +125,18 @@
                 </li>
             
             
+            
+                <li >
+                    <a href="../enums/">Enums</a>
+                </li>
+            
+            
             </ul>
 
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../statics/">
+                    <a rel="next" href="..">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
@@ -142,6 +166,8 @@
     
         <li class="main active"><a href="#afarray-class">AFArray class</a></li>
         
+            <li><a href="#toc">TOC</a></li>
+        
             <li><a href="#staitc-methods">Staitc methods</a></li>
         
             <li><a href="#constructor">constructor</a></li>
@@ -163,6 +189,7 @@
 
 <h1 id="afarray-class">AFArray class</h1>
 <p><a href="http://www.arrayfire.com/docs/group__array__mat.htm">-&gt; ArrayFire Documentation</a></p>
+<h2 id="toc">TOC</h2>
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -219,9 +246,9 @@
 <ul>
 <li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
 <li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimensions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
-<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../enums/#dtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 <li><strong>buffer: Buffer</strong> - data to copy to the device, or device pointer created by the <code>alloc</code> method.</li>
-<li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
+<li><strong>source: value of <a href="../enums/#source">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
 </ul>
 <p><strong>Result</strong>: the created AFArray instance.</p>
 <h2 id="constructor">constructor</h2>
@@ -238,7 +265,7 @@
 <ul>
 <li><strong>dim0 .. dim3: Number</strong> - size of the dimension</li>
 <li><strong>dims: Array|<a href="../Dim4">Dim4</a></strong> - specifies sizes of the dimensions, eg: <code>[2, 1, 1]</code> or <code>new Dim4(3, 4)</code></li>
-<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../enums/#dtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Remarks:</strong></p>
 <p>In Fire.js <code>type</code> argument is <strong>not optional</strong>.</p>
@@ -281,13 +308,13 @@
 <ul>
 <li><strong>buffer: Buffer</strong> - data to copy to the array, or device pointer created by the <code>alloc</code> method.</li>
 <li><strong>bytesToCopy</strong>: bytes to copy</li>
-<li><strong>source: value of <a href="../statics/#typessource">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
+<li><strong>source: value of <a href="../enums/#source">source</a></strong> - can be one of the values of source object (eg. <code>source.host</code>)</li>
 </ul>
 <h3 id="type">type()</h3>
 <ul>
 <li><code>type()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#ga0844daa9b8cc7b7912e89a3d8ddf1a4b">-&gt; ArrayFire Documentation</a></li>
 </ul>
-<p><strong>Result:</strong> array's element type, can be one of the values of <strong><a href="../statics/#typesdtype">dType</a></strong> object</p>
+<p><strong>Result:</strong> array's element type, can be one of the values of <strong><a href="../enums/#dtype">dType</a></strong> object</p>
 <h3 id="dims">dims()</h3>
 <ul>
 <li><code>dims()</code> <a href="http://www.arrayfire.com/docs/group__method__mat.htm#gaf056729e3ff924f5c1d41e0a8db3ce1b">-&gt; ArrayFire Documentation</a></li>
@@ -312,7 +339,7 @@
 </ul>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../enums/#dtype">dType</a></strong> - can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Result:</strong> AFArray instance holding reference the converted array</p>
 <h3 id="copy">copy())`</h3>
@@ -339,17 +366,25 @@
 <li><code>at(s0, s1)</code></li>
 <li><code>at(s0, s1, s2)</code></li>
 <li><code>at(s0, s1, s2, s3)</code></li>
+<li><code>at(def)</code></li>
 </ul>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li>
-<p><strong>s0 .. s3: null|String|Number|<a href="../Seq">Seq</a>|AFArray</strong> </p>
-<ul>
+<li><strong>s0 .. s3: null|String|Number|<a href="../Seq">Seq</a>|AFArray</strong> <ul>
 <li><strong>null:</strong> means <code>"span"</code></li>
 <li><strong>String:</strong> can be <code>"span"</code></li>
 <li><strong>Number:</strong> element's index, or -1 which means the last element</li>
 <li><strong><a href="../Seq">Seq</a>:</strong> sequence of values</li>
 <li><strong>AFArray:</strong> array holding the index value</li>
+</ul>
+</li>
+<li><strong>def</strong>: <a href="../Row">Row</a>|<a href="../Rows">Rows</a>|<a href="../Col">Col</a>|<a href="../Cols">Cols</a>|<a href="../Slice">Slice</a>|<a href="../Slice">Slices</a><ul>
+<li><a href="../Row">Row</a>: specified row</li>
+<li><a href="../Rows">Rows</a>: specified rows</li>
+<li><a href="../Col">Col</a>: specified column</li>
+<li><a href="../Cols">Cols</a>: specified columns</li>
+<li><a href="../Slice">Slice</a>: specified slice</li>
+<li><a href="../Slices">Slices</a>: specified slices</li>
 </ul>
 </li>
 </ul>
@@ -399,12 +434,57 @@
 <li><code>subAssign(other)</code> operator -=</li>
 <li><code>mulAssign(other)</code> operator *=</li>
 <li><code>divAssign(other)</code> operator /=</li>
+<li><code>assign(s0, other)</code> operator =</li>
+<li><code>set(s0, other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(s0, other)</code> operator +=</li>
+<li><code>subAssign(s0, other)</code> operator -=</li>
+<li><code>mulAssign(s0, other)</code> operator *=</li>
+<li><code>divAssign(s0, other)</code> operator /=</li>
+<li><code>assign(s0, s1, other)</code> operator =</li>
+<li><code>set(s0, s1, other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(s0, s1, other)</code> operator +=</li>
+<li><code>subAssign(s0, s1, other)</code> operator -=</li>
+<li><code>mulAssign(s0, s1, other)</code> operator *=</li>
+<li><code>divAssign(s0, s1, other)</code> operator /=</li>
+<li><code>assign(s0, s1, s2, other)</code> operator =</li>
+<li><code>set(s0, s1, s2, other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(s0, s1, s2, other)</code> operator +=</li>
+<li><code>subAssign(s0, s1, s2, other)</code> operator -=</li>
+<li><code>mulAssign(s0, s1, s2, other)</code> operator *=</li>
+<li><code>divAssign(s0, s1, s2, other)</code> operator /=</li>
+<li><code>assign(s0, s1, s2, s3, other)</code> operator =</li>
+<li><code>set(s0, s1, s2, s3, other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(s0, s1, s2, s3, other)</code> operator +=</li>
+<li><code>subAssign(s0, s1, s2, s3, other)</code> operator -=</li>
+<li><code>mulAssign(s0, s1, s2, s3, other)</code> operator *=</li>
+<li><code>divAssign(s0, s1, s2, s3, other)</code> operator /=</li>
+<li><code>assign(def, other)</code> operator =</li>
+<li><code>set(def, other)</code> operator = (alias of assign)</li>
+<li><code>addAssign(def, other)</code> operator +=</li>
+<li><code>subAssign(def, other)</code> operator -=</li>
+<li><code>mulAssign(def, other)</code> operator *=</li>
+<li><code>divAssign(def, other)</code> operator /=</li>
 </ul>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li>
-<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
-<ul>
+<li><strong>s0 .. s3: null|String|Number|<a href="../Seq">Seq</a>|AFArray</strong> lhs index<ul>
+<li><strong>null:</strong> means <code>"span"</code></li>
+<li><strong>String:</strong> can be <code>"span"</code></li>
+<li><strong>Number:</strong> element's index, or -1 which means the last element</li>
+<li><strong><a href="../Seq">Seq</a>:</strong> sequence of values</li>
+<li><strong>AFArray:</strong> array holding the index value</li>
+</ul>
+</li>
+<li><strong>def</strong>: <a href="../Row">Row</a>|<a href="../Rows">Rows</a>|<a href="../Col">Col</a>|<a href="../Cols">Cols</a>|<a href="../Slice">Slice</a>|<a href="../Slice">Slices</a><ul>
+<li><a href="../Row">Row</a>: specified row</li>
+<li><a href="../Rows">Rows</a>: specified rows</li>
+<li><a href="../Col">Col</a>: specified column</li>
+<li><a href="../Cols">Cols</a>: specified columns</li>
+<li><a href="../Slice">Slice</a>: specified slice</li>
+<li><a href="../Slices">Slices</a>: specified slices</li>
+</ul>
+</li>
+<li><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> <ul>
 <li><strong>AFArray:</strong> rhs array</li>
 <li><strong>Number:</strong> rhs number</li>
 <li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>
@@ -427,9 +507,7 @@
 </ul>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li>
-<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
-<ul>
+<li><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> <ul>
 <li><strong>AFArray:</strong> rhs array</li>
 <li><strong>Number:</strong> rhs number</li>
 <li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>
@@ -457,9 +535,7 @@
 </ul>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li>
-<p><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> </p>
-<ul>
+<li><strong>other: AFArray|Number|<a href="../Complex">Complex</a>|String</strong> <ul>
 <li><strong>AFArray:</strong> rhs array</li>
 <li><strong>Number:</strong> rhs number</li>
 <li><strong><a href="../Complex">Complex</a>:</strong> rhs complex value</li>

@@ -56,12 +56,6 @@
             
             
             
-                <li >
-                    <a href="../statics/">Statics</a>
-                </li>
-            
-            
-            
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -80,6 +74,30 @@
                     
                         <li >
                             <a href="../Complex/">Complex</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Row/">Row</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Rows/">Rows</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Col/">Col</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Cols/">Cols</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Slice/">Slice</a>
+                        </li>
+                    
+                        <li >
+                            <a href="../Slices/">Slices</a>
                         </li>
                     
                     </ul>
@@ -107,12 +125,18 @@
                 </li>
             
             
+            
+                <li >
+                    <a href="../enums/">Enums</a>
+                </li>
+            
+            
             </ul>
 
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../Complex/">
+                    <a rel="next" href="../Slices/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
@@ -271,7 +295,7 @@ var deviceCount = cpuPlatform.getDeviceCount();
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><strong>elements: Number</strong> - number of elements to allocate</li>
-<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../enums/#dtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Result: Buffer</strong> - device memory pointer</p>
 <p><strong>Remarks:</strong> Deallocation is handled by the GC automatically</p>
@@ -283,7 +307,7 @@ var deviceCount = cpuPlatform.getDeviceCount();
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><strong>elements: Number</strong> - number of elements to allocate</li>
-<li><strong>type: value of <a href="../statics/#typesdtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
+<li><strong>type: value of <a href="../enums/#dtype">dType</a></strong> - type of the elements, can be one of the values of dType object (eg. <code>dType.f32</code>)</li>
 </ul>
 <p><strong>Result: Buffer</strong> - memory pointer</p>
 <p><strong>Remarks:</strong> Deallocation is handled by the GC automatically</p></div>
