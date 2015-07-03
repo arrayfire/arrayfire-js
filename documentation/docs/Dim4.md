@@ -12,7 +12,7 @@
 
 ## Properties
 
-### dims
+### values
 
 **Value:** **Array** containing the dimension sizes, eg.: two dimensions = `[2, 3, 1, 1]`, four dimensions = `[2, 3, 4, 5]`
 
