@@ -37,7 +37,6 @@ let common = require("../common");
 const numberOfPoints = 20000000;
 
 let pi = async(function*(af, deviceInfo) {
-    af.setDevice(deviceInfo.id);
     let AFArray = af.AFArray;
 
     console.log("Calculating pi on device:\n");
@@ -53,4 +52,4 @@ let pi = async(function*(af, deviceInfo) {
     console.log(`PI = ${piVal}`);
 });
 
-common.runOnAllPlatfroms(pi, "pi example");
+common.runOnAllPlatforms(pi, "pi example");

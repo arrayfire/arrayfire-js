@@ -35,18 +35,22 @@ let async = Bluebird.coroutine;
 let af = require("../../..");
 let util = require("util");
 let now = require("performance-now");
+let _ = require("lodash");
 
-let runOnDevices = async(function*(platformID, f) {
+let runOnDevices = async(function*(platformID, f, onID) {
     let afOfPlatform = af(platformID);
     for (let deviceInfo of afOfPlatform.getDevices()) {
-        const start = now();
-        yield f(afOfPlatform, deviceInfo);
-        const end = now();
-        console.log(`\n-- took ${((end - start) / 1000).toFixed(10)} seconds\n`);
+        if (!onID || onID === deviceInfo.id) {
+            afOfPlatform.setDevice(deviceInfo.id);
+            const start = now();
+            yield f(afOfPlatform, deviceInfo);
+            const end = now();
+            console.log(`\n-- took ${((end - start) / 1000).toFixed(10)} seconds\n`);
+        }
     }
 });
 
-let runOnAllPlatfroms = async(function*(f, name) {
+let runOnAllPlatforms = async(function*(f, name) {
     let platfroms = af.supportedPlatforms();
     console.log(`Running ${name} on all supported platfroms: ${platfroms.join(", ")}\n`);
     try {
@@ -59,11 +63,31 @@ let runOnAllPlatfroms = async(function*(f, name) {
     }
 });
 
+let runOnBestDevice = async(function*(f, name) {
+    let platfroms = af.supportedPlatforms();
+    console.log(`Running ${name} on best available device.\n`);
+    try {
+        if (_(platfroms).contains("CUDA")) {
+            yield runOnDevices("CUDA", f, 0);
+        }
+        else if (_(platfroms).contains("OpenCL")) {
+            yield runOnDevices("OpenCL", f, 0);
+        }
+        else {
+            yield runOnDevices("CPU", f, 0);
+        }
+    }
+    catch(e) {
+        console.error(e.stack);
+    }
+});
+
 let printDeviceInfo = function(deviceInfo) {
     console.log(`ID: ${deviceInfo.id}\nName: ${deviceInfo.name}\nPlatform: ${deviceInfo.platform}\nToolkit: ${deviceInfo.toolkit}\nCompute: ${deviceInfo.compute}`);
 };
 
 module.exports = {
-    runOnAllPlatfroms: runOnAllPlatfroms,
+    runOnAllPlatforms: runOnAllPlatforms,
+    runOnBestDevice: runOnBestDevice,
     printDeviceInfo: printDeviceInfo
 };

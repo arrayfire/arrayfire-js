@@ -9,6 +9,7 @@ let uint = ref.types.uint;
 let debug = require("debug")("af:mnist");
 let _ = require("lodash");
 let assert = require("better-assert");
+let path = require("path");
 
 let readData = async(function*(f, data) {
     let bytesRead = yield fs.readAsync(f, data, 0, data.length, null);
@@ -22,7 +23,7 @@ let readIdx = async(function*(path, type) {
     try {
         let d = new Buffer(4);
 
-        yield readData(f, d);
+        yield readData(file, d);
 
         if (d[2] != 8) {
             throw new Error("Unsupported data type");

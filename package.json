@@ -17,6 +17,7 @@
   "devDependencies": {
     "better-assert": "*",
     "bluebird": "*",
+    "debug": "^2.2.0",
     "fs-extra": "^0.20.1",
     "gulp": "*",
     "gulp-sequence": "*",
