@@ -40,7 +40,7 @@ let _ = require("lodash");
 let runOnDevices = async(function*(platformID, f, onID) {
     let afOfPlatform = af(platformID);
     for (let deviceInfo of afOfPlatform.getDevices()) {
-        if (!onID || onID === deviceInfo.id) {
+        if (_.isUndefined(onID) || onID === deviceInfo.id) {
             afOfPlatform.setDevice(deviceInfo.id);
             const start = now();
             yield f(afOfPlatform, deviceInfo);

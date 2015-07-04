@@ -671,7 +671,7 @@ NAN_METHOD(ArrayWrapper::Dims)
             pDims->Set(1, NanNew<Number>(dims[1]));
             pDims->Set(2, NanNew<Number>(dims[2]));
             pDims->Set(3, NanNew<Number>(dims[3]));
-            jsDims->Set(NanNew(Symbols::Dims), pDims);
+            jsDims->Set(NanNew(Symbols::Values), pDims);
 
             NanReturnValue(jsDims);
         }

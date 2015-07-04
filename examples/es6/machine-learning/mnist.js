@@ -12,7 +12,7 @@ let assert = require("better-assert");
 let path = require("path");
 
 let readData = async(function*(f, data) {
-    let bytesRead = yield fs.readAsync(f, data, 0, data.length, null);
+    let bytesRead = (yield fs.readAsync(f, data, 0, data.length, null))[0];
     if (bytesRead !== data.length) {
         throw new Error("File reading error!");
     }
@@ -36,7 +36,7 @@ let readIdx = async(function*(path, type) {
         let dims = [];
         for (let i = 0; i < numDims; i++) {
             yield readData(file, d);
-
+            let dim = d.readUInt32BE();
             elem *= dim;
             dims.push(dim);
         }
@@ -72,7 +72,7 @@ let mnist = {
         let labelData = yield readIdx(path.join(dataRoot, "labels-subset"), uint);
 
         let rIDims = new Dim4(_(imageData.dims).reverse().value());
-        let images = yield AFArray.createAsync(rIDims, imageData.data, af.dType.f32);
+        let images = yield AFArray.createAsync(rIDims, af.dType.f32, imageData.data);
 
         let r = af.randu(10000, af.dType.f32);
         let cond = r.lt(frac);
@@ -85,6 +85,9 @@ let mnist = {
         let numClasses = 10;
         let numTrain = trainImages.dims().values[2];
         let numTest = testImages.dims().values[2];
+
+        debug(`Training sample count: ${numTrain}`);
+        debug(`Test sample count: ${numTest}`);
 
         let trainLabels;
         let testLabels;
@@ -102,12 +105,14 @@ let mnist = {
             for (let i = 0; i < numTrain; i++) {
                 let idx = uint.get(hTrainIdx, i * uint.size);
                 let label = uint.get(labelData.data, idx * uint.size);
+                assert(label >= 0 && label <= 9);
                 trainLabels.set(label, i, 1);
             }
 
             for (let i = 0; i < numTest; i++) {
-                let idx = uint.get(hTestIdxIdx, i * uint.size);
+                let idx = uint.get(hTestIdx, i * uint.size);
                 let label = uint.get(labelData.data, idx * uint.size);
+                assert(label >= 0 && label <= 9);
                 testLabels.set(label, i, 1);
             }
         }

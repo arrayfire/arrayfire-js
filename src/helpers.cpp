@@ -153,7 +153,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     else
     {
-        auto member = obj->Get(NanNew(Symbols::Dims));
+        auto member = obj->Get(NanNew(Symbols::Values));
         if (member->IsArray())
         {
             dims = member.As<Array>();
@@ -334,14 +334,14 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
     }
     af::dim4 dims(1, 1, 1, 1);
     bool any = false;
-    for (int idx = dimsStartAt; idx < ((assumedArgsLength - 1) - argsFollowingDims) + dimsStartAt; idx++)
+    for (int idx = dimsStartAt; idx < ((assumedArgsLength - 1) - argsFollowingDims); idx++)
     {
         int dimIdx = idx - dimsStartAt;
         assert(dimIdx < 4);
         any = true;
-        if (dimIdx == 0 && args[0]->IsObject())
+        if (dimIdx == 0 && args[idx]->IsObject())
         {
-            dims = move(ToDim4(args[0].As<Object>()));
+            dims = move(ToDim4(args[idx].As<Object>()));
             break;
         }
         dims[dimIdx] = args[idx]->Int32Value();

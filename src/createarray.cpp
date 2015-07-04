@@ -270,6 +270,8 @@ NAN_METHOD(SetSeed)
     ARRAYFIRE_CATCH;
 }
 
+ARRAYFIRE_SYNC_METHOD_ARR_ARR_DIM(Lookup, lookup)
+
 void InitCreateArray(v8::Handle<v8::Object> exports)
 {
     exports->Set(NanNew("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
@@ -285,4 +287,5 @@ void InitCreateArray(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("upper"), NanNew<FunctionTemplate>(Upper)->GetFunction());
     exports->Set(NanNew("getSeed"), NanNew<FunctionTemplate>(GetSeed)->GetFunction());
     exports->Set(NanNew("setSeed"), NanNew<FunctionTemplate>(SetSeed)->GetFunction());
+    exports->Set(NanNew("lookup"), NanNew<FunctionTemplate>(Lookup)->GetFunction());
 }
