@@ -117,7 +117,7 @@ let mnist = {
             }
         }
         else {
-            let labels = yield AFArray.createAsync(labelData.dims[0], labelData.data, af.dType.u32);
+            let labels = yield AFArray.createAsync(labelData.dims[0], af.dType.u32, labelData.data);
             trainLabels = labels.at(trainIndices);
             testLabels = labels.at(testIndices);
         }
