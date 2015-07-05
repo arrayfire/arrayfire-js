@@ -146,8 +146,11 @@ Perform deep copy from host/device pointer to an existing array.
 ### dims()
 
 - `dims()` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#gaf056729e3ff924f5c1d41e0a8db3ce1b)
+- `dims(n)` [-> ArrayFire Documentation](http://www.arrayfire.com/docs/group__method__mat.htm#ga30abc2404f8202bb6ac736282a9d18b7)
 
-**Result:** array's dimensions info in a **[Dim4](Dim4)** object instance
+**Result:**
+- of `dims()`: array's dimensions info in a **[Dim4](Dim4)** object instance
+- of `dims(n)`: size of the specified dimension
 
 ### numdims()
 

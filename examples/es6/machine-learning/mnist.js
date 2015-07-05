@@ -83,8 +83,8 @@ let mnist = {
         let testImages = af.lookup(images, testIndices, 2).div(255);
 
         let numClasses = 10;
-        let numTrain = trainImages.dims().values[2];
-        let numTest = testImages.dims().values[2];
+        let numTrain = trainImages.dims(2);
+        let numTest = testImages.dims(2);
 
         debug(`Training sample count: ${numTrain}`);
         debug(`Test sample count: ${numTest}`);

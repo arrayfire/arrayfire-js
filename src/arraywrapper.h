@@ -88,10 +88,10 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Slices);
     static NAN_METHOD(As);
 
-    static NAN_METHOD(Assign);    
+    static NAN_METHOD(Assign);
     static NAN_METHOD(AddAssign);
-    static NAN_METHOD(SubAssign);    
-    static NAN_METHOD(MulAssign);    
+    static NAN_METHOD(SubAssign);
+    static NAN_METHOD(MulAssign);
     static NAN_METHOD(DivAssign);
 
     static NAN_METHOD(Div);
@@ -108,11 +108,30 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Neq);
     static NAN_METHOD(And);
     static NAN_METHOD(Or);
-    static NAN_METHOD(Not);
-    static NAN_METHOD(Neg);
     static NAN_METHOD(BitAnd);
     static NAN_METHOD(BitOr);
     static NAN_METHOD(BitXor);
+
+    static NAN_METHOD(RhsDiv);
+    static NAN_METHOD(RhsMul);
+    static NAN_METHOD(RhsSub);
+    static NAN_METHOD(RhsAdd);
+    static NAN_METHOD(RhsBitShiftL);
+    static NAN_METHOD(RhsBitShiftR);
+    static NAN_METHOD(RhsLt);
+    static NAN_METHOD(RhsGt);
+    static NAN_METHOD(RhsLe);
+    static NAN_METHOD(RhsGe);
+    static NAN_METHOD(RhsEq);
+    static NAN_METHOD(RhsNeq);
+    static NAN_METHOD(RhsAnd);
+    static NAN_METHOD(RhsOr);
+    static NAN_METHOD(RhsBitAnd);
+    static NAN_METHOD(RhsBitOr);
+    static NAN_METHOD(RhsBitXor);
+
+    static NAN_METHOD(Not);
+    static NAN_METHOD(Neg);
 
 private:
     explicit ArrayWrapper(af::array* array);

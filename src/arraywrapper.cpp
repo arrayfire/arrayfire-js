@@ -124,7 +124,6 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("bitShiftL"), NanNew<FunctionTemplate>(BitShiftL), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("bitshiftr"), NanNew<FunctionTemplate>(BitShiftR), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("bitShiftR"), NanNew<FunctionTemplate>(BitShiftR), v8::ReadOnly);
-
     NanSetPrototypeTemplate(tmpl, NanNew("lt"), NanNew<FunctionTemplate>(Lt), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("gt"), NanNew<FunctionTemplate>(Gt), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("le"), NanNew<FunctionTemplate>(Le), v8::ReadOnly);
@@ -133,11 +132,32 @@ void ArrayWrapper::Init(v8::Local<v8::Object> exports)
     NanSetPrototypeTemplate(tmpl, NanNew("neq"), NanNew<FunctionTemplate>(Neq), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("and"), NanNew<FunctionTemplate>(And), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("or"), NanNew<FunctionTemplate>(Or), v8::ReadOnly);
-    NanSetPrototypeTemplate(tmpl, NanNew("neg"), NanNew<FunctionTemplate>(Neg), v8::ReadOnly);
-    NanSetPrototypeTemplate(tmpl, NanNew("not"), NanNew<FunctionTemplate>(Not), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("bitAnd"), NanNew<FunctionTemplate>(BitAnd), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("bitOr"), NanNew<FunctionTemplate>(BitOr), v8::ReadOnly);
     NanSetPrototypeTemplate(tmpl, NanNew("bitXor"), NanNew<FunctionTemplate>(BitXor), v8::ReadOnly);
+
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsAdd"), NanNew<FunctionTemplate>(RhsAdd), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsSub"), NanNew<FunctionTemplate>(RhsSub), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsMul"), NanNew<FunctionTemplate>(RhsMul), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsDiv"), NanNew<FunctionTemplate>(RhsDiv), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitshiftl"), NanNew<FunctionTemplate>(RhsBitShiftL), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitShiftL"), NanNew<FunctionTemplate>(RhsBitShiftL), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitshiftr"), NanNew<FunctionTemplate>(RhsBitShiftR), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitShiftR"), NanNew<FunctionTemplate>(RhsBitShiftR), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsLt"), NanNew<FunctionTemplate>(RhsLt), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsGt"), NanNew<FunctionTemplate>(RhsGt), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsLe"), NanNew<FunctionTemplate>(RhsLe), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsGe"), NanNew<FunctionTemplate>(RhsGe), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsEq"), NanNew<FunctionTemplate>(RhsEq), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsNeq"), NanNew<FunctionTemplate>(RhsNeq), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsAnd"), NanNew<FunctionTemplate>(RhsAnd), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsOr"), NanNew<FunctionTemplate>(RhsOr), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitAnd"), NanNew<FunctionTemplate>(RhsBitAnd), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitOr"), NanNew<FunctionTemplate>(RhsBitOr), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitXor"), NanNew<FunctionTemplate>(RhsBitXor), v8::ReadOnly);
+
+    NanSetPrototypeTemplate(tmpl, NanNew("neg"), NanNew<FunctionTemplate>(Neg), v8::ReadOnly);
+    NanSetPrototypeTemplate(tmpl, NanNew("not"), NanNew<FunctionTemplate>(Not), v8::ReadOnly);
 
     auto f = tmpl->GetFunction();
     f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
@@ -1648,6 +1668,90 @@ AFARRAY_IMPL_BINOP(Or, ||)
 AFARRAY_IMPL_BINOP(BitAnd, &)
 AFARRAY_IMPL_BINOP(BitOr, |)
 AFARRAY_IMPL_BINOP(BitXor, ^)
+#undef AFARRAY_IMPL_BINOP
+
+#define AFARRAY_IMPL_BINOP(F, Op)\
+NAN_METHOD(ArrayWrapper::F)\
+{\
+    NanScope();\
+    \
+    try\
+    {\
+        auto& array = *GetArray(args.This());\
+        bool isDouble = NeedsDouble(array);\
+        ARGS_LEN(1)\
+        auto value = args[0];\
+        auto pOtherArray = TryGetArray(value);\
+        af::array* result = nullptr;\
+        Guard();\
+        if (pOtherArray)\
+        {\
+            auto& otherArray = *pOtherArray;\
+            result = new af::array(otherArray Op array);\
+        }\
+        else if (value->IsNumber())\
+        {\
+            double v = value->NumberValue();\
+            if (floor(v) == v)\
+            {\
+                result = new af::array(value->Int32Value() Op array);\
+            }\
+            else if (isDouble)\
+            {\
+                result = new af::array(v Op array);\
+            }\
+            else\
+            {\
+                result = new af::array((float)v Op array);\
+            }\
+        }\
+        else if (value->IsObject())\
+        {\
+            if (isDouble)\
+            {\
+                auto v = ToDComplex(value);\
+                result = new af::array(v Op array);\
+            }\
+            else\
+            {\
+                auto v = ToFComplex(value);\
+                result = new af::array(v Op array);\
+            }\
+        }\
+        else if (value->IsString())\
+        {\
+            String::Utf8Value str(value);\
+            intl v = strtoll(*str, nullptr, 10);\
+            result = new af::array(v Op array);\
+        }\
+        else\
+        {\
+            return NAN_THROW_INVALID_ARGS();\
+        }\
+        \
+        NanReturnValue(New(result));\
+    }\
+    ARRAYFIRE_CATCH\
+}
+
+AFARRAY_IMPL_BINOP(RhsAdd, +)
+AFARRAY_IMPL_BINOP(RhsSub, -)
+AFARRAY_IMPL_BINOP(RhsMul, *)
+AFARRAY_IMPL_BINOP(RhsDiv, /)
+AFARRAY_IMPL_BINOP(RhsBitShiftL, <<)
+AFARRAY_IMPL_BINOP(RhsBitShiftR, >>)
+
+AFARRAY_IMPL_BINOP(RhsLt, <)
+AFARRAY_IMPL_BINOP(RhsGt, >)
+AFARRAY_IMPL_BINOP(RhsLe, <=)
+AFARRAY_IMPL_BINOP(RhsGe, >=)
+AFARRAY_IMPL_BINOP(RhsEq, ==)
+AFARRAY_IMPL_BINOP(RhsNeq, !=)
+AFARRAY_IMPL_BINOP(RhsAnd, &&)
+AFARRAY_IMPL_BINOP(RhsOr, ||)
+AFARRAY_IMPL_BINOP(RhsBitAnd, &)
+AFARRAY_IMPL_BINOP(RhsBitOr, |)
+AFARRAY_IMPL_BINOP(RhsBitXor, ^)
 #undef AFARRAY_IMPL_BINOP
 
 #define AFARRAY_IMPL_UNOP(F, Op)\
