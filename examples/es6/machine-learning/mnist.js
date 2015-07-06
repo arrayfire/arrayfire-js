@@ -127,7 +127,9 @@ let mnist = {
             numTrain: numTrain,
             numTest: numTest,
             trainImages: trainImages,
-            testImages: testImages
+            testImages: testImages,
+            trainLabels: trainLabels,
+            testLabels: testLabels
         };
     })
 };

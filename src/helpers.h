@@ -349,23 +349,24 @@ NAN_METHOD(F)\
         ARGS_LEN(2);\
         \
         auto array = *ArrayWrapper::GetArrayAt(args, 0);\
-        if (NeedsDouble(array))\
+        if (args.Length() > 2)\
         {\
-            typedef std::pair<double, unsigned> PairT;\
+            int dim = args[1]->Int32Value();\
+            typedef std::pair<af::array, af::array> PairT;\
             typedef Worker<PairT> WorkerT;\
             auto exec = [=]()\
             {\
                 Guard();\
-                double v;\
-                unsigned at;\
-                af::f<double>(&v, &at, array);\
+                af::array v;\
+                af::array at;\
+                af::f(v, at, array, dim);\
                 return make_pair(v, at);\
             };\
             auto conv = [=](WorkerT* w, PairT p)\
             {\
                 auto obj = NanNew<Object>();\
-                obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
-                obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
+                obj->Set(NanNew(Symbols::Value), ArrayWrapper::New(p.first));\
+                obj->Set(NanNew(Symbols::Index), ArrayWrapper::New(p.second));\
                 return obj;\
             };\
             auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
@@ -374,26 +375,52 @@ NAN_METHOD(F)\
         }\
         else\
         {\
-            typedef std::pair<float, unsigned> PairT;\
-            typedef Worker<PairT> WorkerT;\
-            auto exec = [=]()\
+            if (NeedsDouble(array))\
             {\
-                Guard();\
-                float v;\
-                unsigned at;\
-                af::f<float>(&v, &at, array);\
-                return make_pair(v, at);\
-            };\
-            auto conv = [=](WorkerT* w, PairT p)\
+                typedef std::pair<double, unsigned> PairT;\
+                typedef Worker<PairT> WorkerT;\
+                auto exec = [=]()\
+                {\
+                    Guard();\
+                    double v;\
+                    unsigned at;\
+                    af::f<double>(&v, &at, array);\
+                    return make_pair(v, at);\
+                };\
+                auto conv = [=](WorkerT* w, PairT p)\
+                {\
+                    auto obj = NanNew<Object>();\
+                    obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
+                    obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
+                    return obj;\
+                };\
+                auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
+                NanAsyncQueueWorker(worker);\
+                NanReturnUndefined();\
+            }\
+            else\
             {\
-                auto obj = NanNew<Object>();\
-                obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
-                obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
-                return obj;\
-            };\
-            auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
-            NanAsyncQueueWorker(worker);\
-            NanReturnUndefined();\
+                typedef std::pair<float, unsigned> PairT;\
+                typedef Worker<PairT> WorkerT;\
+                auto exec = [=]()\
+                {\
+                    Guard();\
+                    float v;\
+                    unsigned at;\
+                    af::f<float>(&v, &at, array);\
+                    return make_pair(v, at);\
+                };\
+                auto conv = [=](WorkerT* w, PairT p)\
+                {\
+                    auto obj = NanNew<Object>();\
+                    obj->Set(NanNew(Symbols::Value), NanNew(p.first));\
+                    obj->Set(NanNew(Symbols::Index), NanNew(p.second));\
+                    return obj;\
+                };\
+                auto worker = new WorkerT(GetCallback(args), std::move(exec), std::move(conv));\
+                NanAsyncQueueWorker(worker);\
+                NanReturnUndefined();\
+            }\
         }\
     }\
     ARRAYFIRE_CATCH\

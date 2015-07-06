@@ -54,7 +54,7 @@ NAN_METHOD(Dot)
         if (args.Length() > 2) optLhs = (af::matProp)args[2]->Uint32Value();
         if (args.Length() > 3) optRhs = (af::matProp)args[3]->Uint32Value();
         Guard();
-        ArrayWrapper::New(af::dot(*pArray1, *pArray2, optLhs, optRhs));
+        NanReturnValue(ArrayWrapper::New(af::dot(*pArray1, *pArray2, optLhs, optRhs)));
     }
     ARRAYFIRE_CATCH;
 }
@@ -75,7 +75,7 @@ NAN_METHOD(MatMul)
             if (args.Length() > 2) optLhs = (af::matProp)args[2]->Uint32Value();
             if (args.Length() > 3) optRhs = (af::matProp)args[3]->Uint32Value();
             Guard();
-            ArrayWrapper::New(af::matmul(*pArray1, *pArray2, optLhs, optRhs));
+            NanReturnValue(ArrayWrapper::New(af::matmul(*pArray1, *pArray2, optLhs, optRhs)));
         }
         else
         {
@@ -83,12 +83,12 @@ NAN_METHOD(MatMul)
             if (pArray4 == nullptr)
             {
                 Guard();
-                ArrayWrapper::New(af::matmul(*pArray1, *pArray2, *pArray3));
+                NanReturnValue(ArrayWrapper::New(af::matmul(*pArray1, *pArray2, *pArray3)));
             }
             else
             {
                 Guard();
-                ArrayWrapper::New(af::matmul(*pArray1, *pArray2, *pArray3, *pArray4));
+                NanReturnValue(ArrayWrapper::New(af::matmul(*pArray1, *pArray2, *pArray3, *pArray4)));
             }
         }
     }
@@ -114,7 +114,7 @@ NAN_METHOD(Solve)
         af::matProp options = AF_MAT_NONE;
         if (args.Length() > 2) options = (af::matProp)args[2]->Uint32Value();
         Guard();
-        ArrayWrapper::New(af::solve(*pArray1, *pArray2, options));
+        NanReturnValue(ArrayWrapper::New(af::solve(*pArray1, *pArray2, options)));
     }
     ARRAYFIRE_CATCH;
 }
@@ -131,7 +131,7 @@ NAN_METHOD(SolveLU)
         af::matProp options = AF_MAT_NONE;
         if (args.Length() > 3) options = (af::matProp)args[3]->Uint32Value();
         Guard();
-        ArrayWrapper::New(af::solveLU(*pArray1, *pArray2, *pArray3, options));
+        NanReturnValue(ArrayWrapper::New(af::solveLU(*pArray1, *pArray2, *pArray3, options)));
     }
     ARRAYFIRE_CATCH;
 }
@@ -326,7 +326,7 @@ NAN_METHOD(Inverse)
         af::matProp options = AF_MAT_NONE;
         if (args.Length() > 1) options = (af::matProp)args[1]->Uint32Value();
         Guard();
-        ArrayWrapper::New(af::inverse(*pArray, options));
+        NanReturnValue(ArrayWrapper::New(af::inverse(*pArray, options)));
     }
     ARRAYFIRE_CATCH;
 }

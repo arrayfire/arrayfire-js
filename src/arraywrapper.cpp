@@ -208,8 +208,12 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
     {
         if (value->IsObject())
         {
-            auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
-            if (wrapper) return wrapper->_array;
+            auto obj = value.As<Object>();
+            if (obj->GetConstructorName()->Equals(NanNew(Symbols::AFArrayClass)))
+            {
+                auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
+                return wrapper->_array;
+            }
         }
     }
     catch (...)
