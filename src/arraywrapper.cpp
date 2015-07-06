@@ -47,10 +47,12 @@ ArrayWrapper::ArrayWrapper(af::array* array) :
     _array(array)
 {
     assert(array);
+    NanAdjustExternalMemory(sizeof(af::array) + array->elements() + 200);
 }
 
 ArrayWrapper::~ArrayWrapper()
 {
+    NanAdjustExternalMemory(-(sizeof(af::array) + _array->elements() + 200));
     delete _array;
 }
 

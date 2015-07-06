@@ -203,10 +203,13 @@ NAN_METHOD(Alloc)
         char* ptr = (char*)af::alloc(elements, allocPars.first);
         auto gcCallback = [](char* data, void* hint)
         {
+            Guard();
             af::free(data);
+            NanAdjustExternalMemory(reinterpret_cast<size_t>(hint));
         };
-
-        NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, nullptr));
+        size_t size = elements + 100;
+        NanAdjustExternalMemory(size);
+        NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, reinterpret_cast<void*>(size)));
     }
     ARRAYFIRE_CATCH
 }
@@ -225,10 +228,13 @@ NAN_METHOD(Pinned)
         char* ptr = (char*)af::pinned(elements, allocPars.first);
         auto gcCallback = [](char* data, void* hint)
         {
+            Guard();
             af::freePinned(data);
+            NanAdjustExternalMemory(reinterpret_cast<size_t>(hint));
         };
-
-        NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, nullptr));
+        size_t size = elements + 100;
+        NanAdjustExternalMemory(size);
+        NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, reinterpret_cast<void*>(size)));
     }
     ARRAYFIRE_CATCH
 }

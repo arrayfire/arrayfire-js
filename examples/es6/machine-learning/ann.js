@@ -101,8 +101,6 @@ proto.train = async(function*(input, target, options) {
             this.backPropagate(y, options.alpha);
         }
 
-        gc();
-
         // Validate with last batch
         let startPos = (numBatches - 1) * options.batchSize;
         let endPos = numSamples - 1;
@@ -110,7 +108,7 @@ proto.train = async(function*(input, target, options) {
         err = yield this._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
 
         // Check if convergence criteria has been met
-        if (err < options.maxErr) {
+        if (err < options.maxError) {
             console.log(`Converged on Epoc: ${i + 1}`);
             break;
         }
