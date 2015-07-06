@@ -33,6 +33,10 @@ cmake_minimum_required(VERSION 2.8)
 
 project (arrayfire_js)
 
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+
+include(WinCUDASupport)
+
 set(ArrayFire_DIR "${AF_PATH}")
 if (NOT ArrayFire_DIR)
     set(ArrayFire_DIR "$ENV{AF_PATH}")
@@ -58,7 +62,7 @@ if(UNIX)
         set(ArrayFire_CUDA_LIBRARIES "${ArrayFire_DIR}/lib/libafcuda.so")
     endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-elseif(WIN32)
+elseif(MSVC)
     add_definitions("/W3 /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /wd4251 /wd4244 /nologo")
     # CPU
     set(ArrayFire_CPU_LIBRARIES "${ArrayFire_DIR}/lib/afcpu.lib")
@@ -127,3 +131,5 @@ add_library(${PROJECT_NAME}_CUDA SHARED "${TRAN_SOURCE_FILES};src/init/init_CUDA
 set_target_properties(${PROJECT_NAME}_CUDA PROPERTIES PREFIX "" SUFFIX ".node")
 
 target_link_libraries(${PROJECT_NAME}_CUDA "${CMAKE_JS_LIB};${ArrayFire_CUDA_LIBRARIES};${PROJECT_NAME}_Common")
+
+win_cuda_support()
