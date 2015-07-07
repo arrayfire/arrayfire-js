@@ -43,16 +43,21 @@ using namespace node;
 
 Persistent<Function> ArrayWrapper::constructor;
 
+int GetMemSize(const af::array* array)
+{
+    return static_cast<int>(sizeof(af::array)) + array->elements() + 200;
+}
+
 ArrayWrapper::ArrayWrapper(af::array* array) :
     _array(array)
 {
     assert(array);
-    NanAdjustExternalMemory(sizeof(af::array) + array->elements() + 200);
+    NanAdjustExternalMemory(GetMemSize(array));
 }
 
 ArrayWrapper::~ArrayWrapper()
 {
-    NanAdjustExternalMemory(-(sizeof(af::array) + _array->elements() + 200));
+    NanAdjustExternalMemory(-GetMemSize(_array));
     delete _array;
 }
 

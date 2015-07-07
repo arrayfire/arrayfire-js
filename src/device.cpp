@@ -205,10 +205,10 @@ NAN_METHOD(Alloc)
         {
             Guard();
             af::free(data);
-            NanAdjustExternalMemory(reinterpret_cast<size_t>(hint));
+            NanAdjustExternalMemory(static_cast<int>(reinterpret_cast<size_t>(hint)));
         };
         size_t size = elements + 100;
-        NanAdjustExternalMemory(size);
+        NanAdjustExternalMemory(static_cast<int>(size));
         NanReturnValue(NanNewBufferHandle(ptr, 0, gcCallback, reinterpret_cast<void*>(size)));
     }
     ARRAYFIRE_CATCH
@@ -230,10 +230,10 @@ NAN_METHOD(Pinned)
         {
             Guard();
             af::freePinned(data);
-            NanAdjustExternalMemory(reinterpret_cast<size_t>(hint));
+            NanAdjustExternalMemory(static_cast<int>(reinterpret_cast<size_t>(hint)));
         };
         size_t size = elements + 100;
-        NanAdjustExternalMemory(size);
+        NanAdjustExternalMemory(static_cast<int>(size));
         NanReturnValue(NanNewBufferHandle(ptr, allocPars.second, gcCallback, reinterpret_cast<void*>(size)));
     }
     ARRAYFIRE_CATCH
