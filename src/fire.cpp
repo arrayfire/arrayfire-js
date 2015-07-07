@@ -62,6 +62,13 @@ NAN_METHOD(_GforToggle)
     NanReturnUndefined();
 }
 
+NAN_METHOD(_GC)
+{
+    NanScope();
+    NanIdleNotification(args[0]->Uint32Value());
+    NanReturnUndefined();
+}
+
 void Init(v8::Handle<v8::Object> exports)
 {
     Symbols::Init();
@@ -81,4 +88,5 @@ void Init(v8::Handle<v8::Object> exports)
     // Helpers:
     exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
     exports->Set(NanNew("_gforToggle"), NanNew<FunctionTemplate>(_GforToggle)->GetFunction());
+    exports->Set(NanNew("_gc"), NanNew<FunctionTemplate>(_GC)->GetFunction());
 }

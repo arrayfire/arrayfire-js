@@ -411,5 +411,5 @@ RegionIndex ToRegionIndex(v8::Local<v8::Value> value)
     {
         return ToRegionIndex(value.As<Object>());
     }
-    ARRAYFIRE_THROW_ARG_IS_NOT_AN_OBJ();
+    return make_tuple(Region::None, (unsigned)0, (unsigned)0);
 }

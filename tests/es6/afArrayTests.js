@@ -72,11 +72,11 @@ function testPlatform(id) {
             });
 
             it("should create new one dimensional", function() {
-                let array = new AFArray(10, af.types.dtype.s32);
+                let array = new AFArray(10, af.dType.s32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 4);
                 assert(array.elements() === 10);
-                assert(array.type() === af.types.dtype.s32);
+                assert(array.type() === af.dType.s32);
                 assert(array.numdims() === 1);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 1);
@@ -86,10 +86,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10);
                 assert(dims.ndims === 1);
-                assert(dims.dims[0] === 10);
-                assert(dims.dims[1] === 1);
-                assert(dims.dims[2] === 1);
-                assert(dims.dims[3] === 1);
+                assert(dims.values[0] === 10);
+                assert(dims.values[1] === 1);
+                assert(dims.values[2] === 1);
+                assert(dims.values[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === true);
@@ -106,11 +106,11 @@ function testPlatform(id) {
             });
 
             it("should create new two dimensional", function() {
-                let array = new AFArray(10, 20, af.types.dtype.f32);
+                let array = new AFArray(10, 20, af.dType.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 4);
                 assert(array.elements() === 10 * 20);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === af.dType.f32);
                 assert(array.numdims() === 2);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -120,10 +120,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20);
                 assert(dims.ndims === 2);
-                assert(dims.dims[0] === 10);
-                assert(dims.dims[1] === 20);
-                assert(dims.dims[2] === 1);
-                assert(dims.dims[3] === 1);
+                assert(dims.values[0] === 10);
+                assert(dims.values[1] === 20);
+                assert(dims.values[2] === 1);
+                assert(dims.values[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
@@ -140,11 +140,11 @@ function testPlatform(id) {
             });
 
             it("should create new three dimensional", function() {
-                let array = new AFArray(10, 20, 30, af.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, af.dType.f32);
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 4);
                 assert(array.elements() === 10 * 20 * 30);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === af.dType.f32);
                 assert(array.numdims() === 3);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -154,10 +154,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20 * 30);
                 assert(dims.ndims === 3);
-                assert(dims.dims[0] === 10);
-                assert(dims.dims[1] === 20);
-                assert(dims.dims[2] === 30);
-                assert(dims.dims[3] === 1);
+                assert(dims.values[0] === 10);
+                assert(dims.values[1] === 20);
+                assert(dims.values[2] === 30);
+                assert(dims.values[3] === 1);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
@@ -177,7 +177,7 @@ function testPlatform(id) {
                 assert(_.isObject(array));
                 assert(array.bytes() === 10 * 20 * 30 * 40 * 4);
                 assert(array.elements() === 10 * 20 * 30 * 40);
-                assert(array.type() === af.types.dtype.f32);
+                assert(array.type() === af.dType.f32);
                 assert(array.numdims() === 4);
                 assert(array.dims(0) === 10);
                 assert(array.dims(1) === 20);
@@ -187,10 +187,10 @@ function testPlatform(id) {
                 assert(_.isObject(dims));
                 assert(dims.elements === 10 * 20 * 30 * 40);
                 assert(dims.ndims === 4);
-                assert(dims.dims[0] === 10);
-                assert(dims.dims[1] === 20);
-                assert(dims.dims[2] === 30);
-                assert(dims.dims[3] === 40);
+                assert(dims.values[0] === 10);
+                assert(dims.values[1] === 20);
+                assert(dims.values[2] === 30);
+                assert(dims.values[3] === 40);
                 assert(array.isempty() === false);
                 assert(array.isscalar() === false);
                 assert(array.isvector() === false);
@@ -207,17 +207,17 @@ function testPlatform(id) {
             }
 
             it("should create new four dimensional", function() {
-                let array = new AFArray(10, 20, 30, 40, af.types.dtype.f32);
+                let array = new AFArray(10, 20, 30, 40, af.dType.f32);
                 verify4(array);
             });
 
             it("should create new four dimensional from dim4", function() {
-                let array = new AFArray({ dims: [10, 20, 30, 40] }, af.types.dtype.f32);
+                let array = new AFArray({ values: [10, 20, 30, 40] }, af.dType.f32);
                 verify4(array);
             });
 
             it("should create new four dimensional from dim4 array", function() {
-                let array = new AFArray([10, 20, 30, 40], af.types.dtype.f32);
+                let array = new AFArray([10, 20, 30, 40], af.dType.f32);
                 verify4(array);
             });
 
@@ -233,9 +233,9 @@ function testPlatform(id) {
                     assert(_.isFunction(AFArray.create));
                     assert(_.isFunction(AFArray.createAsync));
 
-                    let array = yield AFArray.createAsync(count, af.types.dtype.s32, buff);
+                    let array = yield AFArray.createAsync(count, af.dType.s32, buff);
                     assert(array.bytes() === count * int.size);
-                    assert(array.type() === af.types.dtype.s32);
+                    assert(array.type() === af.dType.s32);
 
                     let buff2 = new Buffer(int.size * count);
                     yield array.hostAsync(buff2);
@@ -289,9 +289,9 @@ function testPlatform(id) {
                 assert(_.isFunction(AFArray.create));
                 assert(_.isFunction(AFArray.createSync));
 
-                let array = AFArray.createSync(count, af.types.dtype.s32, buff);
+                let array = AFArray.createSync(count, af.dType.s32, buff);
                 assert(array.bytes() === count * int.size);
-                assert(array.type() === af.types.dtype.s32);
+                assert(array.type() === af.dType.s32);
 
                 let buff2 = new Buffer(int.size * count);
                 array.hostSync(buff2);
