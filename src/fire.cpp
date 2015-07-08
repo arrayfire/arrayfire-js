@@ -62,10 +62,12 @@ NAN_METHOD(_GforToggle)
     NanReturnUndefined();
 }
 
-NAN_METHOD(_GC)
+NAN_METHOD(GC)
 {
     NanScope();
-    NanIdleNotification(args[0]->Uint32Value());
+    unsigned ms = args.Length() ? args[0]->Uint32Value() : 1000;
+    NanIdleNotification(ms);
+    uv_run(uv_default_loop(), UV_RUN_DEFAULT);
     NanReturnUndefined();
 }
 
@@ -88,5 +90,5 @@ void Init(v8::Handle<v8::Object> exports)
     // Helpers:
     exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
     exports->Set(NanNew("_gforToggle"), NanNew<FunctionTemplate>(_GforToggle)->GetFunction());
-    exports->Set(NanNew("_gc"), NanNew<FunctionTemplate>(_GC)->GetFunction());
+    exports->Set(NanNew("gc"), NanNew<FunctionTemplate>(::GC)->GetFunction());
 }
