@@ -45,7 +45,7 @@ Persistent<Function> ArrayWrapper::constructor;
 
 int GetMemSize(const af::array* array)
 {
-    return static_cast<int>(sizeof(af::array)) + array->elements() + 200;
+    return 1;//static_cast<int>(sizeof(af::array)) + array->elements() + 200;
 }
 
 ArrayWrapper::ArrayWrapper(af::array* array) :
