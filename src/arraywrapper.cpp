@@ -45,7 +45,12 @@ Persistent<Function> ArrayWrapper::constructor;
 
 int GetMemSize(const af::array* array)
 {
-    return 1;//static_cast<int>(sizeof(af::array)) + array->elements() + 200;
+    // Make GC aware of device memory.
+    // Event it's VRAM this should keep the usage on low (few hundred megabytes),
+    // so we won't triggrer out of memory errors.
+    // TODO: If ArrayFire's CUDA error handling gets fixed,
+    // TODO: then we should only report memory usage for CPU based devices.
+    return static_cast<int>(sizeof(af::array)) + array->elements() + 200;
 }
 
 ArrayWrapper::ArrayWrapper(af::array* array) :

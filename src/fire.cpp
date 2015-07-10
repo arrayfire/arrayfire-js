@@ -67,8 +67,7 @@ NAN_METHOD(GC)
     NanScope();
     unsigned ms = args.Length() ? args[0]->Uint32Value() : 1000;
     NanIdleNotification(ms);
-    uv_run(uv_default_loop(), UV_RUN_ONCE);
-    af::deviceGC();
+    af::sync();
     NanReturnUndefined();
 }
 
