@@ -4,6 +4,7 @@ let _ = require("lodash");
 let Bluebird = require("bluebird");
 let async = Bluebird.coroutine;
 let debug = require("debug")("af:ann");
+let now = require("performance-now");
 
 function ANN(af, layers, range) {
     range = range || 0.05;
@@ -90,6 +91,7 @@ proto.train = async(function*(input, target, options) {
     let err = 0;
 
     for (let i = 0; i < options.maxEpochs; i++) {
+        const start = now();
         for (let j = 0; j < numBatches - 1; j++) {
             let startPos = j * options.batchSize;
             let endPos = startPos + options.batchSize;
@@ -106,14 +108,15 @@ proto.train = async(function*(input, target, options) {
         let endPos = numSamples - 1;
         let outVec = this.predict(input.at(new Seq(startPos, endPos), af.span));
         err = yield this._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
+        const end = now();
+
+        console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(4)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
 
         // Check if convergence criteria has been met
         if (err < options.maxError) {
             console.log(`Converged on Epoc: ${i + 1}`);
             break;
         }
-
-        console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(4)}`);
     }
 
     return err;

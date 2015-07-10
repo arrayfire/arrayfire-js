@@ -1,6 +1,6 @@
 {
   "name": "arrayfire_js",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "dependencies": {

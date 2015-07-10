@@ -61,7 +61,9 @@ var af = require("arrayfire_js")("OpenCL");
 var af = require("arrayfire_js")("CUDA");
 ```
 
-### Small Example
+## Examples
+
+### Calculating pi
 
 Port of the PI calculator from [ArrayFire documentation](http://www.arrayfire.com/docs/index.htm):
 
@@ -102,9 +104,19 @@ It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
 - Node.js below 0.12, enter: `node examples/es5/bechmarks/pi.js`
 
+### Neural Network
+
+There is an example of a neural network with batch backpropagation trained to learn the famous [MNIST](http://yann.lecun.com/exdb/mnist/) data set. It will run on the fastest device available.
+
+It's in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/machine-learning/neuralNetwork.js). To run on:
+
+- io.js, enter: `iojs examples/es6/machine-learning/neuralNetwork.js`
+- Node.js 0.12 or above, enter: `node --harmony examples/es6/machine-learning/neuralNetwork.js`
+- Node.js below 0.12, enter: `node examples/es5/machine-learning/neuralNetwork.js`
+
 ## API Docs
 
-[In progress ...](http://arrayfire.github.io/arrayfire_js/) We'll try to put it together soon.
+[http://arrayfire.github.io/arrayfire_js](http://arrayfire.github.io/arrayfire_js/)
 
 ## Wanna Contribute?
 

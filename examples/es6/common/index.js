@@ -58,7 +58,7 @@ let runOnAllPlatforms = async(function*(f, name) {
             yield runOnDevices(id, f);
         }
     }
-    catch(e) {
+    catch (e) {
         console.error(e.stack);
     }
 });
@@ -78,12 +78,12 @@ let runOnBestDevice = async(function*(f, name) {
             yield runOnDevices(order[2], f, 0);
         }
     }
-    catch(e) {
+    catch (e) {
         console.error(e.stack);
     }
 });
 
-let printDeviceInfo = function(deviceInfo) {
+let printDeviceInfo = function (deviceInfo) {
     console.log(`ID: ${deviceInfo.id}\nName: ${deviceInfo.name}\nPlatform: ${deviceInfo.platform}\nToolkit: ${deviceInfo.toolkit}\nCompute: ${deviceInfo.compute}`);
 };
 
