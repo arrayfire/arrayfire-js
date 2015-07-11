@@ -114,6 +114,12 @@ It's in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/mas
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/machine-learning/neuralNetwork.js`
 - Node.js below 0.12, enter: `node examples/es5/machine-learning/neuralNetwork.js`
 
+Performance on Linux Mint x64, i5 3570, Radeon R9:
+
+- CPU platform: 0.8 sec / epoch
+- OpenCL platform on CPU: 1.0 sec / epoch
+- OpenCL platform on GPU: **0.28 sec / epoch**
+
 ## API Docs
 
 [http://arrayfire.github.io/arrayfire_js](http://arrayfire.github.io/arrayfire_js/)
