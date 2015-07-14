@@ -38,10 +38,10 @@ let annDemo = async(function*(af, deviceInfo) {
         trainFeats,
         trainTarget,
         {
-            alpha: 2.0,
-            maxEpochs: 250,
+            alpha: 1.0,
+            maxEpochs: 300,
             batchSize: 100,
-            maxError: 0.5
+            maxError: 1.0
         }
     );
     yield af.waitAsync();

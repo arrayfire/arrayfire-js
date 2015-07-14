@@ -36,6 +36,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "errors.h"
 #include "guard.h"
 
+namespace af
+{
+    // TODO: Remove this when next version comes out:
+    af::array sigmoid(const af::array val)
+    {
+        return 1 / (1 + exp(-val));
+    }
+}
+
 using namespace v8;
 using namespace std;
 using namespace node;
@@ -76,6 +85,7 @@ ARRAYFIRE_SYNC_METHOD_ARR_ARR(Pow, pow)
 ARRAYFIRE_SYNC_METHOD_ARR(Pow2, pow2)
 ARRAYFIRE_SYNC_METHOD_ARR_DOUBLE_COMB(Root, root)
 ARRAYFIRE_SYNC_METHOD_ARR(Sqrt, sqrt)
+ARRAYFIRE_SYNC_METHOD_ARR(Sigmoid, sigmoid)
 
 ARRAYFIRE_SYNC_METHOD_ARR(ACosH, acosh)
 ARRAYFIRE_SYNC_METHOD_ARR(ASinH, asinh)
@@ -146,4 +156,6 @@ void InitMathFunctions(v8::Handle<v8::Object> exports)
     exports->Set(NanNew("conjg"), NanNew<FunctionTemplate>(Conjg)->GetFunction());
     exports->Set(NanNew("imag"), NanNew<FunctionTemplate>(Imag)->GetFunction());
     exports->Set(NanNew("real"), NanNew<FunctionTemplate>(Real)->GetFunction());
+
+    exports->Set(NanNew("sigmoid"), NanNew<FunctionTemplate>(Sigmoid)->GetFunction());
 }

@@ -23,11 +23,6 @@ function ANN(af, layers, range) {
 
 let proto = ANN.prototype;
 
-proto.sigmoid = function (val) {
-    // 1 / (1 + exp(-val));
-    return this.af.exp(val.neg()).add(1).rhsDiv(1);
-};
-
 proto.deriv = function (out) {
     return out.rhsSub(1).mul(out);
 };
@@ -46,7 +41,7 @@ proto.forwardPropagate = function (input) {
     for (let i = 0; i < this.numLayers - 1; i++) {
         let inVec = this.addBias(this.signal[i]);
         let outVec = this.af.matMul(inVec, this.weights[i]);
-        this.signal[i + 1].set(this.sigmoid(outVec));
+        this.signal[i + 1].set(this.af.sigmoid(outVec));
     }
 };
 
@@ -69,7 +64,7 @@ proto.backPropagate = function (target, alpha) {
 
         // Input to current layer is output of previous
         outVec = this.signal[i];
-        err.set(af.transpose(this.af.matMul(this.weights[i], delta)));
+        err.set(this.af.matMulTT(delta, this.weights[i]));
 
         // Remove the error of bias and propagate backward
         err.set(err.at(af.span, new Seq(1, outVec.dims(1))));
@@ -94,7 +89,7 @@ proto.train = async(function*(input, target, options) {
         const start = now();
         for (let j = 0; j < numBatches - 1; j++) {
             let startPos = j * options.batchSize;
-            let endPos = startPos + options.batchSize;
+            let endPos = startPos + options.batchSize - 1;
 
             let x = input.at(new Seq(startPos, endPos), af.span);
             let y = target.at(new Seq(startPos, endPos), af.span);
