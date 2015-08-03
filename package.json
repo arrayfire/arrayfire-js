@@ -1,13 +1,17 @@
 {
   "name": "arrayfire_js",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arrayfire/arrayfire-js.git"
+  },
   "dependencies": {
     "bindings": "*",
     "cmake-js": "*",
     "lodash": "*",
-    "nan": "*",
+    "nan": "1",
     "traceur-runtime": "*"
   },
   "scripts": {
