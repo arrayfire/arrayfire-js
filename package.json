@@ -11,7 +11,7 @@
     "bindings": "*",
     "cmake-js": "*",
     "lodash": "*",
-    "nan": "1",
+    "nan": "2",
     "traceur-runtime": "*"
   },
   "scripts": {
