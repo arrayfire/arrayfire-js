@@ -34,6 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <nan.h>
 
-void Init(v8::Handle<v8::Object> exports);
+NAN_MODULE_INIT(Init);
 
 #endif

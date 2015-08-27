@@ -41,19 +41,19 @@ struct ArrayWrapper : public node::ObjectWrap
     ArrayWrapper(const ArrayWrapper&) = delete;
     ~ArrayWrapper();
 
-    static void Init(v8::Local<v8::Object> exports);
+    static NAN_MODULE_INIT(Init);
 
     static v8::Local<v8::Object> New(af::array* array);
     static v8::Local<v8::Object> New(const af::array& array);
 
-    static void NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory);
+    static void NewAsync(const Nan::FunctionCallbackInfo<v8::Value>& info, const std::function<af::array*()>& arrayFactory);
 
     static af::array* GetArray(v8::Local<v8::Value> value);
     static af::array* TryGetArray(v8::Local<v8::Value> value);
     static af::array* GetArray(v8::Local<v8::Object> value);
     static af::array* TryGetArray(v8::Local<v8::Object> value);
-    static af::array* GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
-    static af::array* TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index);
+    static af::array* GetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index);
+    static af::array* TryGetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index);
 
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
@@ -138,9 +138,9 @@ private:
 
     template<typename T>
     static af::array* CreateArray(void* ptr, af_source src, const af::dim4& dim4);
-    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
 
-    static v8::Persistent<v8::Function> constructor;
+    static Nan::Persistent<v8::Function> constructor;
 
     af::array* _array;
 };

@@ -42,30 +42,30 @@ using namespace node;
 
 NAN_METHOD(RandU)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(2);
-        auto dimAndType = ParseDimAndTypeArgs(args);
+        auto dimAndType = ParseDimAndTypeArgs(info);
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::randu(dimAndType.first, dimAndType.second)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::randu(dimAndType.first, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(RandN)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(2);
-        auto dimAndType = ParseDimAndTypeArgs(args);
+        auto dimAndType = ParseDimAndTypeArgs(info);
         if (dimAndType.second == f32 || dimAndType.second == f64)
         {
             Guard();
-            NanReturnValue(ArrayWrapper::New(af::randn(dimAndType.first, dimAndType.second)));
+            info.GetReturnValue().Set(ArrayWrapper::New(af::randn(dimAndType.first, dimAndType.second)));
             return;
         }
         return NAN_THROW_INVALID_DTYPE();
@@ -75,84 +75,84 @@ NAN_METHOD(RandN)
 
 NAN_METHOD(Identity)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(2);
-        auto dimAndType = ParseDimAndTypeArgs(args);
+        auto dimAndType = ParseDimAndTypeArgs(info);
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::identity(dimAndType.first, dimAndType.second)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::identity(dimAndType.first, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Range)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(3);
-        auto dimAndType = ParseDimAndTypeArgs(args, -1, 1);
-        af_dtype seqDim = (af_dtype)args[args.Length() - 2]->Uint32Value();
+        auto dimAndType = ParseDimAndTypeArgs(info, -1, 1);
+        af_dtype seqDim = (af_dtype)info[info.Length() - 2]->Uint32Value();
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::range(dimAndType.first, seqDim, dimAndType.second)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::range(dimAndType.first, seqDim, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Iota)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(3);
-        auto dims = ToDim4(args[0]);
-        auto titleDims = ToDim4(args[1]);
-        auto type = GetDTypeInfo(args[3]->Uint32Value());
+        auto dims = ToDim4(info[0]);
+        auto titleDims = ToDim4(info[1]);
+        auto type = GetDTypeInfo(info[3]->Uint32Value());
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::iota(dims, titleDims, type.first)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::iota(dims, titleDims, type.first)));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Diag)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         int num = 0;
         bool extract = true;
-        if (args.Length() > 1)
+        if (info.Length() > 1)
         {
-            num = args[1]->Int32Value();
+            num = info[1]->Int32Value();
         }
-        if (args.Length() > 2)
+        if (info.Length() > 2)
         {
-            extract = args[2]->BooleanValue();
+            extract = info[2]->BooleanValue();
         }
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::diag(*pArray, num, extract)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::diag(*pArray, num, extract)));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Constant)
 {
-    NanScope();
+
 
     // Notice: In v8 we can go for double, complex, and int64 as a string, because v8 numbers are doubles.
 
     try
     {
         ARGS_LEN(3);
-        auto dimAndType = ParseDimAndTypeArgs(args, -1, 0, 1);
-        auto value = args[0];
+        auto dimAndType = ParseDimAndTypeArgs(info, -1, 0, 1);
+        auto value = info[0];
         Guard();
         if (value->IsNumber())
         {
@@ -160,22 +160,22 @@ NAN_METHOD(Constant)
             switch (dimAndType.second)
             {
                 case f32:
-                    NanReturnValue(ArrayWrapper::New(af::constant<float>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<float>(v, dimAndType.first, dimAndType.second)));
                     return;
                 case f64:
-                    NanReturnValue(ArrayWrapper::New(af::constant<double>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<double>(v, dimAndType.first, dimAndType.second)));
                     return;
                 case s32:
-                    NanReturnValue(ArrayWrapper::New(af::constant<int>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<int>(v, dimAndType.first, dimAndType.second)));
                     return;
                 case u32:
-                    NanReturnValue(ArrayWrapper::New(af::constant<unsigned>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<unsigned>(v, dimAndType.first, dimAndType.second)));
                     return;
                 case u8:
-                    NanReturnValue(ArrayWrapper::New(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<unsigned char>(v, dimAndType.first, dimAndType.second)));
                     return;
                 case b8:
-                    NanReturnValue(ArrayWrapper::New(af::constant<char>(v, dimAndType.first, dimAndType.second)));
+                    info.GetReturnValue().Set(ArrayWrapper::New(af::constant<char>(v, dimAndType.first, dimAndType.second)));
                     return;
                 default:
                     break;
@@ -188,13 +188,13 @@ NAN_METHOD(Constant)
                 case c32:
                     {
                         auto cv = ToFComplex(value.As<Object>());
-                        NanReturnValue(ArrayWrapper::New(af::constant<af::cfloat>(cv, dimAndType.first, dimAndType.second)));
+                        info.GetReturnValue().Set(ArrayWrapper::New(af::constant<af::cfloat>(cv, dimAndType.first, dimAndType.second)));
                         return;
                     }
                 case c64:
                     {
                         auto cv = ToDComplex(value.As<Object>());
-                        NanReturnValue(ArrayWrapper::New(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second)));
+                        info.GetReturnValue().Set(ArrayWrapper::New(af::constant<af::cdouble>(cv, dimAndType.first, dimAndType.second)));
                         return;
                     }
                 default:
@@ -209,13 +209,13 @@ NAN_METHOD(Constant)
                 case s64:
                     {
                         long long val = strtoll(*str, nullptr, 10);
-                        NanReturnValue(ArrayWrapper::New(af::constant<long long>(val, dimAndType.first, dimAndType.second)));
+                        info.GetReturnValue().Set(ArrayWrapper::New(af::constant<long long>(val, dimAndType.first, dimAndType.second)));
                         return;
                     }
                 case u64:
                     {
                         unsigned long long val = strtoll(*str, nullptr, 10);
-                        NanReturnValue(ArrayWrapper::New(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second)));
+                        info.GetReturnValue().Set(ArrayWrapper::New(af::constant<unsigned long long>(val, dimAndType.first, dimAndType.second)));
                         return;
                     }
                 default:
@@ -236,28 +236,28 @@ ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Upper, upper, false)
 
 NAN_METHOD(GetSeed)
 {
-    NanScope();
+
     try
     {
-        NanReturnValue(to_string(af::getSeed()));
+        info.GetReturnValue().Set(Nan::New(to_string(af::getSeed()).c_str()).ToLocalChecked());
     }
     ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(SetSeed)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        if (args[0]->IsNumber())
+        if (info[0]->IsNumber())
         {
-            long long seed = args[0]->NumberValue();
+            long long seed = info[0]->NumberValue();
             af::setSeed(seed);
         }
-        else if (args[0]->IsString())
+        else if (info[0]->IsString())
         {
-            String::Utf8Value str(args[0]);
+            String::Utf8Value str(info[0]);
             long long seed = strtoll(*str, nullptr, 10);
             af::setSeed(seed);
         }
@@ -265,27 +265,29 @@ NAN_METHOD(SetSeed)
         {
             return NAN_THROW_INVALID_ARGS();
         }
-        NanReturnUndefined();
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH;
 }
 
 ARRAYFIRE_SYNC_METHOD_ARR_ARR_DIM(Lookup, lookup)
 
-void InitCreateArray(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitCreateArray)
 {
-    exports->Set(NanNew("randu"), NanNew<FunctionTemplate>(RandU)->GetFunction());
-    exports->Set(NanNew("randU"), NanNew<FunctionTemplate>(RandU)->GetFunction());
-    exports->Set(NanNew("randn"), NanNew<FunctionTemplate>(RandN)->GetFunction());
-    exports->Set(NanNew("randN"), NanNew<FunctionTemplate>(RandN)->GetFunction());
-    exports->Set(NanNew("identity"), NanNew<FunctionTemplate>(Identity)->GetFunction());
-    exports->Set(NanNew("range"), NanNew<FunctionTemplate>(Range)->GetFunction());
-    exports->Set(NanNew("iota"), NanNew<FunctionTemplate>(Iota)->GetFunction());
-    exports->Set(NanNew("diag"), NanNew<FunctionTemplate>(Diag)->GetFunction());
-    exports->Set(NanNew("constant"), NanNew<FunctionTemplate>(Constant)->GetFunction());
-    exports->Set(NanNew("lower"), NanNew<FunctionTemplate>(Lower)->GetFunction());
-    exports->Set(NanNew("upper"), NanNew<FunctionTemplate>(Upper)->GetFunction());
-    exports->Set(NanNew("getSeed"), NanNew<FunctionTemplate>(GetSeed)->GetFunction());
-    exports->Set(NanNew("setSeed"), NanNew<FunctionTemplate>(SetSeed)->GetFunction());
-    exports->Set(NanNew("lookup"), NanNew<FunctionTemplate>(Lookup)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("randu").ToLocalChecked(), Nan::New<FunctionTemplate>(RandU)->GetFunction());
+    Nan::Set(target, Nan::New<String>("randU").ToLocalChecked(), Nan::New<FunctionTemplate>(RandU)->GetFunction());
+    Nan::Set(target, Nan::New<String>("randn").ToLocalChecked(), Nan::New<FunctionTemplate>(RandN)->GetFunction());
+    Nan::Set(target, Nan::New<String>("randN").ToLocalChecked(), Nan::New<FunctionTemplate>(RandN)->GetFunction());
+    Nan::Set(target, Nan::New<String>("identity").ToLocalChecked(), Nan::New<FunctionTemplate>(Identity)->GetFunction());
+    Nan::Set(target, Nan::New<String>("range").ToLocalChecked(), Nan::New<FunctionTemplate>(Range)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iota").ToLocalChecked(), Nan::New<FunctionTemplate>(Iota)->GetFunction());
+    Nan::Set(target, Nan::New<String>("diag").ToLocalChecked(), Nan::New<FunctionTemplate>(Diag)->GetFunction());
+    Nan::Set(target, Nan::New<String>("constant").ToLocalChecked(), Nan::New<FunctionTemplate>(Constant)->GetFunction());
+    Nan::Set(target, Nan::New<String>("lower").ToLocalChecked(), Nan::New<FunctionTemplate>(Lower)->GetFunction());
+    Nan::Set(target, Nan::New<String>("upper").ToLocalChecked(), Nan::New<FunctionTemplate>(Upper)->GetFunction());
+    Nan::Set(target, Nan::New<String>("getSeed").ToLocalChecked(), Nan::New<FunctionTemplate>(GetSeed)->GetFunction());
+    Nan::Set(target, Nan::New<String>("setSeed").ToLocalChecked(), Nan::New<FunctionTemplate>(SetSeed)->GetFunction());
+    Nan::Set(target, Nan::New<String>("lookup").ToLocalChecked(), Nan::New<FunctionTemplate>(Lookup)->GetFunction());
 }

@@ -49,33 +49,33 @@ ARRAYFIRE_ASYNC_METHOD_ALGO_V1(StDev, stdev)
 
 NAN_METHOD(Var)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
 
-        auto array = *ArrayWrapper::GetArrayAt(args, 0);
-        bool biased = args[1]->BooleanValue();
-        if (args.Length() > 3)
+        auto array = *ArrayWrapper::GetArrayAt(info, 0);
+        bool biased = info[1]->BooleanValue();
+        if (info.Length() > 3)
         {
-            int dim = args[2]->Int32Value();
-            return ArrayWrapper::NewAsync(args, [=]() { Guard(); return new af::array(af::var(array, biased, dim)); });
+            int dim = info[2]->Int32Value();
+            return ArrayWrapper::NewAsync(info, [=]() { Guard(); return new af::array(af::var(array, biased, dim)); });
         }
         else
         {
             if (NeedsDouble(array))
             {
                 auto exec = [=]() { Guard(); return af::var<double>(array, biased); };
-                auto worker = new Worker<double>(GetCallback(args), std::move(exec));
-                NanAsyncQueueWorker(worker);
-                NanReturnUndefined();
+                auto worker = new Worker<double>(GetCallback(info), std::move(exec));
+                Nan::AsyncQueueWorker(worker);
+                info.GetReturnValue().SetUndefined();
             }
             else
             {
                 auto exec = [=]() { Guard(); return af::var<float>(array, biased); };
-                auto worker = new Worker<float>(GetCallback(args), std::move(exec));
-                NanAsyncQueueWorker(worker);
-                NanReturnUndefined();
+                auto worker = new Worker<float>(GetCallback(info), std::move(exec));
+                Nan::AsyncQueueWorker(worker);
+                info.GetReturnValue().SetUndefined();
             }
         }
     }
@@ -86,42 +86,44 @@ ARRAYFIRE_ASYNC_METHOD_ALGO_V3(WeightedVar, var)
 
 NAN_METHOD(CorrCoef)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
 
-        auto array1 = *ArrayWrapper::GetArrayAt(args, 0);
-        auto array2 = *ArrayWrapper::GetArrayAt(args, 1);
+        auto array1 = *ArrayWrapper::GetArrayAt(info, 0);
+        auto array2 = *ArrayWrapper::GetArrayAt(info, 1);
         if (NeedsDouble(array1))
         {
             auto exec = [=]() { Guard(); return af::corrcoef<double>(array1, array2); };
-            auto worker = new Worker<double>(GetCallback(args), std::move(exec));
-            NanAsyncQueueWorker(worker);
-            NanReturnUndefined();
+            auto worker = new Worker<double>(GetCallback(info), std::move(exec));
+            Nan::AsyncQueueWorker(worker);
+            info.GetReturnValue().SetUndefined();
         }
         else
         {
             auto exec = [=]() { Guard(); return af::corrcoef<float>(array1, array2); };
-            auto worker = new Worker<float>(GetCallback(args), std::move(exec));
-            NanAsyncQueueWorker(worker);
-            NanReturnUndefined();
+            auto worker = new Worker<float>(GetCallback(info), std::move(exec));
+            Nan::AsyncQueueWorker(worker);
+            info.GetReturnValue().SetUndefined();
         }
     }
     ARRAYFIRE_CATCH
 }
 
-void InitStatistics(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitStatistics)
 {
-    exports->Set(NanNew("cov"), NanNew<FunctionTemplate>(Cov)->GetFunction());
-    exports->Set(NanNew("mean"), NanNew<FunctionTemplate>(Mean)->GetFunction());
-    exports->Set(NanNew("weightedMean"), NanNew<FunctionTemplate>(Mean)->GetFunction());
-    exports->Set(NanNew("median"), NanNew<FunctionTemplate>(Median)->GetFunction());
-    exports->Set(NanNew("stdev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
-    exports->Set(NanNew("stDev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
-    exports->Set(NanNew("stdDev"), NanNew<FunctionTemplate>(StDev)->GetFunction());
-    exports->Set(NanNew("var"), NanNew<FunctionTemplate>(Var)->GetFunction());
-    exports->Set(NanNew("weightedVar"), NanNew<FunctionTemplate>(WeightedVar)->GetFunction());
-    exports->Set(NanNew("corrcoef"), NanNew<FunctionTemplate>(CorrCoef)->GetFunction());
-    exports->Set(NanNew("corrCoef"), NanNew<FunctionTemplate>(CorrCoef)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("cov").ToLocalChecked(), Nan::New<FunctionTemplate>(Cov)->GetFunction());
+    Nan::Set(target, Nan::New<String>("mean").ToLocalChecked(), Nan::New<FunctionTemplate>(Mean)->GetFunction());
+    Nan::Set(target, Nan::New<String>("weightedMean").ToLocalChecked(), Nan::New<FunctionTemplate>(Mean)->GetFunction());
+    Nan::Set(target, Nan::New<String>("median").ToLocalChecked(), Nan::New<FunctionTemplate>(Median)->GetFunction());
+    Nan::Set(target, Nan::New<String>("stdev").ToLocalChecked(), Nan::New<FunctionTemplate>(StDev)->GetFunction());
+    Nan::Set(target, Nan::New<String>("stDev").ToLocalChecked(), Nan::New<FunctionTemplate>(StDev)->GetFunction());
+    Nan::Set(target, Nan::New<String>("stdDev").ToLocalChecked(), Nan::New<FunctionTemplate>(StDev)->GetFunction());
+    Nan::Set(target, Nan::New<String>("var").ToLocalChecked(), Nan::New<FunctionTemplate>(Var)->GetFunction());
+    Nan::Set(target, Nan::New<String>("weightedVar").ToLocalChecked(), Nan::New<FunctionTemplate>(WeightedVar)->GetFunction());
+    Nan::Set(target, Nan::New<String>("corrcoef").ToLocalChecked(), Nan::New<FunctionTemplate>(CorrCoef)->GetFunction());
+    Nan::Set(target, Nan::New<String>("corrCoef").ToLocalChecked(), Nan::New<FunctionTemplate>(CorrCoef)->GetFunction());
 }

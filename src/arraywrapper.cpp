@@ -41,7 +41,7 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-Persistent<Function> ArrayWrapper::constructor;
+Nan::Persistent<Function> ArrayWrapper::constructor;
 
 int GetMemSize(const af::array* array)
 {
@@ -57,124 +57,126 @@ ArrayWrapper::ArrayWrapper(af::array* array) :
     _array(array)
 {
     assert(array);
-    NanAdjustExternalMemory(GetMemSize(array));
+    Nan::AdjustExternalMemory(GetMemSize(array));
 }
 
 ArrayWrapper::~ArrayWrapper()
 {
-    NanAdjustExternalMemory(-GetMemSize(_array));
+    Nan::AdjustExternalMemory(-GetMemSize(_array));
     delete _array;
 }
 
-void ArrayWrapper::Init(v8::Local<v8::Object> exports)
+NAN_MODULE_INIT(ArrayWrapper::Init)
 {
-    auto tmpl = NanNew<FunctionTemplate>(New);
-    tmpl->SetClassName(NanNew("AFArray"));
+    Nan::HandleScope scope;
+
+    auto tmpl = Nan::New<FunctionTemplate>(New);
+    tmpl->SetClassName(Nan::New("AFArray").ToLocalChecked());
 
     int noOfMethods = 21;
     tmpl->InstanceTemplate()->SetInternalFieldCount(noOfMethods);
-    NanSetPrototypeTemplate(tmpl, NanNew("elements"), NanNew<FunctionTemplate>(Elements), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("host"), NanNew<FunctionTemplate>(Host), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("copyToHost"), NanNew<FunctionTemplate>(Host), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("scalar"), NanNew<FunctionTemplate>(Scalar), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("value"), NanNew<FunctionTemplate>(Scalar), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("write"), NanNew<FunctionTemplate>(Write), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("type"), NanNew<FunctionTemplate>(Type), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("dims"), NanNew<FunctionTemplate>(Dims), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("numdims"), NanNew<FunctionTemplate>(NumDims), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("numDims"), NanNew<FunctionTemplate>(NumDims), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bytes"), NanNew<FunctionTemplate>(Bytes), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("copy"), NanNew<FunctionTemplate>(Copy), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isempty"), NanNew<FunctionTemplate>(IsEmpty), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isEmpty"), NanNew<FunctionTemplate>(IsEmpty), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isscalar"), NanNew<FunctionTemplate>(IsScalar), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isScalar"), NanNew<FunctionTemplate>(IsScalar), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isvector"), NanNew<FunctionTemplate>(IsVector), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isVector"), NanNew<FunctionTemplate>(IsVector), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isrow"), NanNew<FunctionTemplate>(IsRow), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isRow"), NanNew<FunctionTemplate>(IsRow), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("iscolumn"), NanNew<FunctionTemplate>(IsColumn), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isColumn"), NanNew<FunctionTemplate>(IsColumn), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("iscomplex"), NanNew<FunctionTemplate>(IsComplex), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isComplex"), NanNew<FunctionTemplate>(IsComplex), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isreal"), NanNew<FunctionTemplate>(IsReal), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isReal"), NanNew<FunctionTemplate>(IsReal), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isdouble"), NanNew<FunctionTemplate>(IsDouble), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isDouble"), NanNew<FunctionTemplate>(IsDouble), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("issingle"), NanNew<FunctionTemplate>(IsSingle), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isSingle"), NanNew<FunctionTemplate>(IsSingle), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isrealfloating"), NanNew<FunctionTemplate>(IsRealFloating), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isRealFloating"), NanNew<FunctionTemplate>(IsRealFloating), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isfloating"), NanNew<FunctionTemplate>(IsFloating), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isFloating"), NanNew<FunctionTemplate>(IsFloating), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isinteger"), NanNew<FunctionTemplate>(IsInteger), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isInteger"), NanNew<FunctionTemplate>(IsInteger), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isbool"), NanNew<FunctionTemplate>(IsBool), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("isBool"), NanNew<FunctionTemplate>(IsBool), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("eval"), NanNew<FunctionTemplate>(Eval), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("elements").ToLocalChecked(), Nan::New<FunctionTemplate>(Elements), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("host").ToLocalChecked(), Nan::New<FunctionTemplate>(Host), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("copyToHost").ToLocalChecked(), Nan::New<FunctionTemplate>(Host), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("scalar").ToLocalChecked(), Nan::New<FunctionTemplate>(Scalar), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("value").ToLocalChecked(), Nan::New<FunctionTemplate>(Scalar), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("write").ToLocalChecked(), Nan::New<FunctionTemplate>(Write), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("type").ToLocalChecked(), Nan::New<FunctionTemplate>(Type), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("dims").ToLocalChecked(), Nan::New<FunctionTemplate>(Dims), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("numdims").ToLocalChecked(), Nan::New<FunctionTemplate>(NumDims), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("numDims").ToLocalChecked(), Nan::New<FunctionTemplate>(NumDims), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bytes").ToLocalChecked(), Nan::New<FunctionTemplate>(Bytes), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("copy").ToLocalChecked(), Nan::New<FunctionTemplate>(Copy), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isempty").ToLocalChecked(), Nan::New<FunctionTemplate>(IsEmpty), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isEmpty").ToLocalChecked(), Nan::New<FunctionTemplate>(IsEmpty), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isscalar").ToLocalChecked(), Nan::New<FunctionTemplate>(IsScalar), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isScalar").ToLocalChecked(), Nan::New<FunctionTemplate>(IsScalar), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isvector").ToLocalChecked(), Nan::New<FunctionTemplate>(IsVector), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isVector").ToLocalChecked(), Nan::New<FunctionTemplate>(IsVector), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isrow").ToLocalChecked(), Nan::New<FunctionTemplate>(IsRow), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isRow").ToLocalChecked(), Nan::New<FunctionTemplate>(IsRow), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("iscolumn").ToLocalChecked(), Nan::New<FunctionTemplate>(IsColumn), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isColumn").ToLocalChecked(), Nan::New<FunctionTemplate>(IsColumn), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("iscomplex").ToLocalChecked(), Nan::New<FunctionTemplate>(IsComplex), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isComplex").ToLocalChecked(), Nan::New<FunctionTemplate>(IsComplex), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isreal").ToLocalChecked(), Nan::New<FunctionTemplate>(IsReal), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isReal").ToLocalChecked(), Nan::New<FunctionTemplate>(IsReal), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isdouble").ToLocalChecked(), Nan::New<FunctionTemplate>(IsDouble), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isDouble").ToLocalChecked(), Nan::New<FunctionTemplate>(IsDouble), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("issingle").ToLocalChecked(), Nan::New<FunctionTemplate>(IsSingle), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isSingle").ToLocalChecked(), Nan::New<FunctionTemplate>(IsSingle), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isrealfloating").ToLocalChecked(), Nan::New<FunctionTemplate>(IsRealFloating), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isRealFloating").ToLocalChecked(), Nan::New<FunctionTemplate>(IsRealFloating), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isfloating").ToLocalChecked(), Nan::New<FunctionTemplate>(IsFloating), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isFloating").ToLocalChecked(), Nan::New<FunctionTemplate>(IsFloating), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isinteger").ToLocalChecked(), Nan::New<FunctionTemplate>(IsInteger), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isInteger").ToLocalChecked(), Nan::New<FunctionTemplate>(IsInteger), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isbool").ToLocalChecked(), Nan::New<FunctionTemplate>(IsBool), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("isBool").ToLocalChecked(), Nan::New<FunctionTemplate>(IsBool), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("eval").ToLocalChecked(), Nan::New<FunctionTemplate>(Eval), v8::None);
 
-    NanSetPrototypeTemplate(tmpl, NanNew("at"), NanNew<FunctionTemplate>(At), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("row"), NanNew<FunctionTemplate>(Row), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("col"), NanNew<FunctionTemplate>(Col), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("slice"), NanNew<FunctionTemplate>(Slice), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rows"), NanNew<FunctionTemplate>(Rows), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("cols"), NanNew<FunctionTemplate>(Cols), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("slices"), NanNew<FunctionTemplate>(Slices), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("as"), NanNew<FunctionTemplate>(As), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("assign"), NanNew<FunctionTemplate>(Assign), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("set"), NanNew<FunctionTemplate>(Assign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("at").ToLocalChecked(), Nan::New<FunctionTemplate>(At), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("row").ToLocalChecked(), Nan::New<FunctionTemplate>(Row), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("col").ToLocalChecked(), Nan::New<FunctionTemplate>(Col), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("slice").ToLocalChecked(), Nan::New<FunctionTemplate>(Slice), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rows").ToLocalChecked(), Nan::New<FunctionTemplate>(Rows), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("cols").ToLocalChecked(), Nan::New<FunctionTemplate>(Cols), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("slices").ToLocalChecked(), Nan::New<FunctionTemplate>(Slices), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("as").ToLocalChecked(), Nan::New<FunctionTemplate>(As), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("assign").ToLocalChecked(), Nan::New<FunctionTemplate>(Assign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("set").ToLocalChecked(), Nan::New<FunctionTemplate>(Assign), v8::None);
 
-    NanSetPrototypeTemplate(tmpl, NanNew("add"), NanNew<FunctionTemplate>(Add), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("addAssign"), NanNew<FunctionTemplate>(AddAssign), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("sub"), NanNew<FunctionTemplate>(Sub), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("subAssign"), NanNew<FunctionTemplate>(SubAssign), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("mul"), NanNew<FunctionTemplate>(Mul), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("mulAssign"), NanNew<FunctionTemplate>(MulAssign), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("div"), NanNew<FunctionTemplate>(Div), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("divAssign"), NanNew<FunctionTemplate>(DivAssign), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitshiftl"), NanNew<FunctionTemplate>(BitShiftL), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitShiftL"), NanNew<FunctionTemplate>(BitShiftL), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitshiftr"), NanNew<FunctionTemplate>(BitShiftR), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitShiftR"), NanNew<FunctionTemplate>(BitShiftR), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("lt"), NanNew<FunctionTemplate>(Lt), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("gt"), NanNew<FunctionTemplate>(Gt), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("le"), NanNew<FunctionTemplate>(Le), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("ge"), NanNew<FunctionTemplate>(Ge), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("eq"), NanNew<FunctionTemplate>(Eq), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("neq"), NanNew<FunctionTemplate>(Neq), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("and"), NanNew<FunctionTemplate>(And), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("or"), NanNew<FunctionTemplate>(Or), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitAnd"), NanNew<FunctionTemplate>(BitAnd), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitOr"), NanNew<FunctionTemplate>(BitOr), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("bitXor"), NanNew<FunctionTemplate>(BitXor), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("add").ToLocalChecked(), Nan::New<FunctionTemplate>(Add), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("addAssign").ToLocalChecked(), Nan::New<FunctionTemplate>(AddAssign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("sub").ToLocalChecked(), Nan::New<FunctionTemplate>(Sub), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("subAssign").ToLocalChecked(), Nan::New<FunctionTemplate>(SubAssign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("mul").ToLocalChecked(), Nan::New<FunctionTemplate>(Mul), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("mulAssign").ToLocalChecked(), Nan::New<FunctionTemplate>(MulAssign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("div").ToLocalChecked(), Nan::New<FunctionTemplate>(Div), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("divAssign").ToLocalChecked(), Nan::New<FunctionTemplate>(DivAssign), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitshiftl").ToLocalChecked(), Nan::New<FunctionTemplate>(BitShiftL), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitShiftL").ToLocalChecked(), Nan::New<FunctionTemplate>(BitShiftL), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitshiftr").ToLocalChecked(), Nan::New<FunctionTemplate>(BitShiftR), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitShiftR").ToLocalChecked(), Nan::New<FunctionTemplate>(BitShiftR), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("lt").ToLocalChecked(), Nan::New<FunctionTemplate>(Lt), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("gt").ToLocalChecked(), Nan::New<FunctionTemplate>(Gt), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("le").ToLocalChecked(), Nan::New<FunctionTemplate>(Le), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("ge").ToLocalChecked(), Nan::New<FunctionTemplate>(Ge), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("eq").ToLocalChecked(), Nan::New<FunctionTemplate>(Eq), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("neq").ToLocalChecked(), Nan::New<FunctionTemplate>(Neq), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("and").ToLocalChecked(), Nan::New<FunctionTemplate>(And), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("or").ToLocalChecked(), Nan::New<FunctionTemplate>(Or), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitAnd").ToLocalChecked(), Nan::New<FunctionTemplate>(BitAnd), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitOr").ToLocalChecked(), Nan::New<FunctionTemplate>(BitOr), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("bitXor").ToLocalChecked(), Nan::New<FunctionTemplate>(BitXor), v8::None);
 
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsAdd"), NanNew<FunctionTemplate>(RhsAdd), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsSub"), NanNew<FunctionTemplate>(RhsSub), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsMul"), NanNew<FunctionTemplate>(RhsMul), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsDiv"), NanNew<FunctionTemplate>(RhsDiv), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitshiftl"), NanNew<FunctionTemplate>(RhsBitShiftL), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitShiftL"), NanNew<FunctionTemplate>(RhsBitShiftL), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitshiftr"), NanNew<FunctionTemplate>(RhsBitShiftR), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitShiftR"), NanNew<FunctionTemplate>(RhsBitShiftR), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsLt"), NanNew<FunctionTemplate>(RhsLt), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsGt"), NanNew<FunctionTemplate>(RhsGt), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsLe"), NanNew<FunctionTemplate>(RhsLe), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsGe"), NanNew<FunctionTemplate>(RhsGe), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsEq"), NanNew<FunctionTemplate>(RhsEq), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsNeq"), NanNew<FunctionTemplate>(RhsNeq), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsAnd"), NanNew<FunctionTemplate>(RhsAnd), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsOr"), NanNew<FunctionTemplate>(RhsOr), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitAnd"), NanNew<FunctionTemplate>(RhsBitAnd), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitOr"), NanNew<FunctionTemplate>(RhsBitOr), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("rhsBitXor"), NanNew<FunctionTemplate>(RhsBitXor), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsAdd").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsAdd), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsSub").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsSub), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsMul").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsMul), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsDiv").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsDiv), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitshiftl").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitShiftL), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitShiftL").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitShiftL), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitshiftr").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitShiftR), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitShiftR").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitShiftR), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsLt").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsLt), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsGt").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsGt), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsLe").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsLe), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsGe").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsGe), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsEq").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsEq), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsNeq").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsNeq), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsAnd").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsAnd), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsOr").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsOr), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitAnd").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitAnd), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitOr").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitOr), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("rhsBitXor").ToLocalChecked(), Nan::New<FunctionTemplate>(RhsBitXor), v8::None);
 
-    NanSetPrototypeTemplate(tmpl, NanNew("neg"), NanNew<FunctionTemplate>(Neg), v8::None);
-    NanSetPrototypeTemplate(tmpl, NanNew("not"), NanNew<FunctionTemplate>(Not), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("neg").ToLocalChecked(), Nan::New<FunctionTemplate>(Neg), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("not").ToLocalChecked(), Nan::New<FunctionTemplate>(Not), v8::None);
 
     auto f = tmpl->GetFunction();
-    f->Set(NanNew("create"), NanNew<FunctionTemplate>(Create)->GetFunction());
-    NanAssignPersistent<Function>(constructor, f);
-    exports->Set(NanNew("AFArray"), f);
+    f->Set(Nan::New("create").ToLocalChecked(), Nan::New<FunctionTemplate>(Create)->GetFunction());
+    constructor.Reset(f);
+    Nan::Set(target, Nan::New<String>("AFArray").ToLocalChecked(), f);
 }
 
 v8::Local<Object> ArrayWrapper::New(const af::array& array)
@@ -184,22 +186,23 @@ v8::Local<Object> ArrayWrapper::New(const af::array& array)
 
 v8::Local<v8::Object> ArrayWrapper::New(af::array* array)
 {
+    Nan::EscapableHandleScope scope;
     assert(array);
-    Local<Value> args[] = { WrapPointer(array) };
-    auto c = NanNew(constructor);
-    auto inst = c->NewInstance(1, args);
+    Local<Value> info[] = { WrapPointer(array) };
+    auto c = Nan::New(constructor);
+    auto inst = c->NewInstance(1, info);
     assert(ObjectWrap::Unwrap<ArrayWrapper>(inst)->_array == array);
-    return inst;
+    return scope.Escape(inst);
 }
 
-void ArrayWrapper::NewAsync(const v8::FunctionCallbackInfo<v8::Value>& args, const std::function<af::array*()>& arrayFactory)
+void ArrayWrapper::NewAsync(const Nan::FunctionCallbackInfo<v8::Value>& info, const std::function<af::array*()>& arrayFactory)
 {
-    if (args.Length() >= 1 && args[args.Length() - 1]->IsFunction())
+    if (info.Length() >= 1 && info[info.Length() - 1]->IsFunction())
     {
-        auto callback = new NanCallback(args[args.Length() - 1].As<Function>());
+        auto callback = new Nan::Callback(info[info.Length() - 1].As<Function>());
         auto worker = new Worker<af::array*>(callback, arrayFactory, [](Worker<af::array*>* w, af::array* a){ return ArrayWrapper::New(a); });
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     else
     {
@@ -221,7 +224,7 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
         if (value->IsObject())
         {
             auto obj = value.As<Object>();
-            if (obj->GetConstructorName()->Equals(NanNew(Symbols::AFArrayClass)))
+            if (obj->GetConstructorName()->Equals(Nan::New(Symbols::AFArrayClass)))
             {
                 auto wrapper = ObjectWrap::Unwrap<ArrayWrapper>(value.As<Object>());
                 return wrapper->_array;
@@ -254,49 +257,49 @@ af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
     return nullptr;
 }
 
-af::array* ArrayWrapper::GetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+af::array* ArrayWrapper::GetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index)
 {
-    auto array = TryGetArrayAt(args, index);
+    auto array = TryGetArrayAt(info, index);
     if (array) return array;
     stringstream ss;
     ss << "Argument at position " << to_string(index) << ". is not an AFArray instance.";
     ARRAYFIRE_THROW(ss.str().c_str());
 }
 
-af::array* ArrayWrapper::TryGetArrayAt(const v8::FunctionCallbackInfo<v8::Value>& args, int index)
+af::array* ArrayWrapper::TryGetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index)
 {
-    if (index < args.Length())
+    if (index < info.Length())
     {
-        return GetArray(args[index]);
+        return GetArray(info[index]);
     }
     return nullptr;
 }
 
-void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
+void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
-    NanScope();
+
 
     try
     {
         ArrayWrapper* instance = nullptr;
         try
         {
-            if (args.Length() == 0)
+            if (info.Length() == 0)
             {
                 Guard();
                 instance = new ArrayWrapper(new af::array());
             }
-            else if (args.Length() == 1)
+            else if (info.Length() == 1)
             {
-                if (Buffer::HasInstance(args[0]))
+                if (Buffer::HasInstance(info[0]))
                 {
-                    instance = new ArrayWrapper(reinterpret_cast<af::array*>(Buffer::Data(args[0])));
+                    instance = new ArrayWrapper(reinterpret_cast<af::array*>(Buffer::Data(info[0])));
                 }
             }
             else
             {
                 Guard();
-                auto dimAndType = ParseDimAndTypeArgs(args);
+                auto dimAndType = ParseDimAndTypeArgs(info);
                 instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
             }
         }
@@ -311,8 +314,8 @@ void ArrayWrapper::New(const v8::FunctionCallbackInfo<v8::Value>& args)
             return NAN_THROW("Invalid arguments.");
         }
 
-        instance->Wrap(args.Holder());
-        NanReturnValue(args.Holder());
+        instance->Wrap(info.Holder());
+        info.GetReturnValue().Set(info.Holder());
     }
     ARRAYFIRE_CATCH
 }
@@ -326,16 +329,14 @@ af::array* ArrayWrapper::CreateArray(void* ptr, af_source src, const af::dim4& d
 
 NAN_METHOD(ArrayWrapper::Create)
 {
-    NanScope();
-
     try
     {
         int buffIdx = -1;
         function<af::array*()> factory;
 
-        for (int i = 0; i < args.Length(); i++)
+        for (int i = 0; i < info.Length(); i++)
         {
-            if (Buffer::HasInstance(args[i]))
+            if (Buffer::HasInstance(info[i]))
             {
                 buffIdx = i;
                 break;
@@ -346,18 +347,18 @@ NAN_METHOD(ArrayWrapper::Create)
         {
             return NAN_THROW("Buffer argument expected.");
         }
-        else if (buffIdx + 1 < args.Length())
+        else if (buffIdx + 1 < info.Length())
         {
             // Copy / wrap ptr
-            // args: dim0..dimn, dtype, ptr[, source]
+            // info: dim0..dimn, dtype, ptr[, source]
             af_source src = afHost;
-            if (buffIdx + 1 < args.Length() && args[buffIdx + 1]->IsNumber())
+            if (buffIdx + 1 < info.Length() && info[buffIdx + 1]->IsNumber())
             {
-                src = (af_source)(args[buffIdx + 2]->Int32Value());
+                src = (af_source)(info[buffIdx + 2]->Int32Value());
             }
-            auto buffObj = args[buffIdx]->ToObject();
+            auto buffObj = info[buffIdx]->ToObject();
             char* ptr = Buffer::Data(buffObj);
-            auto dimAndType = ParseDimAndTypeArgs(args, buffIdx);
+            auto dimAndType = ParseDimAndTypeArgs(info, buffIdx);
             switch (dimAndType.second)
             {
                 case f32:
@@ -404,43 +405,39 @@ NAN_METHOD(ArrayWrapper::Create)
         {
             return New(a);
         };
-        auto worker = new Worker<af::array*>(GetCallback(args), move(factory), move(conv));
-        worker->SaveToPersistent("data", args[buffIdx]->ToObject());
+        auto worker = new Worker<af::array*>(GetCallback(info), move(factory), move(conv));
+        worker->SaveToPersistent("data", info[buffIdx]->ToObject());
 
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Elements)
 {
-    NanScope();
-
     try
     {
         Guard();
-        NanReturnValue(NanNew<Number>(GetArray(args.This())->elements()));
+        info.GetReturnValue().Set(Nan::New<Number>(GetArray(info.This())->elements()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Host)
 {
-    NanScope();
-
     try
     {
         ARGS_LEN(1)
 
         char* buffData;
-        auto pArray = GetArray(args.This());
+        auto pArray = GetArray(info.This());
 
-        if (Buffer::HasInstance(args[0]))
+        if (Buffer::HasInstance(info[0]))
         {
-            buffData = Buffer::Data(args[0]);
+            buffData = Buffer::Data(info[0]);
 
-            if (Buffer::Length(args[0]) < pArray->bytes())
+            if (Buffer::Length(info[0]) < pArray->bytes())
             {
                 return NAN_THROW("Buffer is too small to hold values.");
             }
@@ -451,11 +448,11 @@ NAN_METHOD(ArrayWrapper::Host)
                 Guard();
                 array.host(buffData);
             };
-            auto worker = new Worker<void>(GetCallback(args), move(exec));
-            worker->SaveToPersistent("data", args[0]->ToObject());
+            auto worker = new Worker<void>(GetCallback(info), move(exec));
+            worker->SaveToPersistent("data", info[0]->ToObject());
 
-            NanAsyncQueueWorker(worker);
-            NanReturnUndefined();
+            Nan::AsyncQueueWorker(worker);
+            info.GetReturnValue().SetUndefined();
         }
         else
         {
@@ -472,11 +469,12 @@ NAN_METHOD(ArrayWrapper::Host)
                 };
                 auto conv = [=](Worker<char*>* w, char* data)
                 {
-                    return NanNewBufferHandle(data, size, [](char* data, void* hint) { delete[] data; }, nullptr);
+                    Nan::EscapableHandleScope scope;
+                    return scope.Escape(Nan::NewBuffer(data, size, [](char* data, void* hint) { delete[] data; }, nullptr).ToLocalChecked());
                 };
-                auto worker = new Worker<char*>(GetCallback(args), move(exec), move(conv));
-                NanAsyncQueueWorker(worker);
-                NanReturnUndefined();
+                auto worker = new Worker<char*>(GetCallback(info), move(exec), move(conv));
+                Nan::AsyncQueueWorker(worker);
+                info.GetReturnValue().SetUndefined();
             }
             catch (...)
             {
@@ -490,13 +488,11 @@ NAN_METHOD(ArrayWrapper::Host)
 
 NAN_METHOD(ArrayWrapper::Scalar)
 {
-    NanScope();
-
     try
     {
         ARGS_LEN(1)
 
-        auto pArray = GetArray(args.This());
+        auto pArray = GetArray(info.This());
         af::array array(*pArray);
         switch (array.type())
         {
@@ -507,8 +503,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<float>();
                     };
-                    auto worker = new Worker<float>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<float>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case f64:
@@ -518,8 +514,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<double>();
                     };
-                    auto worker = new Worker<double>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<double>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case s32:
@@ -529,8 +525,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<int>();
                     };
-                    auto worker = new Worker<int>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<int>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case u32:
@@ -540,8 +536,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<unsigned>();
                     };
-                    auto worker = new Worker<unsigned>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<unsigned>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case u8:
@@ -551,8 +547,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<unsigned char>();
                     };
-                    auto worker = new Worker<unsigned char>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<unsigned char>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case b8:
@@ -562,8 +558,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                         Guard();
                         return array.scalar<char>();
                     };
-                    auto worker = new Worker<char>(GetCallback(args), move(exec));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<char>(GetCallback(info), move(exec));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case c32:
@@ -577,8 +573,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     {
                         return ToV8Complex(data);
                     };
-                    auto worker = new Worker<af::cfloat>(GetCallback(args), move(exec), move(conv));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<af::cfloat>(GetCallback(info), move(exec), move(conv));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case c64:
@@ -592,8 +588,8 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     {
                         return ToV8Complex(data);
                     };
-                    auto worker = new Worker<af::cdouble>(GetCallback(args), move(exec), move(conv));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<af::cdouble>(GetCallback(info), move(exec), move(conv));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case s64:
@@ -605,10 +601,11 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     };
                     auto conv = [=](Worker<long long>* w, long long data)
                     {
-                        return NanNew(to_string(data).c_str());
+                        Nan::EscapableHandleScope scope;
+                        return scope.Escape(Nan::New(to_string(data).c_str()).ToLocalChecked());
                     };
-                    auto worker = new Worker<long long>(GetCallback(args), move(exec), move(conv));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<long long>(GetCallback(info), move(exec), move(conv));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             case u64:
@@ -620,16 +617,17 @@ NAN_METHOD(ArrayWrapper::Scalar)
                     };
                     auto conv = [=](Worker<unsigned long long>* w, unsigned long long data)
                     {
-                        return NanNew(to_string(data).c_str());
+                        Nan::EscapableHandleScope scope;
+                        return scope.Escape(Nan::New(to_string(data).c_str()).ToLocalChecked());
                     };
-                    auto worker = new Worker<unsigned long long>(GetCallback(args), move(exec), move(conv));
-                    NanAsyncQueueWorker(worker);
+                    auto worker = new Worker<unsigned long long>(GetCallback(info), move(exec), move(conv));
+                    Nan::AsyncQueueWorker(worker);
                 }
                 break;
             default:
                 assert(false);
         }
-        NanReturnUndefined();
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
@@ -637,29 +635,27 @@ NAN_METHOD(ArrayWrapper::Scalar)
 
 NAN_METHOD(ArrayWrapper::Write)
 {
-    NanScope();
-
     try
     {
         ARGS_LEN(3)
 
         char* buffData;
-        auto pArray = GetArray(args.This());
+        auto pArray = GetArray(info.This());
 
-        if (Buffer::HasInstance(args[0]))
+        if (Buffer::HasInstance(info[0]))
         {
-            buffData = Buffer::Data(args[0]);
+            buffData = Buffer::Data(info[0]);
         }
         else
         {
             return NAN_THROW("First argument is no a Buffer.");
         }
 
-        unsigned bytes = args[1]->Uint32Value();
+        unsigned bytes = info[1]->Uint32Value();
         af_source src = afHost;
-        if (args.Length() > 3)
+        if (info.Length() > 3)
         {
-            src = (af_source)(args[2]->Int32Value());
+            src = (af_source)(info[2]->Int32Value());
         }
 
         af::array array(*pArray);
@@ -668,52 +664,48 @@ NAN_METHOD(ArrayWrapper::Write)
             Guard();
             af_write_array(array.get(), buffData, bytes, src);
         };
-        auto worker = new Worker<void>(GetCallback(args), move(exec));
-        worker->SaveToPersistent("data", args[0]->ToObject());
+        auto worker = new Worker<void>(GetCallback(info), move(exec));
+        worker->SaveToPersistent("data", info[0]->ToObject());
 
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Type)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(GetArray(args.This())->type());
+        info.GetReturnValue().Set(GetArray(info.This())->type());
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Dims)
 {
-    NanScope();
-
     try
     {
-        auto pArray = GetArray(args.This());
-        if (!args.Length())
+        auto pArray = GetArray(info.This());
+        if (!info.Length())
         {
             auto dims = pArray->dims();
-            auto jsDims = NanNew<Object>();
-            jsDims->Set(NanNew(Symbols::Elements), NanNew<Number>(dims.elements()));
-            jsDims->Set(NanNew(Symbols::Ndims), NanNew<Number>(dims.ndims()));
-            jsDims->Set(NanNew(Symbols::NDims), NanNew<Number>(dims.ndims()));
-            auto pDims = NanNew<Array>(4);
-            pDims->Set(0, NanNew<Number>(dims[0]));
-            pDims->Set(1, NanNew<Number>(dims[1]));
-            pDims->Set(2, NanNew<Number>(dims[2]));
-            pDims->Set(3, NanNew<Number>(dims[3]));
-            jsDims->Set(NanNew(Symbols::Values), pDims);
+            auto jsDims = Nan::New<Object>();
+            jsDims->Set(Nan::New(Symbols::Elements), Nan::New<Number>(dims.elements()));
+            jsDims->Set(Nan::New(Symbols::Ndims), Nan::New<Number>(dims.ndims()));
+            jsDims->Set(Nan::New(Symbols::NDims), Nan::New<Number>(dims.ndims()));
+            auto pDims = Nan::New<Array>(4);
+            pDims->Set(0, Nan::New<Number>(dims[0]));
+            pDims->Set(1, Nan::New<Number>(dims[1]));
+            pDims->Set(2, Nan::New<Number>(dims[2]));
+            pDims->Set(3, Nan::New<Number>(dims[3]));
+            jsDims->Set(Nan::New(Symbols::Values), pDims);
 
-            NanReturnValue(jsDims);
+            info.GetReturnValue().Set(jsDims);
         }
         else
         {
-            NanReturnValue(NanNew<Number>(pArray->dims(args[0]->Uint32Value())));
+            info.GetReturnValue().Set(Nan::New<Number>(pArray->dims(info[0]->Uint32Value())));
         }
     }
     ARRAYFIRE_CATCH
@@ -721,190 +713,174 @@ NAN_METHOD(ArrayWrapper::Dims)
 
 NAN_METHOD(ArrayWrapper::NumDims)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew<Number>(GetArray(args.This())->numdims()));
+        info.GetReturnValue().Set(Nan::New<Number>(GetArray(info.This())->numdims()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Bytes)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew<Number>((unsigned)GetArray(args.This())->bytes()));
+        info.GetReturnValue().Set(Nan::New<Number>((unsigned)GetArray(info.This())->bytes()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Copy)
 {
-    NanScope();
-
     try
     {
         Guard();
-        NanReturnValue(New(GetArray(args.This())->copy()));
+        info.GetReturnValue().Set(New(GetArray(info.This())->copy()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsEmpty)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isempty()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isempty()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsScalar)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isscalar()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isscalar()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsVector)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isvector()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isvector()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsRow)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isrow()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isrow()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsColumn)
 {
-    NanScope();
-
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->iscolumn()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->iscolumn()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsComplex)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->iscomplex()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->iscomplex()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsReal)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isreal()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isreal()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsDouble)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isdouble()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isdouble()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsSingle)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->issingle()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->issingle()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsRealFloating)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isrealfloating()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isrealfloating()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsFloating)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isfloating()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isfloating()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsInteger)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->isinteger()));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->isinteger()));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::IsBool)
 {
-    NanScope();
+
 
     try
     {
-        NanReturnValue(NanNew(GetArray(args.This())->type() == b8));
+        info.GetReturnValue().Set(Nan::New(GetArray(info.This())->type() == b8));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(ArrayWrapper::Eval)
 {
-    NanScope();
+
 
     try
     {
         Guard();
-        GetArray(args.This())->eval();
-        NanReturnUndefined();
+        GetArray(info.This())->eval();
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
@@ -912,7 +888,7 @@ NAN_METHOD(ArrayWrapper::Eval)
 NAN_METHOD(ArrayWrapper::At)
 {
     // Aka "indexing"
-    NanScope();
+
 
     try
     {
@@ -920,45 +896,45 @@ NAN_METHOD(ArrayWrapper::At)
 
         Guard();
 
-        if (args.Length() == 1)
+        if (info.Length() == 1)
         {
-            auto ri = ToRegionIndex(args[0]);
+            auto ri = ToRegionIndex(info[0]);
             switch (get<0>(ri))
             {
                 case Region::Row:
-                    NanReturnValue(New(GetArray(args.This())->row(get<1>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->row(get<1>(ri))));
                     break;
                 case Region::Rows:
-                    NanReturnValue(New(GetArray(args.This())->rows(get<1>(ri), get<2>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->rows(get<1>(ri), get<2>(ri))));
                     break;
                 case Region::Col:
-                    NanReturnValue(New(GetArray(args.This())->col(get<1>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->col(get<1>(ri))));
                     break;
                 case Region::Cols:
-                    NanReturnValue(New(GetArray(args.This())->cols(get<1>(ri), get<2>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->cols(get<1>(ri), get<2>(ri))));
                     break;
                 case Region::Slice:
-                    NanReturnValue(New(GetArray(args.This())->slice(get<1>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->slice(get<1>(ri))));
                     break;
                 case Region::Slices:
-                    NanReturnValue(New(GetArray(args.This())->slices(get<1>(ri), get<2>(ri))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->slices(get<1>(ri), get<2>(ri))));
                     break;
                 default:
-                    NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]))));
+                    info.GetReturnValue().Set(New(GetArray(info.This())->operator()(ToIndex(info[0]))));
                     break;
             }
         }
-        else if (args.Length() == 2)
+        else if (info.Length() == 2)
         {
-            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]))));
+            info.GetReturnValue().Set(New(GetArray(info.This())->operator()(ToIndex(info[0]), ToIndex(info[1]))));
         }
-        else if (args.Length() == 3)
+        else if (info.Length() == 3)
         {
-            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2]))));
+            info.GetReturnValue().Set(New(GetArray(info.This())->operator()(ToIndex(info[0]), ToIndex(info[1]), ToIndex(info[2]))));
         }
         else
         {
-            NanReturnValue(New(GetArray(args.This())->operator()(ToIndex(args[0]), ToIndex(args[1]), ToIndex(args[2]), ToIndex(args[3]))));
+            info.GetReturnValue().Set(New(GetArray(info.This())->operator()(ToIndex(info[0]), ToIndex(info[1]), ToIndex(info[2]), ToIndex(info[3]))));
         }
     }
     ARRAYFIRE_CATCH
@@ -967,13 +943,13 @@ NAN_METHOD(ArrayWrapper::At)
 #define AFARRAY_IMPL_IDX1(F, f)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(1)\
         Guard();\
-        auto pArray = GetArray(args.This());\
-        NanReturnValue(New(pArray->f(args[0]->Int32Value())));\
+        auto pArray = GetArray(info.This());\
+        info.GetReturnValue().Set(New(pArray->f(info[0]->Int32Value())));\
     }\
     ARRAYFIRE_CATCH\
 }
@@ -986,13 +962,13 @@ AFARRAY_IMPL_IDX1(Slice, slice)
 #define AFARRAY_IMPL_IDX2(F, f)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
         Guard();\
-        auto pArray = GetArray(args.This());\
-        NanReturnValue(New(pArray->f(args[0]->Int32Value(), args[1]->Int32Value())));\
+        auto pArray = GetArray(info.This());\
+        info.GetReturnValue().Set(New(pArray->f(info[0]->Int32Value(), info[1]->Int32Value())));\
     }\
     ARRAYFIRE_CATCH\
 }
@@ -1004,13 +980,13 @@ AFARRAY_IMPL_IDX2(Slices, slices)
 
 NAN_METHOD(ArrayWrapper::As)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        af::dtype type = GetDTypeInfo(args[0]->Uint32Value()).first;
+        af::dtype type = GetDTypeInfo(info[0]->Uint32Value()).first;
         Guard();
-        NanReturnValue(New(GetArray(args.This())->as(type)));
+        info.GetReturnValue().Set(New(GetArray(info.This())->as(type)));
     }
     ARRAYFIRE_CATCH
 }
@@ -1018,17 +994,17 @@ NAN_METHOD(ArrayWrapper::As)
 #define AFARRAY_IMPL_ASSIGN(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     \
     try\
     {\
-        auto pArray = GetArray(args.This());\
+        auto pArray = GetArray(info.This());\
         auto& array = *pArray;\
         bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
-        if (args.Length() == 1)\
+        if (info.Length() == 1)\
         {\
-            auto value = args[0];\
+            auto value = info[0];\
             auto pOtherArray = TryGetArray(value);\
             Guard();\
             if (pOtherArray)\
@@ -1076,17 +1052,17 @@ NAN_METHOD(ArrayWrapper::F)\
                 return NAN_THROW_INVALID_ARGS();\
             }\
         }\
-        else if (args.Length() == 2)\
+        else if (info.Length() == 2)\
         {\
-            auto regIdx = ToRegionIndex(args[0]);\
+            auto regIdx = ToRegionIndex(info[0]);\
             auto reg = get<0>(regIdx);\
-            auto value = args[1];\
+            auto value = info[1];\
             auto pOtherArray = TryGetArray(value);\
             switch(reg)\
             {\
                 case Region::None:\
                     {\
-                        auto idx0 = ToIndex(args[0]);\
+                        auto idx0 = ToIndex(info[0]);\
                         Guard();\
                         if (pOtherArray)\
                         {\
@@ -1430,11 +1406,11 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
             }\
         }\
-        else if (args.Length() == 3)\
+        else if (info.Length() == 3)\
         {\
-            auto idx0 = ToIndex(args[0]);\
-            auto idx1 = ToIndex(args[1]);\
-            auto value = args[2];\
+            auto idx0 = ToIndex(info[0]);\
+            auto idx1 = ToIndex(info[1]);\
+            auto value = info[2];\
             auto pOtherArray = TryGetArray(value);\
             Guard();\
             if (pOtherArray)\
@@ -1482,12 +1458,12 @@ NAN_METHOD(ArrayWrapper::F)\
                 return NAN_THROW_INVALID_ARGS();\
             }\
         }\
-        else if (args.Length() == 4)\
+        else if (info.Length() == 4)\
         {\
-            auto idx0 = ToIndex(args[0]);\
-            auto idx1 = ToIndex(args[1]);\
-            auto idx2 = ToIndex(args[2]);\
-            auto value = args[3];\
+            auto idx0 = ToIndex(info[0]);\
+            auto idx1 = ToIndex(info[1]);\
+            auto idx2 = ToIndex(info[2]);\
+            auto value = info[3];\
             auto pOtherArray = TryGetArray(value);\
             Guard();\
             if (pOtherArray)\
@@ -1537,11 +1513,11 @@ NAN_METHOD(ArrayWrapper::F)\
         }\
         else\
         {\
-            auto idx0 = ToIndex(args[0]);\
-            auto idx1 = ToIndex(args[1]);\
-            auto idx2 = ToIndex(args[2]);\
-            auto idx3 = ToIndex(args[3]);\
-            auto value = args[4];\
+            auto idx0 = ToIndex(info[0]);\
+            auto idx1 = ToIndex(info[1]);\
+            auto idx2 = ToIndex(info[2]);\
+            auto idx3 = ToIndex(info[3]);\
+            auto value = info[4];\
             auto pOtherArray = TryGetArray(value);\
             Guard();\
             if (pOtherArray)\
@@ -1590,7 +1566,7 @@ NAN_METHOD(ArrayWrapper::F)\
             }\
         }\
         \
-        NanReturnValue(args.This());\
+        info.GetReturnValue().Set(info.This());\
     }\
     ARRAYFIRE_CATCH\
 }
@@ -1605,14 +1581,14 @@ AFARRAY_IMPL_ASSIGN(DivAssign, /=)
 #define AFARRAY_IMPL_BINOP(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     \
     try\
     {\
-        auto& array = *GetArray(args.This());\
+        auto& array = *GetArray(info.This());\
         bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
-        auto value = args[0];\
+        auto value = info[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
         Guard();\
@@ -1661,7 +1637,7 @@ NAN_METHOD(ArrayWrapper::F)\
             return NAN_THROW_INVALID_ARGS();\
         }\
         \
-        NanReturnValue(New(result));\
+        info.GetReturnValue().Set(New(result));\
     }\
     ARRAYFIRE_CATCH\
 }
@@ -1689,14 +1665,14 @@ AFARRAY_IMPL_BINOP(BitXor, ^)
 #define AFARRAY_IMPL_BINOP(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     \
     try\
     {\
-        auto& array = *GetArray(args.This());\
+        auto& array = *GetArray(info.This());\
         bool isDouble = NeedsDouble(array);\
         ARGS_LEN(1)\
-        auto value = args[0];\
+        auto value = info[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
         Guard();\
@@ -1745,7 +1721,7 @@ NAN_METHOD(ArrayWrapper::F)\
             return NAN_THROW_INVALID_ARGS();\
         }\
         \
-        NanReturnValue(New(result));\
+        info.GetReturnValue().Set(New(result));\
     }\
     ARRAYFIRE_CATCH\
 }
@@ -1773,13 +1749,13 @@ AFARRAY_IMPL_BINOP(RhsBitXor, ^)
 #define AFARRAY_IMPL_UNOP(F, Op)\
 NAN_METHOD(ArrayWrapper::F)\
 {\
-    NanScope();\
+    \
     \
     try\
     {\
-        auto& array = *GetArray(args.This());\
+        auto& array = *GetArray(info.This());\
         Guard();\
-        NanReturnValue(New(array.operator Op()));\
+        info.GetReturnValue().Set(New(array.operator Op()));\
     }\
     ARRAYFIRE_CATCH\
 }

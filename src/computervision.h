@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <nan.h>
 
-void InitComputerVision(v8::Handle<v8::Object> exports);
+NAN_MODULE_INIT(InitComputerVision);
 
 #endif // ARRAYFIRE_COMPUTERVISION_H
 

@@ -42,17 +42,17 @@ using namespace node;
 
 NAN_METHOD(Join)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(3);
 
-        af::dtype dim = GetDTypeInfo(args[0]).first;
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 1);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 2);
+        af::dtype dim = GetDTypeInfo(info[0]).first;
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 1);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 2);
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::join(dim, *pArray1, *pArray2)));;
+        info.GetReturnValue().Set(ArrayWrapper::New(af::join(dim, *pArray1, *pArray2)));;
     }
     ARRAYFIRE_CATCH
 }
@@ -69,28 +69,45 @@ ARRAYFIRE_SYNC_METHOD_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {
-    NanScope();
+
 
     try
     {
         ARGS_LEN(2);
 
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        af::dtype dim = GetDTypeInfo(args[1]).first;
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        af::dtype dim = GetDTypeInfo(info[1]).first;
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::flip(*pArray, dim)));;
+        info.GetReturnValue().Set(ArrayWrapper::New(af::flip(*pArray, dim)));;
     }
     ARRAYFIRE_CATCH
 }
 
-void InitMoveAndReorderArray(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitMoveAndReorderArray)
 {
-    exports->Set(NanNew("join"), NanNew<FunctionTemplate>(Join)->GetFunction());
-    exports->Set(NanNew("tile"), NanNew<FunctionTemplate>(Tile)->GetFunction());
-    exports->Set(NanNew("reorder"), NanNew<FunctionTemplate>(Reorder)->GetFunction());
-    exports->Set(NanNew("shift"), NanNew<FunctionTemplate>(Shift)->GetFunction());
-    exports->Set(NanNew("moddims"), NanNew<FunctionTemplate>(ModDims)->GetFunction());
-    exports->Set(NanNew("modDims"), NanNew<FunctionTemplate>(ModDims)->GetFunction());
-    exports->Set(NanNew("flat"), NanNew<FunctionTemplate>(Flat)->GetFunction());
-    exports->Set(NanNew("flip"), NanNew<FunctionTemplate>(Flip)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("join").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Join)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("tile").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Tile)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("reorder").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Reorder)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("shift").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Shift)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("moddims").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(ModDims)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("modDims").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(ModDims)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("flat").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Flat)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("flip").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Flip)->GetFunction());
 }

@@ -42,139 +42,141 @@ using namespace node;
 
 NAN_METHOD(Orb)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         float fastThr=20.f;
         unsigned maxFeat=400;
         float sclFctr=1.5f;
         unsigned levels=4;
         bool blurImg=false;
-        if (args.Length() > 1)
+        if (info.Length() > 1)
         {
-            fastThr = args[1]->NumberValue();
+            fastThr = info[1]->NumberValue();
         }
-        if (args.Length() > 2)
+        if (info.Length() > 2)
         {
-            maxFeat = args[2]->Uint32Value();
+            maxFeat = info[2]->Uint32Value();
         }
-        if (args.Length() > 3)
+        if (info.Length() > 3)
         {
-            sclFctr = args[3]->NumberValue();
+            sclFctr = info[3]->NumberValue();
         }
-        if (args.Length() > 4)
+        if (info.Length() > 4)
         {
-            levels = args[4]->Uint32Value();
+            levels = info[4]->Uint32Value();
         }
-        if (args.Length() > 5)
+        if (info.Length() > 5)
         {
-            blurImg = args[5]->BooleanValue();
+            blurImg = info[5]->BooleanValue();
         }
         Guard();
         af::features feat;
         af::array desc;
         af::orb(feat, desc, *pArray, fastThr, maxFeat, sclFctr, levels, blurImg);
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Feat), ToV8Features(feat));
-        result->Set(NanNew(Symbols::Desc), ArrayWrapper::New(desc));
-        NanReturnValue(result);
+        auto result = Nan::New<Object>();
+        result->Set(Nan::New(Symbols::Feat), ToV8Features(feat));
+        result->Set(Nan::New(Symbols::Desc), ArrayWrapper::New(desc));
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(Fast)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         float thr=20.0f;
         unsigned arcLength=9;
         bool nonMax=true;
         float featureRatio=0.05f;
         unsigned edge=3;
-        if (args.Length() > 1)
+        if (info.Length() > 1)
         {
-            thr = args[1]->NumberValue();
+            thr = info[1]->NumberValue();
         }
-        if (args.Length() > 2)
+        if (info.Length() > 2)
         {
-            arcLength = args[2]->Uint32Value();
+            arcLength = info[2]->Uint32Value();
         }
-        if (args.Length() > 3)
+        if (info.Length() > 3)
         {
-            nonMax = args[3]->BooleanValue();
+            nonMax = info[3]->BooleanValue();
         }
-        if (args.Length() > 4)
+        if (info.Length() > 4)
         {
-            featureRatio = args[4]->NumberValue();
+            featureRatio = info[4]->NumberValue();
         }
-        if (args.Length() > 5)
+        if (info.Length() > 5)
         {
-            edge = args[5]->Uint32Value();
+            edge = info[5]->Uint32Value();
         }
         Guard();
         auto feat = af::fast(*pArray, thr, arcLength, nonMax, featureRatio, edge);
-        NanReturnValue(ToV8Features(feat));
+        info.GetReturnValue().Set(ToV8Features(feat));
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(HammingMatcher)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
         dim_t distDim = 0;
         unsigned nDist = 1;
-        if (args.Length() > 2)
+        if (info.Length() > 2)
         {
-            distDim = (dim_t)(args[2]->Uint32Value());
+            distDim = (dim_t)(info[2]->Uint32Value());
         }
-        if (args.Length() > 3)
+        if (info.Length() > 3)
         {
-            nDist = args[3]->Uint32Value();
+            nDist = info[3]->Uint32Value();
         }
         Guard();
         af::array idx, dist;
         af::hammingMatcher(idx, dist, *pArray1, *pArray2, distDim, nDist);
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Idx), ArrayWrapper::New(idx));
-        result->Set(NanNew(Symbols::Dist), ArrayWrapper::New(dist));
-        NanReturnValue(result);
+        auto result = Nan::New<Object>();
+        result->Set(Nan::New(Symbols::Idx), ArrayWrapper::New(idx));
+        result->Set(Nan::New(Symbols::Dist), ArrayWrapper::New(dist));
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(MatchTemplate)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
         af::matchType mType = AF_SAD;
-        if (args.Length() > 2)
+        if (info.Length() > 2)
         {
-            mType = (af::matchType)(args[2]->Uint32Value());
+            mType = (af::matchType)(info[2]->Uint32Value());
         }
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::matchTemplate(*pArray1, *pArray2, mType)));
+        info.GetReturnValue().Set(ArrayWrapper::New(af::matchTemplate(*pArray1, *pArray2, mType)));
     }
     ARRAYFIRE_CATCH
 }
 
-void InitComputerVision(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitComputerVision)
 {
-    exports->Set(NanNew("orb"), NanNew<FunctionTemplate>(Orb)->GetFunction());
-    exports->Set(NanNew("fast"), NanNew<FunctionTemplate>(Fast)->GetFunction());
-    exports->Set(NanNew("hammingMatcher"), NanNew<FunctionTemplate>(HammingMatcher)->GetFunction());
-    exports->Set(NanNew("matchTemplate"), NanNew<FunctionTemplate>(MatchTemplate)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("orb").ToLocalChecked(), Nan::New<FunctionTemplate>(Orb)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fast").ToLocalChecked(), Nan::New<FunctionTemplate>(Fast)->GetFunction());
+    Nan::Set(target, Nan::New<String>("hammingMatcher").ToLocalChecked(), Nan::New<FunctionTemplate>(HammingMatcher)->GetFunction());
+    Nan::Set(target, Nan::New<String>("matchTemplate").ToLocalChecked(), Nan::New<FunctionTemplate>(MatchTemplate)->GetFunction());
 }

@@ -43,19 +43,19 @@ using namespace node;
 
 NAN_METHOD(LoadImage)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        String::Utf8Value str(args[0]);
+        String::Utf8Value str(info[0]);
         string fn(*str);
         bool isColor = false;
-        if (args.Length() > 1)
+        if (info.Length() > 1)
         {
-            isColor = args[1]->BooleanValue();
+            isColor = info[1]->BooleanValue();
         }
         ArrayWrapper::NewAsync(
-                args,
+                info,
                 [=](){ Guard(); return new af::array(af::loadImage(fn.c_str(), isColor)); });
     }
     ARRAYFIRE_CATCH;
@@ -63,34 +63,34 @@ NAN_METHOD(LoadImage)
 
 NAN_METHOD(SaveImage)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        String::Utf8Value str(args[0]);
+        String::Utf8Value str(info[0]);
         string fn(*str);
-        auto array = *ArrayWrapper::GetArrayAt(args, 1);
+        auto array = *ArrayWrapper::GetArrayAt(info, 1);
         auto exec = [=]()
         {
             Guard();
             af::saveImage(fn.c_str(), array);
         };
-        auto worker = new Worker<void>(GetCallback(args), move(exec));
-        NanAsyncQueueWorker(worker);
-        NanReturnUndefined();
+        auto worker = new Worker<void>(GetCallback(info), move(exec));
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH;
 }
 
 NAN_METHOD(ColorSpace)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        auto to = (af::CSpace)args[1]->Uint32Value();
-        auto from = (af::CSpace)args[2]->Uint32Value();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        auto to = (af::CSpace)info[1]->Uint32Value();
+        auto from = (af::CSpace)info[2]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::colorSpace(*pArray, to, from));
     }
@@ -104,15 +104,15 @@ ARRAYFIRE_SYNC_METHOD_ARR(RGB2HSV, rgb2hsv)
 
 NAN_METHOD(Regions)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         af::connectivity conn = AF_CONNECTIVITY_4;
         af::dtype dtype = f32;
-        if (args.Length() > 1) conn = (af::connectivity)args[1]->Uint32Value();
-        if (args.Length() > 2) dtype = GetDTypeInfo(args[2]).first;
+        if (info.Length() > 1) conn = (af::connectivity)info[1]->Uint32Value();
+        if (info.Length() > 2) dtype = GetDTypeInfo(info[2]).first;
         Guard();
         ArrayWrapper::New(af::regions(*pArray, conn, dtype));
     }
@@ -121,15 +121,15 @@ NAN_METHOD(Regions)
 
 NAN_METHOD(Bilateral)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float spatialSigma = args[1]->NumberValue();
-        float chromaticSigma = args[2]->NumberValue();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float spatialSigma = info[1]->NumberValue();
+        float chromaticSigma = info[2]->NumberValue();
         bool isColor = false;
-        if (args.Length() > 3) isColor = args[3]->BooleanValue();
+        if (info.Length() > 3) isColor = info[3]->BooleanValue();
         Guard();
         ArrayWrapper::New(af::bilateral(*pArray, spatialSigma, chromaticSigma, isColor));
     }
@@ -139,17 +139,17 @@ NAN_METHOD(Bilateral)
 #define ARRAYFIRE_FILT_METHOD(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(1);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         dim_t windLength = 3;\
         dim_t windWidth = 3;\
         af::borderType edgePad = AF_PAD_ZERO;\
-        if (args.Length() > 1) windLength = args[1]->Uint32Value();\
-        if (args.Length() > 2) windWidth = args[2]->Uint32Value();\
-        if (args.Length() > 3) edgePad = (af::borderType)args[3]->Uint32Value();\
+        if (info.Length() > 1) windLength = info[1]->Uint32Value();\
+        if (info.Length() > 2) windWidth = info[2]->Uint32Value();\
+        if (info.Length() > 3) edgePad = (af::borderType)info[3]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, windLength, windWidth, edgePad));\
     }\
@@ -163,16 +163,16 @@ ARRAYFIRE_FILT_METHOD(MedFilt, medfilt)
 
 NAN_METHOD(MeanShift)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(4);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float spatialSigma = args[1]->NumberValue();
-        float chromaticSigma = args[2]->NumberValue();
-        unsigned iter = args[3]->Uint32Value();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float spatialSigma = info[1]->NumberValue();
+        float chromaticSigma = info[2]->NumberValue();
+        unsigned iter = info[3]->Uint32Value();
         bool isColor = false;
-        if (args.Length() > 4) isColor = args[4]->BooleanValue();
+        if (info.Length() > 4) isColor = info[4]->BooleanValue();
         Guard();
         ArrayWrapper::New(af::meanShift(*pArray, spatialSigma, chromaticSigma, iter, isColor));
     }
@@ -181,20 +181,20 @@ NAN_METHOD(MeanShift)
 
 NAN_METHOD(Sobel)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         unsigned kerSize = 3;
-        if (args.Length() > 1) kerSize = args[1]->Uint32Value();
+        if (info.Length() > 1) kerSize = info[1]->Uint32Value();
         Guard();
         af::array dx, dy;
         af::sobel(dx, dy, *pArray, kerSize);
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::DX), ArrayWrapper::New(dx));
-        result->Set(NanNew(Symbols::DY), ArrayWrapper::New(dy));
-        NanReturnValue(result);
+        auto result = Nan::New<Object>();
+        result->Set(Nan::New(Symbols::DX), ArrayWrapper::New(dx));
+        result->Set(Nan::New(Symbols::DY), ArrayWrapper::New(dy));
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH;
 }
@@ -203,16 +203,16 @@ ARRAYFIRE_SYNC_METHOD_ARR_ARR(HistEqual, histEqual)
 
 NAN_METHOD(Histogram)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        unsigned nbins = args[1]->Uint32Value();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        unsigned nbins = info[1]->Uint32Value();
         double minval = numeric_limits<double>::min();
         double maxval = numeric_limits<double>::max();
-        if (args.Length() > 2) minval = args[2]->NumberValue();
-        if (args.Length() > 3) maxval = args[3]->NumberValue();
+        if (info.Length() > 2) minval = info[2]->NumberValue();
+        if (info.Length() > 3) maxval = info[3]->NumberValue();
         Guard();
         ArrayWrapper::New(af::histogram(*pArray, nbins, minval, maxval));
     }
@@ -221,36 +221,36 @@ NAN_METHOD(Histogram)
 
 NAN_METHOD(Resize)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pIn = ArrayWrapper::TryGetArrayAt(args, 0);
+        auto pIn = ArrayWrapper::TryGetArrayAt(info, 0);
         af::interpType method = AF_INTERP_NEAREST;
         if (pIn)
         {
-            dim_t odim0 = args[1]->Uint32Value();
-            dim_t odim1 = args[2]->Uint32Value();
-            if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+            dim_t odim0 = info[1]->Uint32Value();
+            dim_t odim1 = info[2]->Uint32Value();
+            if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
             Guard();
             ArrayWrapper::New(af::resize(*pIn, odim0, odim1, method));
         }
         else
         {
-            pIn = ArrayWrapper::TryGetArrayAt(args, 1);
+            pIn = ArrayWrapper::TryGetArrayAt(info, 1);
             if (pIn)
             {
-                float scale = args[0]->NumberValue();
-                if (args.Length() > 2) method = (af::interpType)args[2]->Uint32Value();
+                float scale = info[0]->NumberValue();
+                if (info.Length() > 2) method = (af::interpType)info[2]->Uint32Value();
                 Guard();
                 ArrayWrapper::New(af::resize(scale, *pIn, method));
             }
             else
             {
-                float scale0 = args[0]->NumberValue();
-                float scale1 = args[1]->NumberValue();
-                pIn = ArrayWrapper::GetArrayAt(args, 2);
-                if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+                float scale0 = info[0]->NumberValue();
+                float scale1 = info[1]->NumberValue();
+                pIn = ArrayWrapper::GetArrayAt(info, 2);
+                if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
                 Guard();
                 ArrayWrapper::New(af::resize(scale0, scale1, *pIn, method));
             }
@@ -261,16 +261,16 @@ NAN_METHOD(Resize)
 
 NAN_METHOD(Rotate)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float theta = args[1]->NumberValue();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float theta = info[1]->NumberValue();
         bool crop = true;
         af::interpType method = AF_INTERP_NEAREST;
-        if (args.Length() > 2) crop = args[2]->BooleanValue();
-        if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
+        if (info.Length() > 2) crop = info[2]->BooleanValue();
+        if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::rotate(*pArray, theta, crop, method));
     }
@@ -279,19 +279,19 @@ NAN_METHOD(Rotate)
 
 NAN_METHOD(Scale)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float scale0 = args[1]->NumberValue();
-        float scale1 = args[2]->NumberValue();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float scale0 = info[1]->NumberValue();
+        float scale1 = info[2]->NumberValue();
         dim_t odim0 = 0;
         dim_t odim1 = 0;
         af::interpType method = AF_INTERP_NEAREST;
-        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
-        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
-        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        if (info.Length() > 3) odim0 = info[3]->Uint32Value();
+        if (info.Length() > 4) odim1 = info[4]->Uint32Value();
+        if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::scale(*pArray, scale0, scale1, odim0, odim1, method));
     }
@@ -300,21 +300,21 @@ NAN_METHOD(Scale)
 
 NAN_METHOD(Skew)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float skew0 = args[1]->NumberValue();
-        float skew1 = args[2]->NumberValue();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float skew0 = info[1]->NumberValue();
+        float skew1 = info[2]->NumberValue();
         dim_t odim0 = 0;
         dim_t odim1 = 0;
         bool inverse = true;
         af::interpType method = AF_INTERP_NEAREST;
-        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
-        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
-        if (args.Length() > 5) inverse = args[5]->BooleanValue();
-        if (args.Length() > 6) method = (af::interpType)args[6]->Uint32Value();
+        if (info.Length() > 3) odim0 = info[3]->Uint32Value();
+        if (info.Length() > 4) odim1 = info[4]->Uint32Value();
+        if (info.Length() > 5) inverse = info[5]->BooleanValue();
+        if (info.Length() > 6) method = (af::interpType)info[6]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::skew(*pArray, skew0, skew1, odim0, odim1, inverse, method));
     }
@@ -323,20 +323,20 @@ NAN_METHOD(Skew)
 
 NAN_METHOD(Transform)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
         dim_t odim0 = 0;
         dim_t odim1 = 0;
         bool inverse = true;
         af::interpType method = AF_INTERP_NEAREST;
-        if (args.Length() > 2) odim0 = args[2]->Uint32Value();
-        if (args.Length() > 3) odim1 = args[3]->Uint32Value();
-        if (args.Length() > 4) inverse = args[4]->BooleanValue();
-        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        if (info.Length() > 2) odim0 = info[2]->Uint32Value();
+        if (info.Length() > 3) odim1 = info[3]->Uint32Value();
+        if (info.Length() > 4) inverse = info[4]->BooleanValue();
+        if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::transform(*pArray1, *pArray2, odim0, odim1, method, inverse));
     }
@@ -345,19 +345,19 @@ NAN_METHOD(Transform)
 
 NAN_METHOD(Translate)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
-        float trans0 = args[1]->NumberValue();
-        float trans1 = args[2]->NumberValue();
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        float trans0 = info[1]->NumberValue();
+        float trans1 = info[2]->NumberValue();
         dim_t odim0 = 0;
         dim_t odim1 = 0;
         af::interpType method = AF_INTERP_NEAREST;
-        if (args.Length() > 3) odim0 = args[3]->Uint32Value();
-        if (args.Length() > 4) odim1 = args[4]->Uint32Value();
-        if (args.Length() > 5) method = (af::interpType)args[5]->Uint32Value();
+        if (info.Length() > 3) odim0 = info[3]->Uint32Value();
+        if (info.Length() > 4) odim1 = info[4]->Uint32Value();
+        if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::translate(*pArray, trans0, trans1, odim0, odim1, method));
     }
@@ -371,52 +371,54 @@ ARRAYFIRE_SYNC_METHOD_ARR_ARR(Erode3, erode3)
 
 NAN_METHOD(GaussianKernel)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        int rows = args[0]->Int32Value();
-        int cols = args[1]->Int32Value();
+        int rows = info[0]->Int32Value();
+        int cols = info[1]->Int32Value();
         double sigR = 0;
         double sigC = 0;
-        if (args.Length() > 2) sigR = args[2]->NumberValue();
-        if (args.Length() > 3) sigC = args[3]->NumberValue();
+        if (info.Length() > 2) sigR = info[2]->NumberValue();
+        if (info.Length() > 3) sigC = info[3]->NumberValue();
         Guard();
         ArrayWrapper::New(af::gaussianKernel(rows, cols, sigR, sigC));
     }
     ARRAYFIRE_CATCH;
 }
 
-void InitImageProcessing(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitImageProcessing)
 {
-    exports->Set(NanNew("loadImage"), NanNew<FunctionTemplate>(LoadImage)->GetFunction());
-    exports->Set(NanNew("saveImage"), NanNew<FunctionTemplate>(SaveImage)->GetFunction());
-    exports->Set(NanNew("colorSpace"), NanNew<FunctionTemplate>(ColorSpace)->GetFunction());
-    exports->Set(NanNew("gray2rgb"), NanNew<FunctionTemplate>(Gray2RGB)->GetFunction());
-    exports->Set(NanNew("rgb2gray"), NanNew<FunctionTemplate>(RGB2Gray)->GetFunction());
-    exports->Set(NanNew("hsv2rgb"), NanNew<FunctionTemplate>(HSV2RGB)->GetFunction());
-    exports->Set(NanNew("rgb2hsv"), NanNew<FunctionTemplate>(RGB2HSV)->GetFunction());
-    exports->Set(NanNew("regions"), NanNew<FunctionTemplate>(Regions)->GetFunction());
-    exports->Set(NanNew("bilateral"), NanNew<FunctionTemplate>(Bilateral)->GetFunction());
-    exports->Set(NanNew("maxfilt"), NanNew<FunctionTemplate>(MaxFilt)->GetFunction());
-    exports->Set(NanNew("maxFilt"), NanNew<FunctionTemplate>(MaxFilt)->GetFunction());
-    exports->Set(NanNew("minfilt"), NanNew<FunctionTemplate>(MinFilt)->GetFunction());
-    exports->Set(NanNew("minFilt"), NanNew<FunctionTemplate>(MinFilt)->GetFunction());
-    exports->Set(NanNew("medfilt"), NanNew<FunctionTemplate>(MedFilt)->GetFunction());
-    exports->Set(NanNew("medFilt"), NanNew<FunctionTemplate>(MedFilt)->GetFunction());
-    exports->Set(NanNew("meanShift"), NanNew<FunctionTemplate>(MeanShift)->GetFunction());
-    exports->Set(NanNew("sobel"), NanNew<FunctionTemplate>(Sobel)->GetFunction());
-    exports->Set(NanNew("histEqual"), NanNew<FunctionTemplate>(HistEqual)->GetFunction());
-    exports->Set(NanNew("histogram"), NanNew<FunctionTemplate>(Histogram)->GetFunction());
-    exports->Set(NanNew("resize"), NanNew<FunctionTemplate>(Resize)->GetFunction());
-    exports->Set(NanNew("rotate"), NanNew<FunctionTemplate>(Rotate)->GetFunction());
-    exports->Set(NanNew("scale"), NanNew<FunctionTemplate>(Scale)->GetFunction());
-    exports->Set(NanNew("skew"), NanNew<FunctionTemplate>(Skew)->GetFunction());
-    exports->Set(NanNew("transform"), NanNew<FunctionTemplate>(Transform)->GetFunction());
-    exports->Set(NanNew("translate"), NanNew<FunctionTemplate>(Translate)->GetFunction());
-    exports->Set(NanNew("dilate"), NanNew<FunctionTemplate>(Dilate)->GetFunction());
-    exports->Set(NanNew("dilate3"), NanNew<FunctionTemplate>(Dilate3)->GetFunction());
-    exports->Set(NanNew("erode"), NanNew<FunctionTemplate>(Erode)->GetFunction());
-    exports->Set(NanNew("erode3"), NanNew<FunctionTemplate>(Erode3)->GetFunction());
-    exports->Set(NanNew("gaussianKernel"), NanNew<FunctionTemplate>(GaussianKernel)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("loadImage").ToLocalChecked(), Nan::New<FunctionTemplate>(LoadImage)->GetFunction());
+    Nan::Set(target, Nan::New<String>("saveImage").ToLocalChecked(), Nan::New<FunctionTemplate>(SaveImage)->GetFunction());
+    Nan::Set(target, Nan::New<String>("colorSpace").ToLocalChecked(), Nan::New<FunctionTemplate>(ColorSpace)->GetFunction());
+    Nan::Set(target, Nan::New<String>("gray2rgb").ToLocalChecked(), Nan::New<FunctionTemplate>(Gray2RGB)->GetFunction());
+    Nan::Set(target, Nan::New<String>("rgb2gray").ToLocalChecked(), Nan::New<FunctionTemplate>(RGB2Gray)->GetFunction());
+    Nan::Set(target, Nan::New<String>("hsv2rgb").ToLocalChecked(), Nan::New<FunctionTemplate>(HSV2RGB)->GetFunction());
+    Nan::Set(target, Nan::New<String>("rgb2hsv").ToLocalChecked(), Nan::New<FunctionTemplate>(RGB2HSV)->GetFunction());
+    Nan::Set(target, Nan::New<String>("regions").ToLocalChecked(), Nan::New<FunctionTemplate>(Regions)->GetFunction());
+    Nan::Set(target, Nan::New<String>("bilateral").ToLocalChecked(), Nan::New<FunctionTemplate>(Bilateral)->GetFunction());
+    Nan::Set(target, Nan::New<String>("maxfilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MaxFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("maxFilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MaxFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("minfilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MinFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("minFilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MinFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("medfilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MedFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("medFilt").ToLocalChecked(), Nan::New<FunctionTemplate>(MedFilt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("meanShift").ToLocalChecked(), Nan::New<FunctionTemplate>(MeanShift)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sobel").ToLocalChecked(), Nan::New<FunctionTemplate>(Sobel)->GetFunction());
+    Nan::Set(target, Nan::New<String>("histEqual").ToLocalChecked(), Nan::New<FunctionTemplate>(HistEqual)->GetFunction());
+    Nan::Set(target, Nan::New<String>("histogram").ToLocalChecked(), Nan::New<FunctionTemplate>(Histogram)->GetFunction());
+    Nan::Set(target, Nan::New<String>("resize").ToLocalChecked(), Nan::New<FunctionTemplate>(Resize)->GetFunction());
+    Nan::Set(target, Nan::New<String>("rotate").ToLocalChecked(), Nan::New<FunctionTemplate>(Rotate)->GetFunction());
+    Nan::Set(target, Nan::New<String>("scale").ToLocalChecked(), Nan::New<FunctionTemplate>(Scale)->GetFunction());
+    Nan::Set(target, Nan::New<String>("skew").ToLocalChecked(), Nan::New<FunctionTemplate>(Skew)->GetFunction());
+    Nan::Set(target, Nan::New<String>("transform").ToLocalChecked(), Nan::New<FunctionTemplate>(Transform)->GetFunction());
+    Nan::Set(target, Nan::New<String>("translate").ToLocalChecked(), Nan::New<FunctionTemplate>(Translate)->GetFunction());
+    Nan::Set(target, Nan::New<String>("dilate").ToLocalChecked(), Nan::New<FunctionTemplate>(Dilate)->GetFunction());
+    Nan::Set(target, Nan::New<String>("dilate3").ToLocalChecked(), Nan::New<FunctionTemplate>(Dilate3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("erode").ToLocalChecked(), Nan::New<FunctionTemplate>(Erode)->GetFunction());
+    Nan::Set(target, Nan::New<String>("erode3").ToLocalChecked(), Nan::New<FunctionTemplate>(Erode3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("gaussianKernel").ToLocalChecked(), Nan::New<FunctionTemplate>(GaussianKernel)->GetFunction());
 }

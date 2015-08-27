@@ -50,46 +50,52 @@ using namespace std;
 
 NAN_METHOD(_DoEvents)
 {
-    NanScope();
+
     uv_run(uv_default_loop(), UV_RUN_ONCE);
-    NanReturnUndefined();
+    info.GetReturnValue().SetUndefined();
 }
 
 NAN_METHOD(_GforToggle)
 {
-    NanScope();
+
     af::gforToggle();
-    NanReturnUndefined();
+    info.GetReturnValue().SetUndefined();
 }
 
 NAN_METHOD(GC)
 {
-    NanScope();
-    unsigned ms = args.Length() ? args[0]->Uint32Value() : 1000;
-    NanIdleNotification(ms);
+
+    unsigned ms = info.Length() ? info[0]->Uint32Value() : 1000;
+    Nan::IdleNotification(ms);
     af::sync();
-    NanReturnUndefined();
+    info.GetReturnValue().SetUndefined();
 }
 
-void Init(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(Init)
 {
+    Nan::HandleScope scope;
 
     Symbols::Init();
-    InitDevice(exports);
-    ArrayWrapper::Init(exports);
-    InitCreateArray(exports);
-    InitMoveAndReorderArray(exports);
-    InitArrayHelperFunctions(exports);
-    InitMathFunctions(exports);
-    InitVectorAlgorithms(exports);
-    InitStatistics(exports);
-    InitComputerVision(exports);
-    InitImageProcessing(exports);
-    InitLinearAlgebra(exports);
-    InitSignalProcessing(exports);
+    InitDevice(target);
+    ArrayWrapper::Init(target);
+    InitCreateArray(target);
+    InitMoveAndReorderArray(target);
+    InitArrayHelperFunctions(target);
+    InitMathFunctions(target);
+    InitVectorAlgorithms(target);
+    InitStatistics(target);
+    InitComputerVision(target);
+    InitImageProcessing(target);
+    InitLinearAlgebra(target);
+    InitSignalProcessing(target);
 
     // Helpers:
-    exports->Set(NanNew("_doEvents"), NanNew<FunctionTemplate>(_DoEvents)->GetFunction());
-    exports->Set(NanNew("_gforToggle"), NanNew<FunctionTemplate>(_GforToggle)->GetFunction());
-    exports->Set(NanNew("gc"), NanNew<FunctionTemplate>(::GC)->GetFunction());
+    Nan::Set(target, Nan::New<String>("_doEvents").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(_DoEvents)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("_gforToggle").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(_GforToggle)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("gc").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(::GC)->GetFunction());
 }

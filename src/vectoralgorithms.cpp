@@ -53,85 +53,85 @@ ARRAYFIRE_ASYNC_METHOD_ALGO_V2(FindMaxAt, max)
 
 NAN_METHOD(Sort)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         unsigned dim = 0;
         bool asc = true;
-        if (args.Length() > 1 && args[1]->IsNumber())
+        if (info.Length() > 1 && info[1]->IsNumber())
         {
-            dim = args[1]->Uint32Value();
+            dim = info[1]->Uint32Value();
         }
-        if (args.Length() > 2 && args[2]->IsBoolean())
+        if (info.Length() > 2 && info[2]->IsBoolean())
         {
-            asc = args[2]->BooleanValue();
+            asc = info[2]->BooleanValue();
         }
         Guard();
-        NanReturnValue(ArrayWrapper::New(af::sort(*pArray, dim, asc)));;
+        info.GetReturnValue().Set(ArrayWrapper::New(af::sort(*pArray, dim, asc)));;
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(SortByKey)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pKeys = ArrayWrapper::GetArrayAt(args, 0);
-        auto pValues = ArrayWrapper::GetArrayAt(args, 1);
+        auto pKeys = ArrayWrapper::GetArrayAt(info, 0);
+        auto pValues = ArrayWrapper::GetArrayAt(info, 1);
         unsigned dim = 0;
         bool asc = true;
-        if (args.Length() > 2 && args[2]->IsNumber())
+        if (info.Length() > 2 && info[2]->IsNumber())
         {
-            dim = args[2]->Uint32Value();
+            dim = info[2]->Uint32Value();
         }
-        if (args.Length() > 3 && args[3]->IsBoolean())
+        if (info.Length() > 3 && info[3]->IsBoolean())
         {
-            asc = args[3]->BooleanValue();
+            asc = info[3]->BooleanValue();
         }
 
         Guard();
         af::array outKeys, outValues;
         af::sort(outKeys, outValues, *pKeys, *pValues, dim, asc);
 
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Keys), NanNew(ArrayWrapper::New(outKeys)));
-        result->Set(NanNew(Symbols::Values), NanNew(ArrayWrapper::New(outValues)));
+        auto result = Nan::New<Object>();
+        Nan::Set(result, Nan::New(Symbols::Keys), ArrayWrapper::New(outKeys));
+        Nan::Set(result, Nan::New(Symbols::Values), ArrayWrapper::New(outValues));
 
-        NanReturnValue(result);
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH
 }
 
 NAN_METHOD(SortIndex)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         unsigned dim = 0;
         bool asc = true;
-        if (args.Length() > 1 && args[1]->IsNumber())
+        if (info.Length() > 1 && info[1]->IsNumber())
         {
-            dim = args[1]->Uint32Value();
+            dim = info[1]->Uint32Value();
         }
-        if (args.Length() > 2 && args[2]->IsBoolean())
+        if (info.Length() > 2 && info[2]->IsBoolean())
         {
-            asc = args[2]->BooleanValue();
+            asc = info[2]->BooleanValue();
         }
 
         Guard();
         af::array outValues, outIndices;
         af::sort(outValues, outIndices, *pArray, dim, asc);
 
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::Values), NanNew(ArrayWrapper::New(outValues)));
-        result->Set(NanNew(Symbols::Indices), NanNew(ArrayWrapper::New(outIndices)));
-        NanReturnValue(result);
+        auto result = Nan::New<Object>();
+        result->Set(Nan::New(Symbols::Values), ArrayWrapper::New(outValues));
+        result->Set(Nan::New(Symbols::Indices), ArrayWrapper::New(outIndices));
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH
 }
@@ -147,47 +147,48 @@ ARRAYFIRE_SYNC_METHOD_ARR_DIM(Diff2, diff2)
 
 NAN_METHOD(Grad)
 {
-    NanScope();
     try
     {
         ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
 
         Guard();
         af::array dx, dy;
         af::grad(dx, dy, *pArray);
 
-        auto result = NanNew<Object>();
-        result->Set(NanNew(Symbols::DX), NanNew(ArrayWrapper::New(dx)));
-        result->Set(NanNew(Symbols::DY), NanNew(ArrayWrapper::New(dy)));
-        NanReturnValue(result);
+        auto result = Nan::New<Object>();
+        result->Set(Nan::New(Symbols::DX), (ArrayWrapper::New(dx)));
+        result->Set(Nan::New(Symbols::DY), (ArrayWrapper::New(dy)));
+        info.GetReturnValue().Set(result);
     }
     ARRAYFIRE_CATCH
 }
 
-void InitVectorAlgorithms(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitVectorAlgorithms)
 {
-    exports->Set(NanNew("allTrue"), NanNew<FunctionTemplate>(AllTrue)->GetFunction());
-    exports->Set(NanNew("anyTrue"), NanNew<FunctionTemplate>(AnyTrue)->GetFunction());
-    exports->Set(NanNew("count"), NanNew<FunctionTemplate>(Count)->GetFunction());
-    exports->Set(NanNew("findMax"), NanNew<FunctionTemplate>(FindMax)->GetFunction());
-    exports->Set(NanNew("findMaxAt"), NanNew<FunctionTemplate>(FindMaxAt)->GetFunction());
-    exports->Set(NanNew("findMin"), NanNew<FunctionTemplate>(FindMin)->GetFunction());
-    exports->Set(NanNew("findMinAt"), NanNew<FunctionTemplate>(FindMinAt)->GetFunction());
-    exports->Set(NanNew("product"), NanNew<FunctionTemplate>(Product)->GetFunction());
-    exports->Set(NanNew("sum"), NanNew<FunctionTemplate>(Sum)->GetFunction());
+    Nan::HandleScope scope;
 
-    exports->Set(NanNew("sort"), NanNew<FunctionTemplate>(Sort)->GetFunction());
-    exports->Set(NanNew("sortByKey"), NanNew<FunctionTemplate>(SortByKey)->GetFunction());
-    exports->Set(NanNew("sortIndex"), NanNew<FunctionTemplate>(SortIndex)->GetFunction());
+    Nan::Set(target, Nan::New<String>("allTrue").ToLocalChecked(), Nan::New<FunctionTemplate>(AllTrue)->GetFunction());
+    Nan::Set(target, Nan::New<String>("anyTrue").ToLocalChecked(), Nan::New<FunctionTemplate>(AnyTrue)->GetFunction());
+    Nan::Set(target, Nan::New<String>("count").ToLocalChecked(), Nan::New<FunctionTemplate>(Count)->GetFunction());
+    Nan::Set(target, Nan::New<String>("findMax").ToLocalChecked(), Nan::New<FunctionTemplate>(FindMax)->GetFunction());
+    Nan::Set(target, Nan::New<String>("findMaxAt").ToLocalChecked(), Nan::New<FunctionTemplate>(FindMaxAt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("findMin").ToLocalChecked(), Nan::New<FunctionTemplate>(FindMin)->GetFunction());
+    Nan::Set(target, Nan::New<String>("findMinAt").ToLocalChecked(), Nan::New<FunctionTemplate>(FindMinAt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("product").ToLocalChecked(), Nan::New<FunctionTemplate>(Product)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sum").ToLocalChecked(), Nan::New<FunctionTemplate>(Sum)->GetFunction());
 
-    exports->Set(NanNew("accum"), NanNew<FunctionTemplate>(Accum)->GetFunction());
-    exports->Set(NanNew("where"), NanNew<FunctionTemplate>(Where)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sort").ToLocalChecked(), Nan::New<FunctionTemplate>(Sort)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sortByKey").ToLocalChecked(), Nan::New<FunctionTemplate>(SortByKey)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sortIndex").ToLocalChecked(), Nan::New<FunctionTemplate>(SortIndex)->GetFunction());
 
-    exports->Set(NanNew("setIntersect"), NanNew<FunctionTemplate>(SetIntersect)->GetFunction());
-    exports->Set(NanNew("setUnion"), NanNew<FunctionTemplate>(SetUnion)->GetFunction());
-    exports->Set(NanNew("setUnique"), NanNew<FunctionTemplate>(SetUnique)->GetFunction());
-    exports->Set(NanNew("diff1"), NanNew<FunctionTemplate>(Diff1)->GetFunction());
-    exports->Set(NanNew("diff2"), NanNew<FunctionTemplate>(Diff2)->GetFunction());
-    exports->Set(NanNew("grad"), NanNew<FunctionTemplate>(Grad)->GetFunction());
+    Nan::Set(target, Nan::New<String>("accum").ToLocalChecked(), Nan::New<FunctionTemplate>(Accum)->GetFunction());
+    Nan::Set(target, Nan::New<String>("where").ToLocalChecked(), Nan::New<FunctionTemplate>(Where)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("setIntersect").ToLocalChecked(), Nan::New<FunctionTemplate>(SetIntersect)->GetFunction());
+    Nan::Set(target, Nan::New<String>("setUnion").ToLocalChecked(), Nan::New<FunctionTemplate>(SetUnion)->GetFunction());
+    Nan::Set(target, Nan::New<String>("setUnique").ToLocalChecked(), Nan::New<FunctionTemplate>(SetUnique)->GetFunction());
+    Nan::Set(target, Nan::New<String>("diff1").ToLocalChecked(), Nan::New<FunctionTemplate>(Diff1)->GetFunction());
+    Nan::Set(target, Nan::New<String>("diff2").ToLocalChecked(), Nan::New<FunctionTemplate>(Diff2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("grad").ToLocalChecked(), Nan::New<FunctionTemplate>(Grad)->GetFunction());
 }

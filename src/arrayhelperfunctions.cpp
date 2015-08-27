@@ -46,22 +46,32 @@ ARRAYFIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
 
 NAN_METHOD(Print)
 {
-    NanScope();
     try
     {
         ARGS_LEN(1);
         Guard();
-        af_print(*ArrayWrapper::GetArrayAt(args, 0));
-        NanReturnUndefined();
+        af_print(*ArrayWrapper::GetArrayAt(info, 0));
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH;
 }
 
-void InitArrayHelperFunctions(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitArrayHelperFunctions)
 {
-    exports->Set(NanNew("iszero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
-    exports->Set(NanNew("isZero"), NanNew<FunctionTemplate>(IsZero)->GetFunction());
-    exports->Set(NanNew("isInf"), NanNew<FunctionTemplate>(IsInf)->GetFunction());
-    exports->Set(NanNew("isNaN"), NanNew<FunctionTemplate>(IsNaN)->GetFunction());
-    exports->Set(NanNew("print"), NanNew<FunctionTemplate>(Print)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("iszero").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(IsZero)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("isZero").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(IsZero)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("isInf").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(IsInf)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("isNaN").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(IsNaN)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("print").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Print)->GetFunction());
 }

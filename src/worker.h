@@ -39,41 +39,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 inline NAN_METHOD(Noop)
 {
-    NanScope();
-    NanReturnUndefined();
+
+    info.GetReturnValue().SetUndefined();
 }
 
 template<typename T>
-struct Worker : public NanAsyncWorker
+struct Worker : public Nan::AsyncWorker
 {
     typedef std::function<T()> ExecuteFunc;
     typedef std::function<v8::Local<v8::Value>(Worker<T>*, T)> ResultConvFunc;
 
-    Worker(NanCallback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, const ExecuteFunc& executeFunc, const ResultConvFunc& resultConvFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
         resultConvFunc(std::move(ConvResult(resultConvFunc)))
     {
     }
 
-    Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, const ExecuteFunc& executeFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc),
-        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return NanNew(v); })))
+        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return Nan::New(v); })))
     {
     }
 
-    Worker(NanCallback *callback, ExecuteFunc&& executeFunc, const ResultConvFunc& resultConvFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, ExecuteFunc&& executeFunc, const ResultConvFunc& resultConvFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(std::move(executeFunc)),
         resultConvFunc(std::move(ConvResult(resultConvFunc)))
     {
     }
 
-    Worker(NanCallback *callback, ExecuteFunc&& executeFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, ExecuteFunc&& executeFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(std::move(executeFunc)),
-        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return NanNew(v); })))
+        resultConvFunc(std::move(ConvResult([](Worker<T>* w, T v) { return Nan::New(v); })))
     {
     }
 
@@ -102,17 +102,17 @@ protected:
     void HandleOKCallback() override
     {
         using namespace v8;
-        NanScope();
+
         auto convertedResult = resultConvFunc(this, result);
         if (convertedResult->IsNativeError())
         {
-            Local<Value> args[] = { convertedResult };
-            callback->Call(1, args);
+            Local<Value> info[] = { convertedResult };
+            callback->Call(1, info);
         }
         else
         {
-            Local<Value> args[] = { NanNull(), convertedResult };
-            callback->Call(2, args);
+            Local<Value> info[] = { Nan::Null(), convertedResult };
+            callback->Call(2, info);
         }
     }
 
@@ -125,39 +125,40 @@ private:
     {
         return std::move([=](Worker<T>* i, T result)
         {
+            Nan::EscapableHandleScope scope;
             try
             {
-                return resultConvFunc(i, result);
+                return scope.Escape(resultConvFunc(i, result));
             }
             catch(af::exception& ex)
             {
-                return NanError(ex.what());
+                return scope.Escape(Nan::Error(ex.what()));
             }
             catch(std::exception& ex)
             {
-                return NanError(ex.what());
+                return scope.Escape(Nan::Error(ex.what()));
             }
             catch(...)
             {
-                return NanError("Unknown error!");
+                return scope.Escape(Nan::Error("Unknown error!"));
             }
         });
     }
 };
 
 template<>
-struct Worker<void> : public NanAsyncWorker
+struct Worker<void> : public Nan::AsyncWorker
 {
     typedef std::function<void()> ExecuteFunc;
 
-    Worker(NanCallback *callback, const ExecuteFunc& executeFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, const ExecuteFunc& executeFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(executeFunc)
     {
     }
 
-    Worker(NanCallback *callback, ExecuteFunc&& executeFunc) :
-        NanAsyncWorker(callback ? callback : new NanCallback(NanNew<v8::FunctionTemplate>(Noop)->GetFunction())),
+    Worker(Nan::Callback *callback, ExecuteFunc&& executeFunc) :
+        Nan::AsyncWorker(callback ? callback : new Nan::Callback(Nan::New<v8::FunctionTemplate>(Noop)->GetFunction())),
         executeFunc(std::move(executeFunc))
     {
     }

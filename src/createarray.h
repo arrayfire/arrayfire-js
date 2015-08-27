@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <nan.h>
 
-void InitCreateArray(v8::Handle<v8::Object> exports);
+NAN_MODULE_INIT(InitCreateArray);
 
 #endif // ARRAYFIRE_JS_CREATEARRAY
 

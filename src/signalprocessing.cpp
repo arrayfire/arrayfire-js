@@ -42,15 +42,15 @@ using namespace node;
 
 NAN_METHOD(ConvolveSeparable)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
-        auto pArray3 = ArrayWrapper::GetArrayAt(args, 2);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
+        auto pArray3 = ArrayWrapper::GetArrayAt(info, 2);
         af::convMode mode = AF_CONV_DEFAULT;
-        if (args.Length() > 3) mode = (af::convMode)args[3]->Uint32Value();
+        if (info.Length() > 3) mode = (af::convMode)info[3]->Uint32Value();
         Guard();
         ArrayWrapper::New(af::convolve(*pArray1, *pArray2, *pArray3, mode));
     }
@@ -60,16 +60,16 @@ NAN_METHOD(ConvolveSeparable)
 #define ARRAYFIRE_CONVOLVE(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);\
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);\
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);\
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);\
         af::convMode mode = AF_CONV_DEFAULT;\
         af::convDomain domain = AF_CONV_AUTO;\
-        if (args.Length() > 2) mode = (af::convMode)args[2]->Uint32Value();\
-        if (args.Length() > 3) domain = (af::convDomain)args[3]->Uint32Value();\
+        if (info.Length() > 2) mode = (af::convMode)info[2]->Uint32Value();\
+        if (info.Length() > 3) domain = (af::convDomain)info[3]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray1, *pArray2, mode, domain));\
     }\
@@ -85,14 +85,14 @@ ARRAYFIRE_CONVOLVE(Convolve3, convolve3)
 #define ARRAYFIRE_CONVOLVE(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);\
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);\
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);\
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);\
         af::convMode mode = AF_CONV_DEFAULT;\
-        if (args.Length() > 2) mode = (af::convMode)args[2]->Uint32Value();\
+        if (info.Length() > 2) mode = (af::convMode)info[2]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray1, *pArray2, mode));\
     }\
@@ -107,14 +107,14 @@ ARRAYFIRE_CONVOLVE(FFTConvolve3, fftConvolve3)
 #define ARRAY_FIRE_FFTNORM(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
-        double factor = args[1]->NumberValue();\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
+        double factor = info[1]->NumberValue();\
         dim_t odim0 = 0;\
-        if (args.Length() > 2) odim0 = args[2]->Uint32Value();\
+        if (info.Length() > 2) odim0 = info[2]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, factor, odim0));\
     }\
@@ -128,13 +128,13 @@ ARRAY_FIRE_FFTNORM(IFFTNorm, ifftNorm)
 #define ARRAY_FIRE_FFT(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         dim_t odim0 = 0;\
-        if (args.Length() > 1) odim0 = args[1]->Uint32Value();\
+        if (info.Length() > 1) odim0 = info[1]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, odim0));\
     }\
@@ -148,25 +148,25 @@ ARRAY_FIRE_FFT(IFFT, ifft)
 #define ARRAYFIRE_DFT(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(1);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
-        if (args.Length() == 1)\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
+        if (info.Length() == 1)\
         {\
             Guard();\
             ArrayWrapper::New(af::f(*pArray));\
         }\
-        else if (args.Length() == 2)\
+        else if (info.Length() == 2)\
         {\
             Guard();\
-            ArrayWrapper::New(af::f(*pArray, ToDim4(args[1])));\
+            ArrayWrapper::New(af::f(*pArray, ToDim4(info[1])));\
         }\
-        else if (args.Length() == 3)\
+        else if (info.Length() == 3)\
         {\
             Guard();\
-            ArrayWrapper::New(af::f(*pArray, args[1]->NumberValue(), ToDim4(args[2])));\
+            ArrayWrapper::New(af::f(*pArray, info[1]->NumberValue(), ToDim4(info[2])));\
         }\
         else \
         {\
@@ -183,15 +183,15 @@ ARRAYFIRE_DFT(IDFT, idft)
 #define ARRAYFIRE_FFT2(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(1);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         dim_t dim0 = 0;\
         dim_t dim1 = 0;\
-        if (args.Length() > 1) dim0 = args[1]->Uint32Value();\
-        if (args.Length() > 2) dim1 = args[2]->Uint32Value();\
+        if (info.Length() > 1) dim0 = info[1]->Uint32Value();\
+        if (info.Length() > 2) dim1 = info[2]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, dim0, dim1));\
     }\
@@ -205,17 +205,17 @@ ARRAYFIRE_FFT2(IFFT2, ifft2)
 #define ARRAYFIRE_FFT3(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(1);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         dim_t dim0 = 0;\
         dim_t dim1 = 0;\
         dim_t dim2 = 0;\
-        if (args.Length() > 1) dim0 = args[1]->Uint32Value();\
-        if (args.Length() > 2) dim1 = args[2]->Uint32Value();\
-        if (args.Length() > 3) dim2 = args[3]->Uint32Value();\
+        if (info.Length() > 1) dim0 = info[1]->Uint32Value();\
+        if (info.Length() > 2) dim1 = info[2]->Uint32Value();\
+        if (info.Length() > 3) dim2 = info[3]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, dim0, dim1, dim2));\
     }\
@@ -229,16 +229,16 @@ ARRAYFIRE_FFT3(IFFT3, ifft3)
 #define ARRAYFIRE_FFT2NORM(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
-        double factor = args[1]->NumberValue();\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
+        double factor = info[1]->NumberValue();\
         dim_t dim0 = 0;\
         dim_t dim1 = 0;\
-        if (args.Length() > 2) dim0 = args[2]->Uint32Value();\
-        if (args.Length() > 3) dim1 = args[3]->Uint32Value();\
+        if (info.Length() > 2) dim0 = info[2]->Uint32Value();\
+        if (info.Length() > 3) dim1 = info[3]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, factor, dim0, dim1));\
     }\
@@ -252,18 +252,18 @@ ARRAYFIRE_FFT2NORM(IFFT2Norm, ifft2Norm)
 #define ARRAYFIRE_FFT3NORM(F, f)\
 NAN_METHOD(F)\
 {\
-    NanScope();\
+    \
     try\
     {\
         ARGS_LEN(2);\
-        auto pArray = ArrayWrapper::GetArrayAt(args, 0);\
-        double factor = args[1]->NumberValue();\
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
+        double factor = info[1]->NumberValue();\
         dim_t dim0 = 0;\
         dim_t dim1 = 0;\
         dim_t dim2 = 0;\
-        if (args.Length() > 2) dim0 = args[2]->Uint32Value();\
-        if (args.Length() > 3) dim1 = args[3]->Uint32Value();\
-        if (args.Length() > 4) dim2 = args[4]->Uint32Value();\
+        if (info.Length() > 2) dim0 = info[2]->Uint32Value();\
+        if (info.Length() > 3) dim1 = info[3]->Uint32Value();\
+        if (info.Length() > 4) dim2 = info[4]->Uint32Value();\
         Guard();\
         ArrayWrapper::New(af::f(*pArray, factor, dim0, dim1, dim2));\
     }\
@@ -280,16 +280,16 @@ ARRAYFIRE_SYNC_METHOD_ARR_ARR_ARR(IIR, iir)
 
 NAN_METHOD(Approx1)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
         af::interpType method = AF_INTERP_LINEAR;
         float offGrid = 0.0f;
-        if (args.Length() > 2) method = (af::interpType)args[2]->Uint32Value();
-        if (args.Length() > 3) offGrid = args[3]->NumberValue();
+        if (info.Length() > 2) method = (af::interpType)info[2]->Uint32Value();
+        if (info.Length() > 3) offGrid = info[3]->NumberValue();
         Guard();
         ArrayWrapper::New(af::approx1(*pArray1, *pArray2, method, offGrid));
     }
@@ -298,49 +298,51 @@ NAN_METHOD(Approx1)
 
 NAN_METHOD(Approx2)
 {
-    NanScope();
+
     try
     {
         ARGS_LEN(3);
-        auto pArray1 = ArrayWrapper::GetArrayAt(args, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(args, 1);
-        auto pArray3 = ArrayWrapper::GetArrayAt(args, 2);
+        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
+        auto pArray3 = ArrayWrapper::GetArrayAt(info, 2);
         af::interpType method = AF_INTERP_LINEAR;
         float offGrid = 0.0f;
-        if (args.Length() > 3) method = (af::interpType)args[3]->Uint32Value();
-        if (args.Length() > 4) offGrid = args[4]->NumberValue();
+        if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
+        if (info.Length() > 4) offGrid = info[4]->NumberValue();
         Guard();
         ArrayWrapper::New(af::approx2(*pArray1, *pArray2, *pArray3, method, offGrid));
     }
     ARRAYFIRE_CATCH;
 }
 
-void InitSignalProcessing(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitSignalProcessing)
 {
-    exports->Set(NanNew("convolveSeparable"), NanNew<FunctionTemplate>(ConvolveSeparable)->GetFunction());
-    exports->Set(NanNew("convolve"), NanNew<FunctionTemplate>(Convolve)->GetFunction());
-    exports->Set(NanNew("convolve1"), NanNew<FunctionTemplate>(Convolve1)->GetFunction());
-    exports->Set(NanNew("convolve2"), NanNew<FunctionTemplate>(Convolve2)->GetFunction());
-    exports->Set(NanNew("convolve3"), NanNew<FunctionTemplate>(Convolve3)->GetFunction());
-    exports->Set(NanNew("fftConvolve"), NanNew<FunctionTemplate>(FFTConvolve)->GetFunction());
-    exports->Set(NanNew("fftConvolve2"), NanNew<FunctionTemplate>(FFTConvolve2)->GetFunction());
-    exports->Set(NanNew("fftConvolve3"), NanNew<FunctionTemplate>(FFTConvolve3)->GetFunction());
-    exports->Set(NanNew("fftNorm"), NanNew<FunctionTemplate>(FFTNorm)->GetFunction());
-    exports->Set(NanNew("iFFTNorm"), NanNew<FunctionTemplate>(IFFTNorm)->GetFunction());
-    exports->Set(NanNew("fft"), NanNew<FunctionTemplate>(FFT)->GetFunction());
-    exports->Set(NanNew("iFFT"), NanNew<FunctionTemplate>(IFFT)->GetFunction());
-    exports->Set(NanNew("dFT"), NanNew<FunctionTemplate>(DFT)->GetFunction());
-    exports->Set(NanNew("iDFT"), NanNew<FunctionTemplate>(IDFT)->GetFunction());
-    exports->Set(NanNew("fft2"), NanNew<FunctionTemplate>(FFT2)->GetFunction());
-    exports->Set(NanNew("iFFT2"), NanNew<FunctionTemplate>(IFFT2)->GetFunction());
-    exports->Set(NanNew("fft3"), NanNew<FunctionTemplate>(FFT3)->GetFunction());
-    exports->Set(NanNew("iFFT3"), NanNew<FunctionTemplate>(IFFT3)->GetFunction());
-    exports->Set(NanNew("fft2Norm"), NanNew<FunctionTemplate>(FFT2Norm)->GetFunction());
-    exports->Set(NanNew("iFFT2Norm"), NanNew<FunctionTemplate>(IFFT2Norm)->GetFunction());
-    exports->Set(NanNew("fft3Norm"), NanNew<FunctionTemplate>(FFT3Norm)->GetFunction());
-    exports->Set(NanNew("iFFT3Norm"), NanNew<FunctionTemplate>(IFFT3Norm)->GetFunction());
-    exports->Set(NanNew("fir"), NanNew<FunctionTemplate>(FIR)->GetFunction());
-    exports->Set(NanNew("iir"), NanNew<FunctionTemplate>(IIR)->GetFunction());
-    exports->Set(NanNew("approx1"), NanNew<FunctionTemplate>(Approx1)->GetFunction());
-    exports->Set(NanNew("approx2"), NanNew<FunctionTemplate>(Approx2)->GetFunction());
+    Nan::HandleScope scope;
+
+    Nan::Set(target, Nan::New<String>("convolveSeparable").ToLocalChecked(), Nan::New<FunctionTemplate>(ConvolveSeparable)->GetFunction());
+    Nan::Set(target, Nan::New<String>("convolve").ToLocalChecked(), Nan::New<FunctionTemplate>(Convolve)->GetFunction());
+    Nan::Set(target, Nan::New<String>("convolve1").ToLocalChecked(), Nan::New<FunctionTemplate>(Convolve1)->GetFunction());
+    Nan::Set(target, Nan::New<String>("convolve2").ToLocalChecked(), Nan::New<FunctionTemplate>(Convolve2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("convolve3").ToLocalChecked(), Nan::New<FunctionTemplate>(Convolve3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fftConvolve").ToLocalChecked(), Nan::New<FunctionTemplate>(FFTConvolve)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fftConvolve2").ToLocalChecked(), Nan::New<FunctionTemplate>(FFTConvolve2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fftConvolve3").ToLocalChecked(), Nan::New<FunctionTemplate>(FFTConvolve3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fftNorm").ToLocalChecked(), Nan::New<FunctionTemplate>(FFTNorm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFTNorm").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFTNorm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fft").ToLocalChecked(), Nan::New<FunctionTemplate>(FFT)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFT").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFT)->GetFunction());
+    Nan::Set(target, Nan::New<String>("dFT").ToLocalChecked(), Nan::New<FunctionTemplate>(DFT)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iDFT").ToLocalChecked(), Nan::New<FunctionTemplate>(IDFT)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fft2").ToLocalChecked(), Nan::New<FunctionTemplate>(FFT2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFT2").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFT2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fft3").ToLocalChecked(), Nan::New<FunctionTemplate>(FFT3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFT3").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFT3)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fft2Norm").ToLocalChecked(), Nan::New<FunctionTemplate>(FFT2Norm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFT2Norm").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFT2Norm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fft3Norm").ToLocalChecked(), Nan::New<FunctionTemplate>(FFT3Norm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iFFT3Norm").ToLocalChecked(), Nan::New<FunctionTemplate>(IFFT3Norm)->GetFunction());
+    Nan::Set(target, Nan::New<String>("fir").ToLocalChecked(), Nan::New<FunctionTemplate>(FIR)->GetFunction());
+    Nan::Set(target, Nan::New<String>("iir").ToLocalChecked(), Nan::New<FunctionTemplate>(IIR)->GetFunction());
+    Nan::Set(target, Nan::New<String>("approx1").ToLocalChecked(), Nan::New<FunctionTemplate>(Approx1)->GetFunction());
+    Nan::Set(target, Nan::New<String>("approx2").ToLocalChecked(), Nan::New<FunctionTemplate>(Approx2)->GetFunction());
 }

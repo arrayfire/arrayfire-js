@@ -141,7 +141,8 @@ string ErrToString(af_err err)
 
 v8::Local<v8::Object> WrapPointer(void* ptr)
 {
-    return NanNewBufferHandle(reinterpret_cast<char*>(ptr), 0, [](char*v1, void*v2) {}, nullptr);
+    Nan::EscapableHandleScope scope;
+    return scope.Escape(Nan::NewBuffer(reinterpret_cast<char*>(ptr), 0, [](char*v1, void*v2) {}, nullptr).ToLocalChecked());
 }
 
 af::dim4 ToDim4(v8::Local<v8::Object> obj)
@@ -153,7 +154,7 @@ af::dim4 ToDim4(v8::Local<v8::Object> obj)
     }
     else
     {
-        auto member = obj->Get(NanNew(Symbols::Values));
+        auto member = obj->Get(Nan::New(Symbols::Values));
         if (member->IsArray())
         {
             dims = member.As<Array>();
@@ -197,10 +198,10 @@ af::dim4 ToDim4(v8::Local<v8::Value> value)
 
 af::seq ToSeq(v8::Local<v8::Object> obj)
 {
-    auto begin = obj->Get(NanNew(Symbols::Begin));
-    auto end = obj->Get(NanNew(Symbols::End));
-    auto step = obj->Get(NanNew(Symbols::Step));
-    auto isGFor = obj->Get(NanNew(Symbols::IsGFor));
+    auto begin = obj->Get(Nan::New(Symbols::Begin));
+    auto end = obj->Get(Nan::New(Symbols::End));
+    auto step = obj->Get(Nan::New(Symbols::Step));
+    auto isGFor = obj->Get(Nan::New(Symbols::IsGFor));
     if (begin->IsNumber() && end->IsNumber())
     {
         double stepValue = 1;
@@ -267,8 +268,8 @@ af::index ToIndex(v8::Local<v8::Value> value)
 
 af::af_cdouble ToDComplex(v8::Local<v8::Object> obj)
 {
-    auto imag = obj->Get(NanNew(Symbols::Imag));
-    auto real = obj->Get(NanNew(Symbols::Real));
+    auto imag = obj->Get(Nan::New(Symbols::Imag));
+    auto real = obj->Get(Nan::New(Symbols::Real));
     if (imag->IsNumber() && real->IsNumber())
     {
         return { real->NumberValue(), imag->NumberValue() };
@@ -287,8 +288,8 @@ af::af_cdouble ToDComplex(v8::Local<v8::Value> value)
 
 af::af_cfloat ToFComplex(v8::Local<v8::Object> obj)
 {
-    auto imag = obj->Get(NanNew(Symbols::Imag));
-    auto real = obj->Get(NanNew(Symbols::Real));
+    auto imag = obj->Get(Nan::New(Symbols::Imag));
+    auto real = obj->Get(Nan::New(Symbols::Real));
     if (imag->IsNumber() && real->IsNumber())
     {
         return { (float)real->NumberValue(), (float)imag->NumberValue() };
@@ -307,26 +308,26 @@ af::af_cfloat ToFComplex(v8::Local<v8::Value> value)
 
 v8::Local<v8::Object> ToV8Complex(const af::af_cdouble& value)
 {
-    auto obj = NanNew<Object>();
-    obj->Set(NanNew(Symbols::Imag), NanNew(value.imag));
-    obj->Set(NanNew(Symbols::Real), NanNew(value.real));
+    auto obj = Nan::New<Object>();
+    obj->Set(Nan::New(Symbols::Imag), Nan::New(value.imag));
+    obj->Set(Nan::New(Symbols::Real), Nan::New(value.real));
     return obj;
 }
 
 v8::Local<v8::Object> ToV8Complex(const af::af_cfloat& value)
 {
-    auto obj = NanNew<Object>();
-    obj->Set(NanNew(Symbols::Imag), NanNew(value.imag));
-    obj->Set(NanNew(Symbols::Real), NanNew(value.real));
+    auto obj = Nan::New<Object>();
+    obj->Set(Nan::New(Symbols::Imag), Nan::New(value.imag));
+    obj->Set(Nan::New(Symbols::Real), Nan::New(value.real));
     return obj;
 }
 
-std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInfo<v8::Value>& args, int assumedArgsLength, int argsFollowingDims, int dimsStartAt)
+std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const Nan::FunctionCallbackInfo<v8::Value>& info, int assumedArgsLength, int argsFollowingDims, int dimsStartAt)
 {
     if (assumedArgsLength == -1)
     {
-        assumedArgsLength = args.Length();
-        if (args[assumedArgsLength - 1]->IsFunction())
+        assumedArgsLength = info.Length();
+        if (info[assumedArgsLength - 1]->IsFunction())
         {
             // Async
             assumedArgsLength--;
@@ -339,68 +340,68 @@ std::pair<af::dim4, af::dtype> ParseDimAndTypeArgs(const v8::FunctionCallbackInf
         int dimIdx = idx - dimsStartAt;
         assert(dimIdx < 4);
         any = true;
-        if (dimIdx == 0 && args[idx]->IsObject())
+        if (dimIdx == 0 && info[idx]->IsObject())
         {
-            dims = move(ToDim4(args[idx].As<Object>()));
+            dims = move(ToDim4(info[idx].As<Object>()));
             break;
         }
-        dims[dimIdx] = args[idx]->Int32Value();
+        dims[dimIdx] = info[idx]->Int32Value();
     }
     if (any)
     {
-        af::dtype type = GetDTypeInfo(args[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
+        af::dtype type = GetDTypeInfo(info[assumedArgsLength - 1 + dimsStartAt]->Uint32Value()).first;
         return move(make_pair(move(dims), type));
     }
     ARRAYFIRE_THROW("Cannot extract dimensions and dtype from argumens.");
 }
 
-NanCallback* GetCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
+Nan::Callback* GetCallback(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
-    if (args.Length() && args[args.Length() - 1]->IsFunction())
+    if (info.Length() && info[info.Length() - 1]->IsFunction())
     {
-        return new NanCallback(args[args.Length() - 1].As<Function>());
+        return new Nan::Callback(info[info.Length() - 1].As<Function>());
     }
     ARRAYFIRE_THROW_CB_EXPECTED();
 }
 
 v8::Local<v8::Object> ToV8Features(const af::features& feat)
 {
-    auto obj = NanNew<Object>();
-    obj->Set(NanNew(Symbols::NumFeatures), NanNew((unsigned)feat.getNumFeatures()));
-    obj->Set(NanNew(Symbols::X), ArrayWrapper::New(feat.getX()));
-    obj->Set(NanNew(Symbols::Y), ArrayWrapper::New(feat.getY()));
-    obj->Set(NanNew(Symbols::Score), ArrayWrapper::New(feat.getScore()));
-    obj->Set(NanNew(Symbols::Orientation), ArrayWrapper::New(feat.getOrientation()));
-    obj->Set(NanNew(Symbols::Size), ArrayWrapper::New(feat.getSize()));
+    auto obj = Nan::New<Object>();
+    obj->Set(Nan::New(Symbols::NumFeatures), Nan::New((unsigned)feat.getNumFeatures()));
+    obj->Set(Nan::New(Symbols::X), ArrayWrapper::New(feat.getX()));
+    obj->Set(Nan::New(Symbols::Y), ArrayWrapper::New(feat.getY()));
+    obj->Set(Nan::New(Symbols::Score), ArrayWrapper::New(feat.getScore()));
+    obj->Set(Nan::New(Symbols::Orientation), ArrayWrapper::New(feat.getOrientation()));
+    obj->Set(Nan::New(Symbols::Size), ArrayWrapper::New(feat.getSize()));
     return obj;
 }
 
 RegionIndex ToRegionIndex(v8::Local<v8::Object> obj)
 {
     auto cn = obj->GetConstructorName();
-    if (cn->Equals(NanNew(Symbols::RowClass)))
+    if (cn->Equals(Nan::New(Symbols::RowClass)))
     {
-        return make_tuple(Region::Row, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+        return make_tuple(Region::Row, obj->Get(Nan::New(Symbols::Index))->Uint32Value(), (unsigned)0);
     }
-    else if (cn->Equals(NanNew(Symbols::RowsClass)))
+    else if (cn->Equals(Nan::New(Symbols::RowsClass)))
     {
-        return make_tuple(Region::Rows, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+        return make_tuple(Region::Rows, obj->Get(Nan::New(Symbols::FirstIndex))->Uint32Value(), obj->Get(Nan::New(Symbols::LastIndex))->Uint32Value());
     }
-    else if (cn->Equals(NanNew(Symbols::ColClass)))
+    else if (cn->Equals(Nan::New(Symbols::ColClass)))
     {
-        return make_tuple(Region::Col, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+        return make_tuple(Region::Col, obj->Get(Nan::New(Symbols::Index))->Uint32Value(), (unsigned)0);
     }
-    else if (cn->Equals(NanNew(Symbols::ColsClass)))
+    else if (cn->Equals(Nan::New(Symbols::ColsClass)))
     {
-        return make_tuple(Region::Cols, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+        return make_tuple(Region::Cols, obj->Get(Nan::New(Symbols::FirstIndex))->Uint32Value(), obj->Get(Nan::New(Symbols::LastIndex))->Uint32Value());
     }
-    else if (cn->Equals(NanNew(Symbols::SliceClass)))
+    else if (cn->Equals(Nan::New(Symbols::SliceClass)))
     {
-        return make_tuple(Region::Slice, obj->Get(NanNew(Symbols::Index))->Uint32Value(), (unsigned)0);
+        return make_tuple(Region::Slice, obj->Get(Nan::New(Symbols::Index))->Uint32Value(), (unsigned)0);
     }
-    else if (cn->Equals(NanNew(Symbols::SlicesClass)))
+    else if (cn->Equals(Nan::New(Symbols::SlicesClass)))
     {
-        return make_tuple(Region::Slices, obj->Get(NanNew(Symbols::FirstIndex))->Uint32Value(), obj->Get(NanNew(Symbols::LastIndex))->Uint32Value());
+        return make_tuple(Region::Slices, obj->Get(Nan::New(Symbols::FirstIndex))->Uint32Value(), obj->Get(Nan::New(Symbols::LastIndex))->Uint32Value());
     }
     return make_tuple(Region::None, (unsigned)0, (unsigned)0);
 }

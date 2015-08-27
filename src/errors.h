@@ -46,7 +46,7 @@ inline void _NanThrow(const char* what, const char* file, int line)
     using namespace std;
     stringstream s;
     s << what << " in '" << file << "' at " << line << ".";
-    NanThrowError(s.str().c_str());
+    Nan::ThrowError(s.str().c_str());
 }
 
 #define NAN_THROW(what) _NanThrow(what, __FILE__, __LINE__)
@@ -71,7 +71,7 @@ inline void _NanThrow(const char* what, const char* file, int line)
 #define ARRAYFIRE_THROW_CB_EXPECTED() ARRAYFIRE_THROW("Callback argument expected.");
 
 #define ARRAYFIRE_CATCH \
-    catch(fire_error &ex) { return NanThrowError(ex.what()); } \
+    catch(fire_error &ex) { return Nan::ThrowError(ex.what()); } \
     catch(af::exception &ex) { return NAN_THROW(ex.what()); } \
     catch(std::exception &ex) { return NAN_THROW(ex.what()); } \
     catch(...) { return NAN_THROW("Unknown error!"); }

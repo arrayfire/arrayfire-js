@@ -99,63 +99,73 @@ ARRAYFIRE_SYNC_METHOD_ARR(Conjg, conjg)
 ARRAYFIRE_SYNC_METHOD_ARR(Imag, imag)
 ARRAYFIRE_SYNC_METHOD_ARR(Real, real)
 
-void InitMathFunctions(v8::Handle<v8::Object> exports)
+NAN_MODULE_INIT(InitMathFunctions)
 {
-    exports->Set(NanNew("abs"), NanNew<FunctionTemplate>(Abs)->GetFunction());
-    exports->Set(NanNew("arg"), NanNew<FunctionTemplate>(Arg)->GetFunction());
-    exports->Set(NanNew("ceil"), NanNew<FunctionTemplate>(Ceil)->GetFunction());
-    exports->Set(NanNew("floor"), NanNew<FunctionTemplate>(Floor)->GetFunction());
-    exports->Set(NanNew("hypot"), NanNew<FunctionTemplate>(Hypot)->GetFunction());
-    exports->Set(NanNew("max"), NanNew<FunctionTemplate>(Max)->GetFunction());
-    exports->Set(NanNew("min"), NanNew<FunctionTemplate>(Min)->GetFunction());
-    exports->Set(NanNew("round"), NanNew<FunctionTemplate>(Round)->GetFunction());
-    exports->Set(NanNew("sign"), NanNew<FunctionTemplate>(Sign)->GetFunction());
-    exports->Set(NanNew("trunc"), NanNew<FunctionTemplate>(Trunc)->GetFunction());
-    exports->Set(NanNew("rem"), NanNew<FunctionTemplate>(Rem)->GetFunction());
+    Nan::HandleScope scope;
 
-    exports->Set(NanNew("acos"), NanNew<FunctionTemplate>(ACos)->GetFunction());
-    exports->Set(NanNew("aCos"), NanNew<FunctionTemplate>(ACos)->GetFunction());
-    exports->Set(NanNew("asin"), NanNew<FunctionTemplate>(ASin)->GetFunction());
-    exports->Set(NanNew("aSin"), NanNew<FunctionTemplate>(ASin)->GetFunction());
-    exports->Set(NanNew("atan"), NanNew<FunctionTemplate>(ATan)->GetFunction());
-    exports->Set(NanNew("aTan"), NanNew<FunctionTemplate>(ATan)->GetFunction());
-    exports->Set(NanNew("atan2"), NanNew<FunctionTemplate>(ATan2)->GetFunction());
-    exports->Set(NanNew("aTan2"), NanNew<FunctionTemplate>(ATan2)->GetFunction());
-    exports->Set(NanNew("cos"), NanNew<FunctionTemplate>(Cos)->GetFunction());
-    exports->Set(NanNew("sin"), NanNew<FunctionTemplate>(Sin)->GetFunction());
-    exports->Set(NanNew("tan"), NanNew<FunctionTemplate>(Tan)->GetFunction());
+    Nan::Set(target, Nan::New<String>("abs").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Abs)->GetFunction());
 
-    exports->Set(NanNew("cbrt"), NanNew<FunctionTemplate>(Cbrt)->GetFunction());
-    exports->Set(NanNew("erf"), NanNew<FunctionTemplate>(Erf)->GetFunction());
-    exports->Set(NanNew("erfc"), NanNew<FunctionTemplate>(Erfc)->GetFunction());
-    exports->Set(NanNew("exp"), NanNew<FunctionTemplate>(Exp)->GetFunction());
-    exports->Set(NanNew("expm1"), NanNew<FunctionTemplate>(ExpM1)->GetFunction());
-    exports->Set(NanNew("expM1"), NanNew<FunctionTemplate>(ExpM1)->GetFunction());
-    exports->Set(NanNew("factorial"), NanNew<FunctionTemplate>(Factorial)->GetFunction());
-    exports->Set(NanNew("lgamma"), NanNew<FunctionTemplate>(LGamma)->GetFunction());
-    exports->Set(NanNew("lGamma"), NanNew<FunctionTemplate>(LGamma)->GetFunction());
-    exports->Set(NanNew("tgamma"), NanNew<FunctionTemplate>(TGamma)->GetFunction());
-    exports->Set(NanNew("tGamma"), NanNew<FunctionTemplate>(TGamma)->GetFunction());
-    exports->Set(NanNew("log"), NanNew<FunctionTemplate>(Log)->GetFunction());
-    exports->Set(NanNew("log10"), NanNew<FunctionTemplate>(Log10)->GetFunction());
-    exports->Set(NanNew("log1p"), NanNew<FunctionTemplate>(Log1P)->GetFunction());
-    exports->Set(NanNew("log1P"), NanNew<FunctionTemplate>(Log1P)->GetFunction());
-    exports->Set(NanNew("pow"), NanNew<FunctionTemplate>(Pow)->GetFunction());
-    exports->Set(NanNew("pow2"), NanNew<FunctionTemplate>(Pow2)->GetFunction());
-    exports->Set(NanNew("root"), NanNew<FunctionTemplate>(Root)->GetFunction());
-    exports->Set(NanNew("sqrt"), NanNew<FunctionTemplate>(Sqrt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("arg").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Arg)->GetFunction());
 
-    exports->Set(NanNew("acosh"), NanNew<FunctionTemplate>(ACosH)->GetFunction());
-    exports->Set(NanNew("aCosH"), NanNew<FunctionTemplate>(ACosH)->GetFunction());
-    exports->Set(NanNew("asinh"), NanNew<FunctionTemplate>(ASinH)->GetFunction());
-    exports->Set(NanNew("aSinH"), NanNew<FunctionTemplate>(ASinH)->GetFunction());
-    exports->Set(NanNew("atanh"), NanNew<FunctionTemplate>(ATanH)->GetFunction());
-    exports->Set(NanNew("aTanH"), NanNew<FunctionTemplate>(ATanH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("ceil").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Ceil)->GetFunction());
 
-    exports->Set(NanNew("complex"), NanNew<FunctionTemplate>(Complex)->GetFunction());
-    exports->Set(NanNew("conjg"), NanNew<FunctionTemplate>(Conjg)->GetFunction());
-    exports->Set(NanNew("imag"), NanNew<FunctionTemplate>(Imag)->GetFunction());
-    exports->Set(NanNew("real"), NanNew<FunctionTemplate>(Real)->GetFunction());
+    Nan::Set(target, Nan::New<String>("floor").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Floor)->GetFunction());
 
-    exports->Set(NanNew("sigmoid"), NanNew<FunctionTemplate>(Sigmoid)->GetFunction());
+    Nan::Set(target, Nan::New<String>("hypot").ToLocalChecked(), Nan::New<FunctionTemplate>(Hypot)->GetFunction());
+    Nan::Set(target, Nan::New<String>("max").ToLocalChecked(), Nan::New<FunctionTemplate>(Max)->GetFunction());
+    Nan::Set(target, Nan::New<String>("min").ToLocalChecked(), Nan::New<FunctionTemplate>(Min)->GetFunction());
+    Nan::Set(target, Nan::New<String>("round").ToLocalChecked(), Nan::New<FunctionTemplate>(Round)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sign").ToLocalChecked(), Nan::New<FunctionTemplate>(Sign)->GetFunction());
+    Nan::Set(target, Nan::New<String>("trunc").ToLocalChecked(), Nan::New<FunctionTemplate>(Trunc)->GetFunction());
+    Nan::Set(target, Nan::New<String>("rem").ToLocalChecked(), Nan::New<FunctionTemplate>(Rem)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("acos").ToLocalChecked(), Nan::New<FunctionTemplate>(ACos)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aCos").ToLocalChecked(), Nan::New<FunctionTemplate>(ACos)->GetFunction());
+    Nan::Set(target, Nan::New<String>("asin").ToLocalChecked(), Nan::New<FunctionTemplate>(ASin)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aSin").ToLocalChecked(), Nan::New<FunctionTemplate>(ASin)->GetFunction());
+    Nan::Set(target, Nan::New<String>("atan").ToLocalChecked(), Nan::New<FunctionTemplate>(ATan)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aTan").ToLocalChecked(), Nan::New<FunctionTemplate>(ATan)->GetFunction());
+    Nan::Set(target, Nan::New<String>("atan2").ToLocalChecked(), Nan::New<FunctionTemplate>(ATan2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aTan2").ToLocalChecked(), Nan::New<FunctionTemplate>(ATan2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("cos").ToLocalChecked(), Nan::New<FunctionTemplate>(Cos)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sin").ToLocalChecked(), Nan::New<FunctionTemplate>(Sin)->GetFunction());
+    Nan::Set(target, Nan::New<String>("tan").ToLocalChecked(), Nan::New<FunctionTemplate>(Tan)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("cbrt").ToLocalChecked(), Nan::New<FunctionTemplate>(Cbrt)->GetFunction());
+    Nan::Set(target, Nan::New<String>("erf").ToLocalChecked(), Nan::New<FunctionTemplate>(Erf)->GetFunction());
+    Nan::Set(target, Nan::New<String>("erfc").ToLocalChecked(), Nan::New<FunctionTemplate>(Erfc)->GetFunction());
+    Nan::Set(target, Nan::New<String>("exp").ToLocalChecked(), Nan::New<FunctionTemplate>(Exp)->GetFunction());
+    Nan::Set(target, Nan::New<String>("expm1").ToLocalChecked(), Nan::New<FunctionTemplate>(ExpM1)->GetFunction());
+    Nan::Set(target, Nan::New<String>("expM1").ToLocalChecked(), Nan::New<FunctionTemplate>(ExpM1)->GetFunction());
+    Nan::Set(target, Nan::New<String>("factorial").ToLocalChecked(), Nan::New<FunctionTemplate>(Factorial)->GetFunction());
+    Nan::Set(target, Nan::New<String>("lgamma").ToLocalChecked(), Nan::New<FunctionTemplate>(LGamma)->GetFunction());
+    Nan::Set(target, Nan::New<String>("lGamma").ToLocalChecked(), Nan::New<FunctionTemplate>(LGamma)->GetFunction());
+    Nan::Set(target, Nan::New<String>("tgamma").ToLocalChecked(), Nan::New<FunctionTemplate>(TGamma)->GetFunction());
+    Nan::Set(target, Nan::New<String>("tGamma").ToLocalChecked(), Nan::New<FunctionTemplate>(TGamma)->GetFunction());
+    Nan::Set(target, Nan::New<String>("log").ToLocalChecked(), Nan::New<FunctionTemplate>(Log)->GetFunction());
+    Nan::Set(target, Nan::New<String>("log10").ToLocalChecked(), Nan::New<FunctionTemplate>(Log10)->GetFunction());
+    Nan::Set(target, Nan::New<String>("log1p").ToLocalChecked(), Nan::New<FunctionTemplate>(Log1P)->GetFunction());
+    Nan::Set(target, Nan::New<String>("log1P").ToLocalChecked(), Nan::New<FunctionTemplate>(Log1P)->GetFunction());
+    Nan::Set(target, Nan::New<String>("pow").ToLocalChecked(), Nan::New<FunctionTemplate>(Pow)->GetFunction());
+    Nan::Set(target, Nan::New<String>("pow2").ToLocalChecked(), Nan::New<FunctionTemplate>(Pow2)->GetFunction());
+    Nan::Set(target, Nan::New<String>("root").ToLocalChecked(), Nan::New<FunctionTemplate>(Root)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sqrt").ToLocalChecked(), Nan::New<FunctionTemplate>(Sqrt)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("acosh").ToLocalChecked(), Nan::New<FunctionTemplate>(ACosH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aCosH").ToLocalChecked(), Nan::New<FunctionTemplate>(ACosH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("asinh").ToLocalChecked(), Nan::New<FunctionTemplate>(ASinH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aSinH").ToLocalChecked(), Nan::New<FunctionTemplate>(ASinH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("atanh").ToLocalChecked(), Nan::New<FunctionTemplate>(ATanH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("aTanH").ToLocalChecked(), Nan::New<FunctionTemplate>(ATanH)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("complex").ToLocalChecked(), Nan::New<FunctionTemplate>(Complex)->GetFunction());
+    Nan::Set(target, Nan::New<String>("conjg").ToLocalChecked(), Nan::New<FunctionTemplate>(Conjg)->GetFunction());
+    Nan::Set(target, Nan::New<String>("imag").ToLocalChecked(), Nan::New<FunctionTemplate>(Imag)->GetFunction());
+    Nan::Set(target, Nan::New<String>("real").ToLocalChecked(), Nan::New<FunctionTemplate>(Real)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("sigmoid").ToLocalChecked(), Nan::New<FunctionTemplate>(Sigmoid)->GetFunction());
 }
