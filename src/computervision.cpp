@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "arraywrapper.h"
 #include "errors.h"
 #include "guard.h"
+#include "worker.h"
 
 using namespace v8;
 using namespace std;
@@ -45,8 +46,8 @@ NAN_METHOD(Orb)
 
     try
     {
-        ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        ARGS_LEN(2);
+        auto array = *ArrayWrapper::GetArrayAt(info, 0);
         float fastThr=20.f;
         unsigned maxFeat=400;
         float sclFctr=1.5f;
@@ -72,14 +73,26 @@ NAN_METHOD(Orb)
         {
             blurImg = info[5]->BooleanValue();
         }
-        Guard guard;
-        af::features feat;
-        af::array desc;
-        af::orb(feat, desc, *pArray, fastThr, maxFeat, sclFctr, levels, blurImg);
-        auto result = Nan::New<Object>();
-        result->Set(Nan::New(Symbols::Feat), ToV8Features(feat));
-        result->Set(Nan::New(Symbols::Desc), ArrayWrapper::New(desc));
-        info.GetReturnValue().Set(result);
+        typedef std::pair<af::features, af::array> result_t;
+        typedef Worker<result_t> worker_t;
+        auto exec = [=]()
+        {
+            Guard guard;
+            result_t result;
+            af::orb(result.first, result.second, array, fastThr, maxFeat, sclFctr, levels, blurImg);
+            return result;
+        };
+        auto conv = [=](worker_t* worker, const result_t& r)
+        {
+            Nan::EscapableHandleScope scope;
+            auto result = Nan::New<Object>();
+            result->Set(Nan::New(Symbols::Feat), ToV8Features(r.first));
+            result->Set(Nan::New(Symbols::Desc), ArrayWrapper::New(r.second));
+            return scope.Escape(result);
+        };
+        auto worker = new worker_t(GetCallback(info), std::move(exec), std::move(conv));
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
@@ -89,8 +102,8 @@ NAN_METHOD(Fast)
 
     try
     {
-        ARGS_LEN(1);
-        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        ARGS_LEN(2);
+        auto array = *ArrayWrapper::GetArrayAt(info, 0);
         float thr=20.0f;
         unsigned arcLength=9;
         bool nonMax=true;
@@ -116,9 +129,20 @@ NAN_METHOD(Fast)
         {
             edge = info[5]->Uint32Value();
         }
-        Guard guard;
-        auto feat = af::fast(*pArray, thr, arcLength, nonMax, featureRatio, edge);
-        info.GetReturnValue().Set(ToV8Features(feat));
+        typedef Worker<af::features> worker_t;
+        auto exec = [=]()
+        {
+            Guard guard;
+            return af::fast(array, thr, arcLength, nonMax, featureRatio, edge);
+        };
+        auto conv = [=](worker_t* worker, const af::features& feat)
+        {
+            return ToV8Features(feat);
+        };
+
+        auto worker = new worker_t(GetCallback(info), std::move(exec), std::move(conv));
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
@@ -128,9 +152,9 @@ NAN_METHOD(HammingMatcher)
 
     try
     {
-        ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
+        ARGS_LEN(3);
+        auto array1 = *ArrayWrapper::GetArrayAt(info, 0);
+        auto array2 = *ArrayWrapper::GetArrayAt(info, 1);
         dim_t distDim = 0;
         unsigned nDist = 1;
         if (info.Length() > 2)
@@ -141,13 +165,26 @@ NAN_METHOD(HammingMatcher)
         {
             nDist = info[3]->Uint32Value();
         }
-        Guard guard;
-        af::array idx, dist;
-        af::hammingMatcher(idx, dist, *pArray1, *pArray2, distDim, nDist);
-        auto result = Nan::New<Object>();
-        result->Set(Nan::New(Symbols::Idx), ArrayWrapper::New(idx));
-        result->Set(Nan::New(Symbols::Dist), ArrayWrapper::New(dist));
-        info.GetReturnValue().Set(result);
+        typedef std::pair<af::array, af::array> result_t;
+        typedef Worker<result_t> worker_t;
+        auto exec = [=]()
+        {
+            Guard guard;
+            result_t result;
+            af::hammingMatcher(result.first, result.second, array1, array2, distDim, nDist);
+            return result;
+        };
+        auto conv = [=](worker_t* worker, const result_t& r)
+        {
+            Nan::EscapableHandleScope scope;
+            auto result = Nan::New<Object>();
+            result->Set(Nan::New(Symbols::Idx), ArrayWrapper::New(r.first));
+            result->Set(Nan::New(Symbols::Dist), ArrayWrapper::New(r.second));
+            return scope.Escape(result);
+        };
+        auto worker = new worker_t(GetCallback(info), std::move(exec), std::move(conv));
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
@@ -157,16 +194,28 @@ NAN_METHOD(MatchTemplate)
 
     try
     {
-        ARGS_LEN(2);
-        auto pArray1 = ArrayWrapper::GetArrayAt(info, 0);
-        auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);
+        ARGS_LEN(3);
+        auto array1 = *ArrayWrapper::GetArrayAt(info, 0);
+        auto array2 = *ArrayWrapper::GetArrayAt(info, 1);
         af::matchType mType = AF_SAD;
         if (info.Length() > 2)
         {
             mType = (af::matchType)(info[2]->Uint32Value());
         }
-        Guard guard;
-        info.GetReturnValue().Set(ArrayWrapper::New(af::matchTemplate(*pArray1, *pArray2, mType)));
+        typedef Worker<af::array> worker_t;
+        auto exec = [=]()
+        {
+            Guard guard;
+            return af::matchTemplate(array1, array2, mType);
+        };
+        auto conv = [=](worker_t* worker, const af::array& arr)
+        {
+            return ArrayWrapper::New(arr);
+        };
+
+        auto worker = new worker_t(GetCallback(info), std::move(exec), std::move(conv));
+        Nan::AsyncQueueWorker(worker);
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }
