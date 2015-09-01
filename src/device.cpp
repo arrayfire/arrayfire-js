@@ -47,7 +47,7 @@ NAN_METHOD(GetDeviceCount)
 
     try
     {
-        Guard();
+        Guard guard;
 #ifdef CPU
         info.GetReturnValue().Set(Nan::New<Number>(1));
 #else
@@ -61,7 +61,7 @@ NAN_METHOD(GetDevice)
 {
     try
     {
-        Guard();
+        Guard guard;
 
 
 #ifdef CPU
@@ -79,7 +79,7 @@ NAN_METHOD(SetDevice)
 
     try
     {
-        Guard();
+        Guard guard;
 
 #ifndef CPU
         af::setDevice(info[0]->Uint32Value());
@@ -96,7 +96,7 @@ NAN_METHOD(DeviceInfo)
 
     try
     {
-        Guard();
+        Guard guard;
 
         bool IsDoubleAvailable = af::isDoubleAvailable(af::getDevice());
         auto infoObj = Nan::New<Object>();
@@ -128,7 +128,7 @@ NAN_METHOD(IsDoubleAvailable)
 
     try
     {
-        Guard();
+        Guard guard;
 
         info.GetReturnValue().Set(Nan::New<Number>(af::isDoubleAvailable(info[0]->Uint32Value())));
     }
@@ -170,7 +170,7 @@ NAN_METHOD(Sync)
 
         auto exec = [=]()
         {
-            Guard();
+            Guard guard;
             af::sync(device);
         };
 
@@ -199,11 +199,11 @@ NAN_METHOD(Alloc)
         unsigned udtype = info[1]->Uint32Value();
         auto allocPars = getAllocPars(elements, udtype);
 
-        Guard();
+        Guard guard;
         char* ptr = (char*)af::alloc(elements, allocPars.first);
         auto gcCallback = [](char* data, void* hint)
         {
-            Guard();
+            Guard guard;
             af::free(data);
             Nan::AdjustExternalMemory(static_cast<int>(reinterpret_cast<size_t>(hint)));
         };
@@ -224,11 +224,11 @@ NAN_METHOD(Pinned)
         unsigned udtype = info[1]->Uint32Value();
         auto allocPars = getAllocPars(elements, udtype);
 
-        Guard();
+        Guard guard;
         char* ptr = (char*)af::pinned(elements, allocPars.first);
         auto gcCallback = [](char* data, void* hint)
         {
-            Guard();
+            Guard guard;
             af::freePinned(data);
             Nan::AdjustExternalMemory(static_cast<int>(reinterpret_cast<size_t>(hint)));
         };

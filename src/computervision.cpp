@@ -72,7 +72,7 @@ NAN_METHOD(Orb)
         {
             blurImg = info[5]->BooleanValue();
         }
-        Guard();
+        Guard guard;
         af::features feat;
         af::array desc;
         af::orb(feat, desc, *pArray, fastThr, maxFeat, sclFctr, levels, blurImg);
@@ -116,7 +116,7 @@ NAN_METHOD(Fast)
         {
             edge = info[5]->Uint32Value();
         }
-        Guard();
+        Guard guard;
         auto feat = af::fast(*pArray, thr, arcLength, nonMax, featureRatio, edge);
         info.GetReturnValue().Set(ToV8Features(feat));
     }
@@ -141,7 +141,7 @@ NAN_METHOD(HammingMatcher)
         {
             nDist = info[3]->Uint32Value();
         }
-        Guard();
+        Guard guard;
         af::array idx, dist;
         af::hammingMatcher(idx, dist, *pArray1, *pArray2, distDim, nDist);
         auto result = Nan::New<Object>();
@@ -165,7 +165,7 @@ NAN_METHOD(MatchTemplate)
         {
             mType = (af::matchType)(info[2]->Uint32Value());
         }
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::matchTemplate(*pArray1, *pArray2, mType)));
     }
     ARRAYFIRE_CATCH

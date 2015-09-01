@@ -51,7 +51,7 @@ NAN_METHOD(Join)
         af::dtype dim = GetDTypeInfo(info[0]).first;
         auto pArray1 = ArrayWrapper::GetArrayAt(info, 1);
         auto pArray2 = ArrayWrapper::GetArrayAt(info, 2);
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::join(dim, *pArray1, *pArray2)));;
     }
     ARRAYFIRE_CATCH
@@ -77,7 +77,7 @@ NAN_METHOD(Flip)
 
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         af::dtype dim = GetDTypeInfo(info[1]).first;
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::flip(*pArray, dim)));;
     }
     ARRAYFIRE_CATCH

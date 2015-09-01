@@ -68,7 +68,7 @@ NAN_METHOD(Sort)
         {
             asc = info[2]->BooleanValue();
         }
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::sort(*pArray, dim, asc)));;
     }
     ARRAYFIRE_CATCH
@@ -93,7 +93,7 @@ NAN_METHOD(SortByKey)
             asc = info[3]->BooleanValue();
         }
 
-        Guard();
+        Guard guard;
         af::array outKeys, outValues;
         af::sort(outKeys, outValues, *pKeys, *pValues, dim, asc);
 
@@ -124,7 +124,7 @@ NAN_METHOD(SortIndex)
             asc = info[2]->BooleanValue();
         }
 
-        Guard();
+        Guard guard;
         af::array outValues, outIndices;
         af::sort(outValues, outIndices, *pArray, dim, asc);
 
@@ -152,7 +152,7 @@ NAN_METHOD(Grad)
         ARGS_LEN(1);
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);
 
-        Guard();
+        Guard guard;
         af::array dx, dy;
         af::grad(dx, dy, *pArray);
 

@@ -101,7 +101,7 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(1);\
         \
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0))));\
     }\
     ARRAYFIRE_CATCH\
@@ -118,7 +118,7 @@ NAN_METHOD(F)\
         \
         int dim = 0;\
         if (info.Length() > 1) dim = info[1]->Int32Value();\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), dim)));\
     }\
     ARRAYFIRE_CATCH\
@@ -135,7 +135,7 @@ NAN_METHOD(F)\
         \
         bool v = defV;\
         if (info.Length() > 1) v = info[1]->BooleanValue();\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), v)));\
     }\
     ARRAYFIRE_CATCH\
@@ -152,7 +152,7 @@ NAN_METHOD(F)\
         \
         bool v = defV;\
         if (info.Length() > 1) v = info[1]->BooleanValue();\
-        Guard();\
+        Guard guard;\
         af::f(*ArrayWrapper::GetArrayAt(info, 0), v);\
         info.GetReturnValue().SetUndefined();\
     }\
@@ -174,7 +174,7 @@ NAN_METHOD(F)\
         if (info.Length() > 1) v1 = info[1]->NumberValue();\
         if (info.Length() > 2) v1 = info[2]->NumberValue();\
         if (info.Length() > 3) v1 = info[3]->NumberValue();\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), v1, v2, v3)));\
     }\
     ARRAYFIRE_CATCH\
@@ -189,7 +189,7 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(2);\
         \
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), *ArrayWrapper::GetArrayAt(info, 1))));\
     }\
     ARRAYFIRE_CATCH\
@@ -204,7 +204,7 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(3);\
         \
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), *ArrayWrapper::GetArrayAt(info, 1), *ArrayWrapper::GetArrayAt(info, 2))));\
     }\
     ARRAYFIRE_CATCH\
@@ -219,7 +219,7 @@ NAN_METHOD(F)\
     {\
         ARGS_LEN(4);\
         \
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), *ArrayWrapper::GetArrayAt(info, 1), *ArrayWrapper::GetArrayAt(info, 2), *ArrayWrapper::GetArrayAt(info, 3))));\
     }\
     ARRAYFIRE_CATCH\
@@ -236,7 +236,7 @@ NAN_METHOD(F)\
         \
         int dim = 0;\
         if (info.Length() > 2) dim = info[2]->Int32Value();\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), *ArrayWrapper::GetArrayAt(info, 1), dim)));\
     }\
     ARRAYFIRE_CATCH\
@@ -253,7 +253,7 @@ NAN_METHOD(F)\
         \
         bool v = defV;\
         if (info.Length() > 2) v = info[2]->BooleanValue();\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*ArrayWrapper::GetArrayAt(info, 0), *ArrayWrapper::GetArrayAt(info, 1), v)));\
     }\
     ARRAYFIRE_CATCH\
@@ -269,7 +269,7 @@ NAN_METHOD(F)\
         \
         auto pArray1 = ArrayWrapper::TryGetArrayAt(info, 0);\
         auto pArray2 = ArrayWrapper::TryGetArrayAt(info, 1);\
-        Guard();\
+        Guard guard;\
         if (pArray1)\
         {\
             if (pArray2)\
@@ -317,20 +317,20 @@ NAN_METHOD(F)\
         if (info.Length() > 2)\
         {\
             int dim = info[1]->Int32Value();\
-            return ArrayWrapper::NewAsync(info, [=]() { Guard(); return new af::array(af::f(array, dim)); });\
+            return ArrayWrapper::NewAsync(info, [=]() { Guard guard; return new af::array(af::f(array, dim)); });\
         }\
         else\
         {\
             if (NeedsDouble(array))\
             {\
-                auto exec = [=]() { Guard(); return af::f<double>(array); };\
+                auto exec = [=]() { Guard guard; return af::f<double>(array); };\
                 auto worker = new Worker<double>(GetCallback(info), std::move(exec));\
                 Nan::AsyncQueueWorker(worker);\
                 info.GetReturnValue().SetUndefined();\
             }\
             else\
             {\
-                auto exec = [=]() { Guard(); return af::f<float>(array); };\
+                auto exec = [=]() { Guard guard; return af::f<float>(array); };\
                 auto worker = new Worker<float>(GetCallback(info), std::move(exec));\
                 Nan::AsyncQueueWorker(worker);\
                 info.GetReturnValue().SetUndefined();\
@@ -356,7 +356,7 @@ NAN_METHOD(F)\
             typedef Worker<PairT> WorkerT;\
             auto exec = [=]()\
             {\
-                Guard();\
+                Guard guard;\
                 af::array v;\
                 af::array at;\
                 af::f(v, at, array, dim);\
@@ -382,7 +382,7 @@ NAN_METHOD(F)\
                 typedef Worker<PairT> WorkerT;\
                 auto exec = [=]()\
                 {\
-                    Guard();\
+                    Guard guard;\
                     double v;\
                     unsigned at;\
                     af::f<double>(&v, &at, array);\
@@ -406,7 +406,7 @@ NAN_METHOD(F)\
                 typedef Worker<PairT> WorkerT;\
                 auto exec = [=]()\
                 {\
-                    Guard();\
+                    Guard guard;\
                     float v;\
                     unsigned at;\
                     af::f<float>(&v, &at, array);\
@@ -443,20 +443,20 @@ NAN_METHOD(F)\
         if (info.Length() > 3)\
         {\
             int dim = info[2]->Int32Value();\
-            return ArrayWrapper::NewAsync(info, [=]() { Guard(); return new af::array(af::f(array1, array2, dim)); });\
+            return ArrayWrapper::NewAsync(info, [=]() { Guard guard; return new af::array(af::f(array1, array2, dim)); });\
         }\
         else\
         {\
             if (NeedsDouble(array1))\
             {\
-                auto exec = [=]() { Guard(); return af::f<double>(array1, array2); };\
+                auto exec = [=]() { Guard guard; return af::f<double>(array1, array2); };\
                 auto worker = new Worker<double>(GetCallback(info), std::move(exec));\
                 Nan::AsyncQueueWorker(worker);\
                 info.GetReturnValue().SetUndefined();\
             }\
             else\
             {\
-                auto exec = [=]() { Guard(); return af::f<float>(array1, array2); };\
+                auto exec = [=]() { Guard guard; return af::f<float>(array1, array2); };\
                 auto worker = new Worker<float>(GetCallback(info), std::move(exec));\
                 Nan::AsyncQueueWorker(worker);\
                 info.GetReturnValue().SetUndefined();\
@@ -504,7 +504,7 @@ NAN_METHOD(F)\
                 w = info[4]->Uint32Value();\
             }\
         }\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(ArrayWrapper::New(af::f(*pArray, x, y, z, w)));\
     }\
     ARRAYFIRE_CATCH\

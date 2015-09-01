@@ -48,7 +48,7 @@ NAN_METHOD(RandU)
     {
         ARGS_LEN(2);
         auto dimAndType = ParseDimAndTypeArgs(info);
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::randu(dimAndType.first, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
@@ -64,7 +64,7 @@ NAN_METHOD(RandN)
         auto dimAndType = ParseDimAndTypeArgs(info);
         if (dimAndType.second == f32 || dimAndType.second == f64)
         {
-            Guard();
+            Guard guard;
             info.GetReturnValue().Set(ArrayWrapper::New(af::randn(dimAndType.first, dimAndType.second)));
             return;
         }
@@ -81,7 +81,7 @@ NAN_METHOD(Identity)
     {
         ARGS_LEN(2);
         auto dimAndType = ParseDimAndTypeArgs(info);
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::identity(dimAndType.first, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
@@ -96,7 +96,7 @@ NAN_METHOD(Range)
         ARGS_LEN(3);
         auto dimAndType = ParseDimAndTypeArgs(info, -1, 1);
         af_dtype seqDim = (af_dtype)info[info.Length() - 2]->Uint32Value();
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::range(dimAndType.first, seqDim, dimAndType.second)));
     }
     ARRAYFIRE_CATCH
@@ -112,7 +112,7 @@ NAN_METHOD(Iota)
         auto dims = ToDim4(info[0]);
         auto titleDims = ToDim4(info[1]);
         auto type = GetDTypeInfo(info[3]->Uint32Value());
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::iota(dims, titleDims, type.first)));
     }
     ARRAYFIRE_CATCH
@@ -136,7 +136,7 @@ NAN_METHOD(Diag)
         {
             extract = info[2]->BooleanValue();
         }
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::diag(*pArray, num, extract)));
     }
     ARRAYFIRE_CATCH
@@ -153,7 +153,7 @@ NAN_METHOD(Constant)
         ARGS_LEN(3);
         auto dimAndType = ParseDimAndTypeArgs(info, -1, 0, 1);
         auto value = info[0];
-        Guard();
+        Guard guard;
         if (value->IsNumber())
         {
             double v = value->NumberValue();

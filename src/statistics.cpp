@@ -59,20 +59,20 @@ NAN_METHOD(Var)
         if (info.Length() > 3)
         {
             int dim = info[2]->Int32Value();
-            return ArrayWrapper::NewAsync(info, [=]() { Guard(); return new af::array(af::var(array, biased, dim)); });
+            return ArrayWrapper::NewAsync(info, [=]() { Guard guard; return new af::array(af::var(array, biased, dim)); });
         }
         else
         {
             if (NeedsDouble(array))
             {
-                auto exec = [=]() { Guard(); return af::var<double>(array, biased); };
+                auto exec = [=]() { Guard guard; return af::var<double>(array, biased); };
                 auto worker = new Worker<double>(GetCallback(info), std::move(exec));
                 Nan::AsyncQueueWorker(worker);
                 info.GetReturnValue().SetUndefined();
             }
             else
             {
-                auto exec = [=]() { Guard(); return af::var<float>(array, biased); };
+                auto exec = [=]() { Guard guard; return af::var<float>(array, biased); };
                 auto worker = new Worker<float>(GetCallback(info), std::move(exec));
                 Nan::AsyncQueueWorker(worker);
                 info.GetReturnValue().SetUndefined();
@@ -95,14 +95,14 @@ NAN_METHOD(CorrCoef)
         auto array2 = *ArrayWrapper::GetArrayAt(info, 1);
         if (NeedsDouble(array1))
         {
-            auto exec = [=]() { Guard(); return af::corrcoef<double>(array1, array2); };
+            auto exec = [=]() { Guard guard; return af::corrcoef<double>(array1, array2); };
             auto worker = new Worker<double>(GetCallback(info), std::move(exec));
             Nan::AsyncQueueWorker(worker);
             info.GetReturnValue().SetUndefined();
         }
         else
         {
-            auto exec = [=]() { Guard(); return af::corrcoef<float>(array1, array2); };
+            auto exec = [=]() { Guard guard; return af::corrcoef<float>(array1, array2); };
             auto worker = new Worker<float>(GetCallback(info), std::move(exec));
             Nan::AsyncQueueWorker(worker);
             info.GetReturnValue().SetUndefined();

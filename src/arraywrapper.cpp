@@ -286,7 +286,7 @@ void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
         {
             if (info.Length() == 0)
             {
-                Guard();
+                Guard guard;
                 instance = new ArrayWrapper(new af::array());
             }
             else if (info.Length() == 1)
@@ -298,7 +298,7 @@ void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
             }
             else
             {
-                Guard();
+                Guard guard;
                 auto dimAndType = ParseDimAndTypeArgs(info);
                 instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
             }
@@ -323,7 +323,7 @@ void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 template<typename T>
 af::array* ArrayWrapper::CreateArray(void* ptr, af_source src, const af::dim4& dim4)
 {
-    Guard();
+    Guard guard;
     return new af::array(dim4, (T*)ptr, src);
 }
 
@@ -418,7 +418,7 @@ NAN_METHOD(ArrayWrapper::Elements)
 {
     try
     {
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(Nan::New<Number>(GetArray(info.This())->elements()));
     }
     ARRAYFIRE_CATCH
@@ -445,7 +445,7 @@ NAN_METHOD(ArrayWrapper::Host)
             af::array array(*pArray);
             auto exec = [=]()
             {
-                Guard();
+                Guard guard;
                 array.host(buffData);
             };
             auto worker = new Worker<void>(GetCallback(info), move(exec));
@@ -463,7 +463,7 @@ NAN_METHOD(ArrayWrapper::Host)
                 af::array array(*pArray);
                 auto exec = [=]()
                 {
-                    Guard();
+                    Guard guard;
                     array.host(buffData);
                     return buffData;
                 };
@@ -500,7 +500,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<float>();
                     };
                     auto worker = new Worker<float>(GetCallback(info), move(exec));
@@ -511,7 +511,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<double>();
                     };
                     auto worker = new Worker<double>(GetCallback(info), move(exec));
@@ -522,7 +522,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<int>();
                     };
                     auto worker = new Worker<int>(GetCallback(info), move(exec));
@@ -533,7 +533,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<unsigned>();
                     };
                     auto worker = new Worker<unsigned>(GetCallback(info), move(exec));
@@ -544,7 +544,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<unsigned char>();
                     };
                     auto worker = new Worker<unsigned char>(GetCallback(info), move(exec));
@@ -555,7 +555,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<char>();
                     };
                     auto worker = new Worker<char>(GetCallback(info), move(exec));
@@ -566,7 +566,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<af::cfloat>();
                     };
                     auto conv = [=](Worker<af::cfloat>* w, af::cfloat data)
@@ -581,7 +581,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<af::cdouble>();
                     };
                     auto conv = [=](Worker<af::cdouble>* w, af::cdouble data)
@@ -596,7 +596,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<long long>();
                     };
                     auto conv = [=](Worker<long long>* w, long long data)
@@ -612,7 +612,7 @@ NAN_METHOD(ArrayWrapper::Scalar)
                 {
                     auto exec = [=]()
                     {
-                        Guard();
+                        Guard guard;
                         return array.scalar<unsigned long long>();
                     };
                     auto conv = [=](Worker<unsigned long long>* w, unsigned long long data)
@@ -661,7 +661,7 @@ NAN_METHOD(ArrayWrapper::Write)
         af::array array(*pArray);
         auto exec = [=]()
         {
-            Guard();
+            Guard guard;
             af_write_array(array.get(), buffData, bytes, src);
         };
         auto worker = new Worker<void>(GetCallback(info), move(exec));
@@ -733,7 +733,7 @@ NAN_METHOD(ArrayWrapper::Copy)
 {
     try
     {
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(New(GetArray(info.This())->copy()));
     }
     ARRAYFIRE_CATCH
@@ -878,7 +878,7 @@ NAN_METHOD(ArrayWrapper::Eval)
 
     try
     {
-        Guard();
+        Guard guard;
         GetArray(info.This())->eval();
         info.GetReturnValue().SetUndefined();
     }
@@ -894,7 +894,7 @@ NAN_METHOD(ArrayWrapper::At)
     {
         ARGS_LEN(1)
 
-        Guard();
+        Guard guard;
 
         if (info.Length() == 1)
         {
@@ -947,7 +947,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(1)\
-        Guard();\
+        Guard guard;\
         auto pArray = GetArray(info.This());\
         info.GetReturnValue().Set(New(pArray->f(info[0]->Int32Value())));\
     }\
@@ -966,7 +966,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         ARGS_LEN(2);\
-        Guard();\
+        Guard guard;\
         auto pArray = GetArray(info.This());\
         info.GetReturnValue().Set(New(pArray->f(info[0]->Int32Value(), info[1]->Int32Value())));\
     }\
@@ -985,7 +985,7 @@ NAN_METHOD(ArrayWrapper::As)
     {
         ARGS_LEN(1);
         af::dtype type = GetDTypeInfo(info[0]->Uint32Value()).first;
-        Guard();
+        Guard guard;
         info.GetReturnValue().Set(New(GetArray(info.This())->as(type)));
     }
     ARRAYFIRE_CATCH
@@ -1006,7 +1006,7 @@ NAN_METHOD(ArrayWrapper::F)\
         {\
             auto value = info[0];\
             auto pOtherArray = TryGetArray(value);\
-            Guard();\
+            Guard guard;\
             if (pOtherArray)\
             {\
                 auto& otherArray = *pOtherArray;\
@@ -1063,7 +1063,7 @@ NAN_METHOD(ArrayWrapper::F)\
                 case Region::None:\
                     {\
                         auto idx0 = ToIndex(info[0]);\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1112,7 +1112,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Row:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1161,7 +1161,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Rows:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1210,7 +1210,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Col:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1259,7 +1259,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Cols:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1308,7 +1308,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Slice:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1357,7 +1357,7 @@ NAN_METHOD(ArrayWrapper::F)\
                     break;\
                 case Region::Slices:\
                     {\
-                        Guard();\
+                        Guard guard;\
                         if (pOtherArray)\
                         {\
                             auto& otherArray = *pOtherArray;\
@@ -1412,7 +1412,7 @@ NAN_METHOD(ArrayWrapper::F)\
             auto idx1 = ToIndex(info[1]);\
             auto value = info[2];\
             auto pOtherArray = TryGetArray(value);\
-            Guard();\
+            Guard guard;\
             if (pOtherArray)\
             {\
                 auto& otherArray = *pOtherArray;\
@@ -1465,7 +1465,7 @@ NAN_METHOD(ArrayWrapper::F)\
             auto idx2 = ToIndex(info[2]);\
             auto value = info[3];\
             auto pOtherArray = TryGetArray(value);\
-            Guard();\
+            Guard guard;\
             if (pOtherArray)\
             {\
                 auto& otherArray = *pOtherArray;\
@@ -1519,7 +1519,7 @@ NAN_METHOD(ArrayWrapper::F)\
             auto idx3 = ToIndex(info[3]);\
             auto value = info[4];\
             auto pOtherArray = TryGetArray(value);\
-            Guard();\
+            Guard guard;\
             if (pOtherArray)\
             {\
                 auto& otherArray = *pOtherArray;\
@@ -1591,7 +1591,7 @@ NAN_METHOD(ArrayWrapper::F)\
         auto value = info[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
-        Guard();\
+        Guard guard;\
         if (pOtherArray)\
         {\
             auto& otherArray = *pOtherArray;\
@@ -1675,7 +1675,7 @@ NAN_METHOD(ArrayWrapper::F)\
         auto value = info[0];\
         auto pOtherArray = TryGetArray(value);\
         af::array* result = nullptr;\
-        Guard();\
+        Guard guard;\
         if (pOtherArray)\
         {\
             auto& otherArray = *pOtherArray;\
@@ -1754,7 +1754,7 @@ NAN_METHOD(ArrayWrapper::F)\
     try\
     {\
         auto& array = *GetArray(info.This());\
-        Guard();\
+        Guard guard;\
         info.GetReturnValue().Set(New(array.operator Op()));\
     }\
     ARRAYFIRE_CATCH\

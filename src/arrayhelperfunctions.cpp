@@ -49,7 +49,7 @@ NAN_METHOD(Print)
     try
     {
         ARGS_LEN(1);
-        Guard();
+        Guard guard;
         af_print(*ArrayWrapper::GetArrayAt(info, 0));
         info.GetReturnValue().SetUndefined();
     }

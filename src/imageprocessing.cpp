@@ -56,7 +56,7 @@ NAN_METHOD(LoadImage)
         }
         ArrayWrapper::NewAsync(
                 info,
-                [=](){ Guard(); return new af::array(af::loadImage(fn.c_str(), isColor)); });
+                [=](){ Guard guard; return new af::array(af::loadImage(fn.c_str(), isColor)); });
     }
     ARRAYFIRE_CATCH;
 }
@@ -72,7 +72,7 @@ NAN_METHOD(SaveImage)
         auto array = *ArrayWrapper::GetArrayAt(info, 1);
         auto exec = [=]()
         {
-            Guard();
+            Guard guard;
             af::saveImage(fn.c_str(), array);
         };
         auto worker = new Worker<void>(GetCallback(info), move(exec));
@@ -91,7 +91,7 @@ NAN_METHOD(ColorSpace)
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         auto to = (af::CSpace)info[1]->Uint32Value();
         auto from = (af::CSpace)info[2]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::colorSpace(*pArray, to, from));
     }
     ARRAYFIRE_CATCH;
@@ -113,7 +113,7 @@ NAN_METHOD(Regions)
         af::dtype dtype = f32;
         if (info.Length() > 1) conn = (af::connectivity)info[1]->Uint32Value();
         if (info.Length() > 2) dtype = GetDTypeInfo(info[2]).first;
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::regions(*pArray, conn, dtype));
     }
     ARRAYFIRE_CATCH;
@@ -130,7 +130,7 @@ NAN_METHOD(Bilateral)
         float chromaticSigma = info[2]->NumberValue();
         bool isColor = false;
         if (info.Length() > 3) isColor = info[3]->BooleanValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::bilateral(*pArray, spatialSigma, chromaticSigma, isColor));
     }
     ARRAYFIRE_CATCH;
@@ -150,7 +150,7 @@ NAN_METHOD(F)\
         if (info.Length() > 1) windLength = info[1]->Uint32Value();\
         if (info.Length() > 2) windWidth = info[2]->Uint32Value();\
         if (info.Length() > 3) edgePad = (af::borderType)info[3]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, windLength, windWidth, edgePad));\
     }\
     ARRAYFIRE_CATCH;\
@@ -173,7 +173,7 @@ NAN_METHOD(MeanShift)
         unsigned iter = info[3]->Uint32Value();
         bool isColor = false;
         if (info.Length() > 4) isColor = info[4]->BooleanValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::meanShift(*pArray, spatialSigma, chromaticSigma, iter, isColor));
     }
     ARRAYFIRE_CATCH;
@@ -188,7 +188,7 @@ NAN_METHOD(Sobel)
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);
         unsigned kerSize = 3;
         if (info.Length() > 1) kerSize = info[1]->Uint32Value();
-        Guard();
+        Guard guard;
         af::array dx, dy;
         af::sobel(dx, dy, *pArray, kerSize);
         auto result = Nan::New<Object>();
@@ -213,7 +213,7 @@ NAN_METHOD(Histogram)
         double maxval = numeric_limits<double>::max();
         if (info.Length() > 2) minval = info[2]->NumberValue();
         if (info.Length() > 3) maxval = info[3]->NumberValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::histogram(*pArray, nbins, minval, maxval));
     }
     ARRAYFIRE_CATCH;
@@ -232,7 +232,7 @@ NAN_METHOD(Resize)
             dim_t odim0 = info[1]->Uint32Value();
             dim_t odim1 = info[2]->Uint32Value();
             if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
-            Guard();
+            Guard guard;
             ArrayWrapper::New(af::resize(*pIn, odim0, odim1, method));
         }
         else
@@ -242,7 +242,7 @@ NAN_METHOD(Resize)
             {
                 float scale = info[0]->NumberValue();
                 if (info.Length() > 2) method = (af::interpType)info[2]->Uint32Value();
-                Guard();
+                Guard guard;
                 ArrayWrapper::New(af::resize(scale, *pIn, method));
             }
             else
@@ -251,7 +251,7 @@ NAN_METHOD(Resize)
                 float scale1 = info[1]->NumberValue();
                 pIn = ArrayWrapper::GetArrayAt(info, 2);
                 if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
-                Guard();
+                Guard guard;
                 ArrayWrapper::New(af::resize(scale0, scale1, *pIn, method));
             }
         }
@@ -271,7 +271,7 @@ NAN_METHOD(Rotate)
         af::interpType method = AF_INTERP_NEAREST;
         if (info.Length() > 2) crop = info[2]->BooleanValue();
         if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::rotate(*pArray, theta, crop, method));
     }
     ARRAYFIRE_CATCH;
@@ -292,7 +292,7 @@ NAN_METHOD(Scale)
         if (info.Length() > 3) odim0 = info[3]->Uint32Value();
         if (info.Length() > 4) odim1 = info[4]->Uint32Value();
         if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::scale(*pArray, scale0, scale1, odim0, odim1, method));
     }
     ARRAYFIRE_CATCH;
@@ -315,7 +315,7 @@ NAN_METHOD(Skew)
         if (info.Length() > 4) odim1 = info[4]->Uint32Value();
         if (info.Length() > 5) inverse = info[5]->BooleanValue();
         if (info.Length() > 6) method = (af::interpType)info[6]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::skew(*pArray, skew0, skew1, odim0, odim1, inverse, method));
     }
     ARRAYFIRE_CATCH;
@@ -337,7 +337,7 @@ NAN_METHOD(Transform)
         if (info.Length() > 3) odim1 = info[3]->Uint32Value();
         if (info.Length() > 4) inverse = info[4]->BooleanValue();
         if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::transform(*pArray1, *pArray2, odim0, odim1, method, inverse));
     }
     ARRAYFIRE_CATCH;
@@ -358,7 +358,7 @@ NAN_METHOD(Translate)
         if (info.Length() > 3) odim0 = info[3]->Uint32Value();
         if (info.Length() > 4) odim1 = info[4]->Uint32Value();
         if (info.Length() > 5) method = (af::interpType)info[5]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::translate(*pArray, trans0, trans1, odim0, odim1, method));
     }
     ARRAYFIRE_CATCH;
@@ -381,7 +381,7 @@ NAN_METHOD(GaussianKernel)
         double sigC = 0;
         if (info.Length() > 2) sigR = info[2]->NumberValue();
         if (info.Length() > 3) sigC = info[3]->NumberValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::gaussianKernel(rows, cols, sigR, sigC));
     }
     ARRAYFIRE_CATCH;

@@ -51,7 +51,7 @@ NAN_METHOD(ConvolveSeparable)
         auto pArray3 = ArrayWrapper::GetArrayAt(info, 2);
         af::convMode mode = AF_CONV_DEFAULT;
         if (info.Length() > 3) mode = (af::convMode)info[3]->Uint32Value();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::convolve(*pArray1, *pArray2, *pArray3, mode));
     }
     ARRAYFIRE_CATCH;
@@ -70,7 +70,7 @@ NAN_METHOD(F)\
         af::convDomain domain = AF_CONV_AUTO;\
         if (info.Length() > 2) mode = (af::convMode)info[2]->Uint32Value();\
         if (info.Length() > 3) domain = (af::convDomain)info[3]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray1, *pArray2, mode, domain));\
     }\
     ARRAYFIRE_CATCH;\
@@ -93,7 +93,7 @@ NAN_METHOD(F)\
         auto pArray2 = ArrayWrapper::GetArrayAt(info, 1);\
         af::convMode mode = AF_CONV_DEFAULT;\
         if (info.Length() > 2) mode = (af::convMode)info[2]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray1, *pArray2, mode));\
     }\
     ARRAYFIRE_CATCH;\
@@ -115,7 +115,7 @@ NAN_METHOD(F)\
         double factor = info[1]->NumberValue();\
         dim_t odim0 = 0;\
         if (info.Length() > 2) odim0 = info[2]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, factor, odim0));\
     }\
     ARRAYFIRE_CATCH;\
@@ -135,7 +135,7 @@ NAN_METHOD(F)\
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         dim_t odim0 = 0;\
         if (info.Length() > 1) odim0 = info[1]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, odim0));\
     }\
     ARRAYFIRE_CATCH;\
@@ -155,17 +155,17 @@ NAN_METHOD(F)\
         auto pArray = ArrayWrapper::GetArrayAt(info, 0);\
         if (info.Length() == 1)\
         {\
-            Guard();\
+            Guard guard;\
             ArrayWrapper::New(af::f(*pArray));\
         }\
         else if (info.Length() == 2)\
         {\
-            Guard();\
+            Guard guard;\
             ArrayWrapper::New(af::f(*pArray, ToDim4(info[1])));\
         }\
         else if (info.Length() == 3)\
         {\
-            Guard();\
+            Guard guard;\
             ArrayWrapper::New(af::f(*pArray, info[1]->NumberValue(), ToDim4(info[2])));\
         }\
         else \
@@ -192,7 +192,7 @@ NAN_METHOD(F)\
         dim_t dim1 = 0;\
         if (info.Length() > 1) dim0 = info[1]->Uint32Value();\
         if (info.Length() > 2) dim1 = info[2]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, dim0, dim1));\
     }\
     ARRAYFIRE_CATCH;\
@@ -216,7 +216,7 @@ NAN_METHOD(F)\
         if (info.Length() > 1) dim0 = info[1]->Uint32Value();\
         if (info.Length() > 2) dim1 = info[2]->Uint32Value();\
         if (info.Length() > 3) dim2 = info[3]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, dim0, dim1, dim2));\
     }\
     ARRAYFIRE_CATCH;\
@@ -239,7 +239,7 @@ NAN_METHOD(F)\
         dim_t dim1 = 0;\
         if (info.Length() > 2) dim0 = info[2]->Uint32Value();\
         if (info.Length() > 3) dim1 = info[3]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, factor, dim0, dim1));\
     }\
     ARRAYFIRE_CATCH;\
@@ -264,7 +264,7 @@ NAN_METHOD(F)\
         if (info.Length() > 2) dim0 = info[2]->Uint32Value();\
         if (info.Length() > 3) dim1 = info[3]->Uint32Value();\
         if (info.Length() > 4) dim2 = info[4]->Uint32Value();\
-        Guard();\
+        Guard guard;\
         ArrayWrapper::New(af::f(*pArray, factor, dim0, dim1, dim2));\
     }\
     ARRAYFIRE_CATCH;\
@@ -290,7 +290,7 @@ NAN_METHOD(Approx1)
         float offGrid = 0.0f;
         if (info.Length() > 2) method = (af::interpType)info[2]->Uint32Value();
         if (info.Length() > 3) offGrid = info[3]->NumberValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::approx1(*pArray1, *pArray2, method, offGrid));
     }
     ARRAYFIRE_CATCH;
@@ -309,7 +309,7 @@ NAN_METHOD(Approx2)
         float offGrid = 0.0f;
         if (info.Length() > 3) method = (af::interpType)info[3]->Uint32Value();
         if (info.Length() > 4) offGrid = info[4]->NumberValue();
-        Guard();
+        Guard guard;
         ArrayWrapper::New(af::approx2(*pArray1, *pArray2, *pArray3, method, offGrid));
     }
     ARRAYFIRE_CATCH;
