@@ -1,3 +1,7 @@
+# NOTICE: The next release (0.16) will rename this module as arrayfire-js
+
+The old `arrayfire_js` module will be available on the npm for a while.
+
 # ArrayFire.js
 
 **Please follow [this issue](https://github.com/arrayfire/arrayfire_js/issues/1) for tracking the progress towards release of 1.0.0-beta.**
@@ -122,7 +126,7 @@ Performance on Linux Mint x64, i5 3570, Radeon R9:
 
 ## API Docs
 
-[http://arrayfire.github.io/arrayfire_js](http://arrayfire.github.io/arrayfire_js/)
+[http://arrayfire.github.io/arrayfire_js](http://arrayfire.github.io/arrayfire-js/)
 
 ## Wanna Contribute?
 
