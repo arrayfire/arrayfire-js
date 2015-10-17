@@ -42,6 +42,6 @@ if (es6) {
     module.exports = require("./es6");
 }
 else {
-    require("traceur-runtime");
+    require("traceur/bin/traceur-runtime");
     module.exports = require("./es5");
 }

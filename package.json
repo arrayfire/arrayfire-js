@@ -1,6 +1,6 @@
 {
   "name": "arrayfire_js",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "repository": {
@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "bindings": "*",
-    "cmake-js": "*",
+    "cmake-js": "2",
     "lodash": "*",
     "nan": "2",
-    "traceur-runtime": "*"
+    "traceur": "0"
   },
   "scripts": {
-    "install": "cmake-js rebuild"
+    "install": "cmake-js compile"
   },
   "main": "lib/",
   "devDependencies": {
@@ -29,7 +29,6 @@
     "merge2": "*",
     "mocha": "*",
     "performance-now": "*",
-    "ref": "*",
-    "traceur": "*"
+    "ref": "*"
   }
 }
