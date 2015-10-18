@@ -1,10 +1,10 @@
-# NOTICE: The next release (0.16) will rename this module as arrayfire-js
+# NOTICE: 
 
-The old `arrayfire_js` module will be available on the npm for a while.
+As of 0.16.0 this module has been renamed from `arrayfire_js` to `arrayfire-js`. The old `arrayfire_js` module will be available on the npm for a while.
 
 # ArrayFire.js
 
-**Please follow [this issue](https://github.com/arrayfire/arrayfire_js/issues/1) for tracking the progress towards release of 1.0.0-beta.**
+**Please follow [this issue](https://github.com/arrayfire/arrayfire-js/issues/1) for tracking the progress towards release of 1.0.0-beta.**
 
 ## About ArrayFire
 
@@ -51,18 +51,18 @@ On Windows the installer do this for you, so there is nothing to do on this plat
 The above have to be done only once. After you can install ArrayFire.js from the npm:
 
 ```
-npm install arrayfire_js --save
+npm install arrayfire-js --save
 ```
 
 ## Usage
 
 ```js
 // CPU
-var af = require("arrayfire_js")("CPU");
+var af = require("arrayfire-js")("CPU");
 // OpenCL
-var af = require("arrayfire_js")("OpenCL");
+var af = require("arrayfire-js")("OpenCL");
 // CUDA
-var af = require("arrayfire_js")("CUDA");
+var af = require("arrayfire-js")("CUDA");
 ```
 
 ## Examples
@@ -86,7 +86,7 @@ af_print(pi);
 
 **JavaScript**
 
-*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so it is advised to call asynchronous variants of ArrayFire.js functions, however there are synchronous counterparts available too for supporting REPL scenarios. (I suggest use [ES6 generators](http://arrayfire.github.io/arrayfire_js/#how-to-use-es6-generators) instead of callback hell or even instead of bare promises).*
+*Notice: Remember, in Node.js everything that blocks or might blocks should be asynchronous, so it is advised to call asynchronous variants of ArrayFire.js functions, however there are synchronous counterparts available too for supporting REPL scenarios. (I suggest use [ES6 generators](http://arrayfire.github.io/arrayfire-js/#how-to-use-es6-generators) instead of callback hell or even instead of bare promises).*
 
 ```js
 const numberOfPoints = 20000000;
@@ -102,7 +102,7 @@ let piVal = (4.0 *  numInside) / numberOfPoints;
 console.log(`PI = ${piVal}`);
 ```
 
-It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/bechmarks/pi.js). To run on:
+It's included in the [examples folder](https://github.com/arrayfire/arrayfire-js/blob/master/examples/es6/bechmarks/pi.js). To run on:
 
 - io.js, enter: `iojs examples/es6/bechmarks/pi.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
@@ -112,7 +112,7 @@ It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js
 
 There is an example of a neural network with batch backpropagation trained to learn the famous [MNIST](http://yann.lecun.com/exdb/mnist/) data set. It will run on the fastest device available.
 
-It's in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/machine-learning/neuralNetwork.js). To run on:
+It's in the [examples folder](https://github.com/arrayfire/arrayfire-js/blob/master/examples/es6/machine-learning/neuralNetwork.js). To run on:
 
 - io.js, enter: `iojs examples/es6/machine-learning/neuralNetwork.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/machine-learning/neuralNetwork.js`
@@ -126,15 +126,15 @@ Performance on Linux Mint x64, i5 3570, Radeon R9:
 
 ## API Docs
 
-[http://arrayfire.github.io/arrayfire_js](http://arrayfire.github.io/arrayfire-js/)
+[http://arrayfire.github.io/arrayfire-js](http://arrayfire.github.io/arrayfire-js/)
 
 ## Wanna Contribute?
 
-PRs are welcome, but please read the [Contributing Guide](https://github.com/arrayfire/arrayfire_js/blob/master/CONTRIBUTING.md) first.
+PRs are welcome, but please read the [Contributing Guide](https://github.com/arrayfire/arrayfire-js/blob/master/CONTRIBUTING.md) first.
 
 ## License
 
-[New BSD](https://github.com/arrayfire/arrayfire_js/blob/master/LICENSE)
+[New BSD](https://github.com/arrayfire/arrayfire-js/blob/master/LICENSE)
 
 ```
 Copyright (c) 2014-2015, ArrayFire

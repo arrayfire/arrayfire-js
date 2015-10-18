@@ -33,7 +33,7 @@ Supported platform IDs:
 **Example:**
 
 ```js
-var af = require("arrayfire_js");
+var af = require("arrayfire-js");
 var cpuPlatform = af("CPU");
 ```
 
@@ -48,7 +48,7 @@ Gets the number of devices on the given platform.
 **Example:**
 
 ```js
-var af = require("arrayfire_js");
+var af = require("arrayfire-js");
 var cpuPlatform = af("CPU");
 var deviceCount = cpuPlatform.getDeviceCount();
 ```

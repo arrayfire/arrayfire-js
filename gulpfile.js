@@ -33,22 +33,29 @@ var gulp = require("gulp");
 var traceur = require("gulp-traceur");
 var gulpSequence = require("gulp-sequence");
 var exec = require("child_process").exec;
+var sourcemaps = require("gulp-sourcemaps");
 
 gulp.task("compile-test", function () {
     return gulp.src("tests/es6/**/*.js", {base: "tests/es6"})
-        .pipe(traceur({sourceMaps: "inline"}))
+        .pipe(sourcemaps.init())
+        .pipe(traceur())
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("tests/es5"));
 });
 
 gulp.task("compile-lib", function () {
     return gulp.src("lib/es6/**/*.js", {base: "lib/es6"})
-        .pipe(traceur({sourceMaps: "inline"}))
+        .pipe(sourcemaps.init())
+        .pipe(traceur())
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("lib/es5"));
 });
 
 gulp.task("compile-examples", function () {
     return gulp.src("examples/es6/**/*.js", {base: "examples/es6"})
-        .pipe(traceur({sourceMaps: "inline"}))
+        .pipe(sourcemaps.init())
+        .pipe(traceur())
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("examples/es5"));
 });
 

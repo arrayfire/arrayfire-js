@@ -8,7 +8,7 @@ You can read its introduction [int its documentation's index page](http://www.ar
 
 ArrayFire.js is the Node.js bindings for ArrayFire, it uses [CMake.js](https://github.com/unbornchikken/cmake-js) as of its build system. It takes Node.js' insane level of productivity and mix that with ArrayFire's insane level of performance and simplicity. You'll get something like Matlab just in familiar JavaScript with performance of level of x100 (with a good GPU).
 
-Install instructions can be found in the [project's readme at Github](https://github.com/arrayfire/arrayfire_js#install).
+Install instructions can be found in the [project's readme at Github](https://github.com/arrayfire/arrayfire-js#install).
 
 ## (How To) Use ES6 Generators
 
@@ -40,7 +40,7 @@ And voila, you can write asynchronous code that looks like synchronous. It's exa
 
 To run ES6 code you can use io.js that supports it inherently. Or use Node.js 0.12+ with --harmony flag. Or you can go with older Node.js versions with Gulp and Traceur modules.
 
-Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. ArrayFire.js uses that method too. It has been developed in ES6, and uses [Gulp/Traceur](https://github.com/arrayfire/arrayfire_js/blob/master/gulpfile.js) and [feature detection](https://github.com/arrayfire/arrayfire_js/blob/master/lib/index.js#L19) to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.
+Even you can use feature detection and can write code that can run on each platform choosing ES5 or ES6 code paths depending of the actual runtime. ArrayFire.js uses that method too. It has been developed in ES6, and uses [Gulp/Traceur](https://github.com/arrayfire/arrayfire-js/blob/master/gulpfile.js) and [feature detection](https://github.com/arrayfire/arrayfire-js/blob/master/lib/index.js#L19) to fallback to manually compiled ES5 code on older runtimes. If you need further information about this topic, please open up an issue on Github, and I'll help you out with this there.
 
 ## API
 
@@ -81,7 +81,7 @@ let piVal = (4.0 *  numInside) / numberOfPoints;
 console.log(`PI = ${piVal}`);
 ```
 
-It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js/blob/master/examples/es6/bechmarks/pi.js). To run on:
+It's included in the [examples folder](https://github.com/arrayfire/arrayfire-js/blob/master/examples/es6/bechmarks/pi.js). To run on:
 
 - io.js, enter: `iojs examples/es6/bechmarks/pi.js`
 - Node.js 0.12 or above, enter: `node --harmony examples/es6/bechmarks/pi.js`
@@ -89,4 +89,4 @@ It's included in the [examples folder](https://github.com/arrayfire/arrayfire_js
 
 ## License
 
-[New BSD](https://github.com/arrayfire/arrayfire_js/blob/master/LICENSE)
+[New BSD](https://github.com/arrayfire/arrayfire-js/blob/master/LICENSE)

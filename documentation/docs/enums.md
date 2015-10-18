@@ -3,7 +3,7 @@
 They are accessible from the main Fire.js context object, eg.:
 
 ```js
-var af = require("arrayfire_js")("CPU");
+var af = require("arrayfire-js")("CPU");
 
 // dType:
 var dType = af.dType;

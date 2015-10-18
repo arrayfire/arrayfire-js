@@ -1,6 +1,6 @@
 {
-  "name": "arrayfire_js",
-  "version": "0.15.2",
+  "name": "arrayfire-js",
+  "version": "0.16.0",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "repository": {
@@ -25,6 +25,7 @@
     "fs-extra": "*",
     "gulp": "*",
     "gulp-sequence": "*",
+    "gulp-sourcemaps": "*",
     "gulp-traceur": "*",
     "merge2": "*",
     "mocha": "*",
