@@ -30,6 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 require("./deviceTests");
-require("./afArrayTests");
 require("./createArrayFunctionTests");
 require("./moveAndReorderArrayTests");
+require("./afArrayTests");
