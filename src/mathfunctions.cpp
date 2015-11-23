@@ -36,15 +36,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "errors.h"
 #include "guard.h"
 
-namespace af
-{
-    // TODO: Remove this when next version comes out:
-    af::array sigmoid(const af::array val)
-    {
-        return 1 / (1 + exp(-val));
-    }
-}
-
 using namespace v8;
 using namespace std;
 using namespace node;

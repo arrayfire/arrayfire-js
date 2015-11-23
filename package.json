@@ -9,13 +9,14 @@
   },
   "dependencies": {
     "bindings": "*",
-    "cmake-js": "2",
+    "cmake-js": "3",
     "lodash": "*",
-    "nan": "2",
+    "nan": "^2.1.0",
     "traceur": "0"
   },
   "scripts": {
-    "install": "cmake-js compile"
+    "install": "cmake-js compile",
+    "test": "mocha tests"
   },
   "main": "lib/",
   "devDependencies": {

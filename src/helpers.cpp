@@ -142,8 +142,7 @@ string ErrToString(af_err err)
 v8::Local<v8::Object> WrapPointer(void* ptr)
 {
     Nan::EscapableHandleScope scope;
-    if (ptr == nullptr) length = 0;
-    return scope.Escape(Nan::NewBuffer(ptr, length, [](char*v1, void*v2) {}, NULL).ToLocalChecked());
+    return scope.Escape(Nan::NewBuffer((char*)ptr, 0, [](char*v1, void*v2) {}, nullptr).ToLocalChecked());
 }
 
 af::dim4 ToDim4(v8::Local<v8::Object> obj)
