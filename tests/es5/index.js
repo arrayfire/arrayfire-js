@@ -1,7 +1,7 @@
 "use strict";
 require("./deviceTests");
-require("./afArrayTests");
 require("./createArrayFunctionTests");
 require("./moveAndReorderArrayTests");
+require("./afArrayTests");
 
 //# sourceMappingURL=index.js.map
