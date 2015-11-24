@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 "use strict";
-
+/* global describe,it */
 let assert = require("better-assert");
 let _ = require("lodash");
 let ref = require("ref");
@@ -104,36 +104,6 @@ describe("Functions to create arrays", function () {
                     }
                 });
                 f().nodeify(done);
-            });
-        });
-
-        describe("identity", function () {
-            it("should be implemented", function() {
-                console.log(`TODO: implement identity test for ${id}\n`);
-            });
-        });
-
-        describe("range", function () {
-            it("should be implemented", function() {
-                console.log(`TODO: implement range test for ${id}\n`);
-            });
-        });
-
-        describe("iota", function () {
-            it("should be implemented", function() {
-                console.log(`TODO: implement iota test for ${id}\n`);
-            });
-        });
-
-        describe("diag", function () {
-            it("should be implemented", function() {
-                console.log(`TODO: implement diag test for ${id}\n`);
-            });
-        });
-
-        describe("constant", function () {
-            it("should be implemented", function() {
-                console.log(`TODO: implement constant test for ${id}\n`);
             });
         });
     });

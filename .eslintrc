@@ -20,18 +20,18 @@
     "jsx": true
   },
   "rules": {
-    "no-underscore-dangle": false,
-    "no-unused-vars": false,
-    "no-duplicate-case": false,
-    "no-new-func": false,
-    "no-loop-func": false,
-    "no-eval": false,
-    "camelcase": false,
-    "eol-last": false,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": 0,
+    "no-duplicate-case": 0,
+    "no-new-func": 0,
+    "no-loop-func": 0,
+    "no-eval": 0,
+    "camelcase": 0,
+    "eol-last": 0,
     "semi": 2,
-    "quotes": false,
+    "quotes": 0,
     "strict": 0,
-    "no-alert": false
+    "no-alert": 0
   },
   "env": {
     "browser": true,

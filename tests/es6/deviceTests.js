@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 "use strict";
-
+/* global describe,it */
 let assert = require("better-assert");
 let _ = require("lodash");
 let Bluebird = require("bluebird");

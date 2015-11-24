@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 "use strict";
-
+/* global describe,it */
 let assert = require("better-assert");
 let _ = require("lodash");
 let ref = require("ref");
@@ -329,50 +329,6 @@ describe("AFArray class and methods", function() {
 
             v = array2.at(af.end - 1).scalarSync();
             assert(v === 8.0 * 8.0);
-        });
-
-        it("should be tests for assignment operators", function() {
-            console.log(`TODO: implement array assignment operator tests for ${id}\n`);
-        });
-
-        it("should be tests for indexing operators", function() {
-            console.log(`TODO: implement array indexing operator tests for ${id}\n`);
-        });
-
-        it("should be tests for row", function() {
-            console.log(`TODO: implement array row test for ${id}\n`);
-        });
-
-        it("should be tests for col", function() {
-            console.log(`TODO: implement array col test for ${id}\n`);
-        });
-
-        it("should be tests for slice", function() {
-            console.log(`TODO: implement array slice test for ${id}\n`);
-        });
-
-        it("should be tests for rows", function() {
-            console.log(`TODO: implement array rows test for ${id}\n`);
-        });
-
-        it("should be tests for cols", function() {
-            console.log(`TODO: implement array cols test for ${id}\n`);
-        });
-
-        it("should be tests for slices", function() {
-            console.log(`TODO: implement array slices test for ${id}\n`);
-        });
-
-        it("should be tests for as", function() {
-            console.log(`TODO: implement array as test for ${id}\n`);
-        });
-
-        it("should be tests for arithmetic operators", function() {
-            console.log(`TODO: implement array arithmetic operator tests for ${id}\n`);
-        });
-
-        it("should be tests for logical operators", function() {
-            console.log(`TODO: implement array logical operator tests for ${id}\n`);
         });
     });
 });
