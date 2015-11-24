@@ -1,3 +1,11 @@
+# 0.16.2 (2015-10-18)
+
+- better-asser dependency fixed
+
+# 0.16.1 (2015-10-18)
+
+- Runs with ArrayFire 3.2
+
 # 0.16.0 (2015-10-18)
 
 - Renamed to arrayfire-js

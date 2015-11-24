@@ -1,6 +1,6 @@
 {
   "name": "arrayfire-js",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "repository": {
@@ -12,7 +12,8 @@
     "cmake-js": "3",
     "lodash": "*",
     "nan": "^2.1.0",
-    "traceur": "*"
+    "traceur": "*",
+    "better-assert": "*"
   },
   "scripts": {
     "install": "cmake-js compile",
@@ -20,7 +21,6 @@
   },
   "main": "lib/",
   "devDependencies": {
-    "better-assert": "*",
     "bluebird": "*",
     "debug": "*",
     "fs-extra": "*",
