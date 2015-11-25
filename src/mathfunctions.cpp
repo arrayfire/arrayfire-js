@@ -109,6 +109,7 @@ NAN_MODULE_INIT(InitMathFunctions)
     Nan::Set(target, Nan::New<String>("hypot").ToLocalChecked(), Nan::New<FunctionTemplate>(Hypot)->GetFunction());
     Nan::Set(target, Nan::New<String>("max").ToLocalChecked(), Nan::New<FunctionTemplate>(Max)->GetFunction());
     Nan::Set(target, Nan::New<String>("min").ToLocalChecked(), Nan::New<FunctionTemplate>(Min)->GetFunction());
+    Nan::Set(target, Nan::New<String>("mod").ToLocalChecked(), Nan::New<FunctionTemplate>(Mod)->GetFunction());
     Nan::Set(target, Nan::New<String>("round").ToLocalChecked(), Nan::New<FunctionTemplate>(Round)->GetFunction());
     Nan::Set(target, Nan::New<String>("sign").ToLocalChecked(), Nan::New<FunctionTemplate>(Sign)->GetFunction());
     Nan::Set(target, Nan::New<String>("trunc").ToLocalChecked(), Nan::New<FunctionTemplate>(Trunc)->GetFunction());

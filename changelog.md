@@ -1,5 +1,9 @@
 # 0.17.0 (2015-11-25)
 
+- missing mod export added
+
+# 0.17.0 (2015-11-25)
+
 - select wrapper implemented
 
 # 0.16.2 (2015-11-23)
