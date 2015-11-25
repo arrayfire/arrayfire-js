@@ -42,8 +42,6 @@ using namespace node;
 
 NAN_METHOD(Join)
 {
-
-
     try
     {
         ARGS_LEN(3);
@@ -69,8 +67,6 @@ ARRAYFIRE_SYNC_METHOD_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {
-
-
     try
     {
         ARGS_LEN(2);
@@ -79,6 +75,36 @@ NAN_METHOD(Flip)
         af::dtype dim = GetDTypeInfo(info[1]).first;
         Guard guard;
         info.GetReturnValue().Set(ArrayWrapper::New(af::flip(*pArray, dim)));;
+    }
+    ARRAYFIRE_CATCH
+}
+
+NAN_METHOD(Select)
+{
+    try
+    {
+        ARGS_LEN(3);
+
+        auto pArray = ArrayWrapper::GetArrayAt(info, 0);
+        auto pArray1 = ArrayWrapper::TryGetArrayAt(info, 1);
+        auto pArray2 = ArrayWrapper::TryGetArrayAt(info, 2);
+        Guard guard;
+        if (pArray1 && pArray2)
+        {
+            info.GetReturnValue().Set(ArrayWrapper::New(af::select(*pArray, *pArray1, *pArray2)));
+        }
+        else if (pArray1 && info[2]->IsNumber())
+        {
+            info.GetReturnValue().Set(ArrayWrapper::New(af::select(*pArray, *pArray1, info[2]->NumberValue())));
+        }
+        else if (pArray2 && info[1]->IsNumber())
+        {
+            info.GetReturnValue().Set(ArrayWrapper::New(af::select(*pArray, info[1]->NumberValue(), *pArray2)));
+        }
+        else
+        {
+            NAN_THROW_INVALID_ARGS();
+        }
     }
     ARRAYFIRE_CATCH
 }
@@ -110,4 +136,7 @@ NAN_MODULE_INIT(InitMoveAndReorderArray)
 
     Nan::Set(target, Nan::New<String>("flip").ToLocalChecked(),
         Nan::New<FunctionTemplate>(Flip)->GetFunction());
+
+    Nan::Set(target, Nan::New<String>("select").ToLocalChecked(),
+        Nan::New<FunctionTemplate>(Select)->GetFunction());
 }

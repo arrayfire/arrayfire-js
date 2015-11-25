@@ -1,4 +1,8 @@
-# 0.16.2 (2015-10-18)
+# 0.17.0 (2015-11-25)
+
+- select wrapper implemented
+
+# 0.16.2 (2015-11-23)
 
 - better-asser dependency fixed
 

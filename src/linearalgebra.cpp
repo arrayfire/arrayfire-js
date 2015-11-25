@@ -221,7 +221,7 @@ NAN_METHOD(LuPacked)
         {
             Guard guard;
             af::array out, pivot;
-            af::lu(out, pivot, array, isLapackPiv);
+            af::lu(out, pivot, (const af::array&)array, isLapackPiv);
             return move(make_pair(out, pivot));
         };
         auto conv = [=](WorkerT* w, ResultT v)
