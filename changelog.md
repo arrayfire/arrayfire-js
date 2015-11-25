@@ -1,4 +1,8 @@
-# 0.17.0 (2015-11-25)
+# 0.17.2 (2015-11-25)
+
+- mod export fixed
+
+# 0.17.1 (2015-11-25)
 
 - missing mod export added
 

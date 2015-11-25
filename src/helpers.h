@@ -280,10 +280,7 @@ NAN_METHOD(F)\
             else if (info[1]->IsNumber())\
             {\
                 double d = info[1]->NumberValue();\
-                if (NeedsDouble(*pArray1))\
-                    info.GetReturnValue().Set(ArrayWrapper::New(af::f(*pArray1, d)));\
-                else\
-                    info.GetReturnValue().Set(ArrayWrapper::New(af::f(*pArray1, (float)d)));\
+                info.GetReturnValue().Set(ArrayWrapper::New(af::f(*pArray1, d)));\
                 return;\
             }\
         }\
@@ -292,10 +289,7 @@ NAN_METHOD(F)\
             double d = info[0]->NumberValue();\
             if (pArray2)\
             {\
-                if (NeedsDouble(*pArray2))\
-                    info.GetReturnValue().Set(ArrayWrapper::New(af::f(d, *pArray2)));\
-                else\
-                    info.GetReturnValue().Set(ArrayWrapper::New(af::f((float)d, *pArray2)));\
+                info.GetReturnValue().Set(ArrayWrapper::New(af::f(d, *pArray2)));\
                 return;\
             }\
         }\
