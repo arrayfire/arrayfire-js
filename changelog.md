@@ -1,3 +1,7 @@
+# 0.17.3 (2015-11-26)
+
+- Math function fixes
+
 # 0.17.2 (2015-11-25)
 
 - mod export fixed

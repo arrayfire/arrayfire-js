@@ -45,7 +45,33 @@ let testHelpers = {
         result = func(42, arr2);
         assert(result instanceof af.AFArray);
         try {
-            func(42, 42);
+            func(42, {});
+            assert(false);
+        }
+        catch (e) {
+            _.noop(e);
+        }
+    },
+    testIntfSyncArrArr: function(af, func) {
+        let arr1 = new af.AFArray(10, af.dType.f32);
+        let arr2 = new af.AFArray(10, af.dType.f32);
+        let result = func(arr1, arr2);
+        assert(result instanceof af.AFArray);
+        try {
+            func(42, {});
+            assert(false);
+        }
+        catch (e) {
+            _.noop(e);
+        }
+    },
+    testIntfSyncArr: function(af, func) {
+        let arr = new af.AFArray(10, af.dType.f32);
+        let result = func(arr);
+        assert(result instanceof af.AFArray);
+        try {
+            func({});
+            assert(false);
         }
         catch (e) {
             _.noop(e);

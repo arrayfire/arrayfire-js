@@ -154,6 +154,13 @@ NAN_MODULE_INIT(InitMathFunctions)
     Nan::Set(target, Nan::New<String>("atanh").ToLocalChecked(), Nan::New<FunctionTemplate>(ATanH)->GetFunction());
     Nan::Set(target, Nan::New<String>("aTanH").ToLocalChecked(), Nan::New<FunctionTemplate>(ATanH)->GetFunction());
 
+    Nan::Set(target, Nan::New<String>("cosh").ToLocalChecked(), Nan::New<FunctionTemplate>(CosH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("CosH").ToLocalChecked(), Nan::New<FunctionTemplate>(CosH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("sinh").ToLocalChecked(), Nan::New<FunctionTemplate>(SinH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("SinH").ToLocalChecked(), Nan::New<FunctionTemplate>(SinH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("tanh").ToLocalChecked(), Nan::New<FunctionTemplate>(TanH)->GetFunction());
+    Nan::Set(target, Nan::New<String>("TanH").ToLocalChecked(), Nan::New<FunctionTemplate>(TanH)->GetFunction());
+
     Nan::Set(target, Nan::New<String>("complex").ToLocalChecked(), Nan::New<FunctionTemplate>(Complex)->GetFunction());
     Nan::Set(target, Nan::New<String>("conjg").ToLocalChecked(), Nan::New<FunctionTemplate>(Conjg)->GetFunction());
     Nan::Set(target, Nan::New<String>("imag").ToLocalChecked(), Nan::New<FunctionTemplate>(Imag)->GetFunction());

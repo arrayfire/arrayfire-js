@@ -270,7 +270,7 @@ af::array* ArrayWrapper::TryGetArrayAt(const Nan::FunctionCallbackInfo<v8::Value
 {
     if (index < info.Length())
     {
-        return GetArray(info[index]);
+        return TryGetArray(info[index]);
     }
     return nullptr;
 }
