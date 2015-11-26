@@ -55,15 +55,15 @@ NAN_METHOD(Join)
     ARRAYFIRE_CATCH
 }
 
-ARRAYFIRE_SYNC_METHOD_XYZW(Tile, tile, 1, 1, 1)
+AF_SM_XYZW(Tile, tile, 1, 1, 1)
 
-ARRAYFIRE_SYNC_METHOD_XYZW(Reorder, reorder, 1, 2, 3)
+AF_SM_XYZW(Reorder, reorder, 1, 2, 3)
 
-ARRAYFIRE_SYNC_METHOD_XYZW(Shift, shift, 0, 0, 0)
+AF_SM_XYZW(Shift, shift, 0, 0, 0)
 
-ARRAYFIRE_SYNC_METHOD_XYZW(ModDims, moddims, 1, 1, 1)
+AF_SM_XYZW(ModDims, moddims, 1, 1, 1)
 
-ARRAYFIRE_SYNC_METHOD_ARR(Flat, flat)
+AF_SM_ARR(Flat, flat)
 
 NAN_METHOD(Flip)
 {

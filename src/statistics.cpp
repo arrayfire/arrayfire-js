@@ -41,11 +41,11 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(Cov, cov, false)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Mean, mean)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V3(WeightedMean, mean)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Median, median)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(StDev, stdev)
+AF_SM_ARR_ARR_BOOL(Cov, cov, false)
+AF_AM_ALGO_V1(Mean, mean)
+AF_AM_ALGO_V3(WeightedMean, mean)
+AF_AM_ALGO_V1(Median, median)
+AF_AM_ALGO_V1(StDev, stdev)
 
 NAN_METHOD(Var)
 {
@@ -82,7 +82,7 @@ NAN_METHOD(Var)
     ARRAYFIRE_CATCH
 }
 
-ARRAYFIRE_ASYNC_METHOD_ALGO_V3(WeightedVar, var)
+AF_AM_ALGO_V3(WeightedVar, var)
 
 NAN_METHOD(CorrCoef)
 {

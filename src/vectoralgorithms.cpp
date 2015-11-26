@@ -41,15 +41,15 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(AllTrue, allTrue)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(AnyTrue, anyTrue)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Count, count)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(FindMax, max)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(FindMin, min)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Product, product)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V1(Sum, sum)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V2(FindMinAt, min)
-ARRAYFIRE_ASYNC_METHOD_ALGO_V2(FindMaxAt, max)
+AF_AM_ALGO_V1(AllTrue, allTrue)
+AF_AM_ALGO_V1(AnyTrue, anyTrue)
+AF_AM_ALGO_V1(Count, count)
+AF_AM_ALGO_V1(FindMax, max)
+AF_AM_ALGO_V1(FindMin, min)
+AF_AM_ALGO_V1(Product, product)
+AF_AM_ALGO_V1(Sum, sum)
+AF_AM_ALGO_V2(FindMinAt, min)
+AF_AM_ALGO_V2(FindMaxAt, max)
 
 NAN_METHOD(Sort)
 {
@@ -136,14 +136,14 @@ NAN_METHOD(SortIndex)
     ARRAYFIRE_CATCH
 }
 
-ARRAYFIRE_SYNC_METHOD_ARR_DIM(Accum, accum)
-ARRAYFIRE_SYNC_METHOD_ARR(Where, where)
+AF_SM_ARR_DIM(Accum, accum)
+AF_SM_ARR(Where, where)
 
-ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
-ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(SetUnion, setUnion, false)
-ARRAYFIRE_SYNC_METHOD_ARR_BOOL(SetUnique, setUnique, false)
-ARRAYFIRE_SYNC_METHOD_ARR_DIM(Diff1, diff1)
-ARRAYFIRE_SYNC_METHOD_ARR_DIM(Diff2, diff2)
+AF_SM_ARR_ARR_BOOL(SetIntersect, setIntersect, false)
+AF_SM_ARR_ARR_BOOL(SetUnion, setUnion, false)
+AF_SM_ARR_BOOL(SetUnique, setUnique, false)
+AF_SM_ARR_DIM(Diff1, diff1)
+AF_SM_ARR_DIM(Diff2, diff2)
 
 NAN_METHOD(Grad)
 {

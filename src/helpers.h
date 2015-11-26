@@ -92,7 +92,7 @@ RegionIndex ToRegionIndex(v8::Local<v8::Value> value);
 
 #define ARGS_LEN(n) if (info.Length() < n) return NAN_THROW_INVALID_NO_OF_ARGS();
 
-#define ARRAYFIRE_SYNC_METHOD_ARR(F, f)\
+#define AF_SM_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -107,7 +107,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_DIM(F, f)\
+#define AF_SM_ARR_DIM(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -124,7 +124,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_BOOL(F, f, defV)\
+#define AF_SM_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     \
@@ -141,7 +141,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_VOID_ARR_BOOL(F, f, defV)\
+#define AF_SM_VOID_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     \
@@ -159,7 +159,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_FLOAT_FLOAT_FLOAT(F, f, defV1, defV2, defV3)\
+#define AF_SM_ARR_FLOAT_FLOAT_FLOAT(F, f, defV1, defV2, defV3)\
 NAN_METHOD(F)\
 {\
     \
@@ -180,7 +180,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_ARR(F, f)\
+#define AF_SM_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -195,7 +195,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_ARR(F, f)\
+#define AF_SM_ARR_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -210,7 +210,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_ARR_ARR(F, f)\
+#define AF_SM_ARR_ARR_ARR_ARR(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -225,7 +225,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_DIM(F, f)\
+#define AF_SM_ARR_ARR_DIM(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -242,7 +242,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_ARR_BOOL(F, f, defV)\
+#define AF_SM_ARR_ARR_BOOL(F, f, defV)\
 NAN_METHOD(F)\
 {\
     \
@@ -259,7 +259,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_ARR_DOUBLE_COMB(F, f)\
+#define AF_SM_ARR_DOUBLE_COMB(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -299,7 +299,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_ASYNC_METHOD_ALGO_V1(F, f)\
+#define AF_AM_ALGO_V1(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -334,7 +334,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_ASYNC_METHOD_ALGO_V2(F, f)\
+#define AF_AM_ALGO_V2(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -424,7 +424,7 @@ NAN_METHOD(F)\
 }
 
 // weighted mean like stuff:
-#define ARRAYFIRE_ASYNC_METHOD_ALGO_V3(F, f)\
+#define AF_AM_ALGO_V3(F, f)\
 NAN_METHOD(F)\
 {\
     \
@@ -460,7 +460,7 @@ NAN_METHOD(F)\
     ARRAYFIRE_CATCH\
 }
 
-#define ARRAYFIRE_SYNC_METHOD_XYZW(F, f, iy, iz, iw)\
+#define AF_SM_XYZW(F, f, iy, iz, iw)\
 NAN_METHOD(F)\
 {\
     \

@@ -40,9 +40,9 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-ARRAYFIRE_SYNC_METHOD_ARR(IsZero, iszero)
-ARRAYFIRE_SYNC_METHOD_ARR(IsInf, isInf)
-ARRAYFIRE_SYNC_METHOD_ARR(IsNaN, isNaN)
+AF_SM_ARR(IsZero, iszero)
+AF_SM_ARR(IsInf, isInf)
+AF_SM_ARR(IsNaN, isNaN)
 
 NAN_METHOD(Print)
 {

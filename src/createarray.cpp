@@ -231,8 +231,8 @@ NAN_METHOD(Constant)
     ARRAYFIRE_CATCH
 }
 
-ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Lower, lower, false)
-ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Upper, upper, false)
+AF_SM_ARR_BOOL(Lower, lower, false)
+AF_SM_ARR_BOOL(Upper, upper, false)
 
 NAN_METHOD(GetSeed)
 {
@@ -270,7 +270,7 @@ NAN_METHOD(SetSeed)
     ARRAYFIRE_CATCH;
 }
 
-ARRAYFIRE_SYNC_METHOD_ARR_ARR_DIM(Lookup, lookup)
+AF_SM_ARR_ARR_DIM(Lookup, lookup)
 
 NAN_MODULE_INIT(InitCreateArray)
 {

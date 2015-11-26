@@ -96,12 +96,12 @@ NAN_METHOD(MatMul)
 }
 
 
-ARRAYFIRE_SYNC_METHOD_ARR_ARR(MatMulNT, matmulNT)
-ARRAYFIRE_SYNC_METHOD_ARR_ARR(MatMulTN, matmulTN)
-ARRAYFIRE_SYNC_METHOD_ARR_ARR(MatMulTT, matmulTT)
+AF_SM_ARR_ARR(MatMulNT, matmulNT)
+AF_SM_ARR_ARR(MatMulTN, matmulTN)
+AF_SM_ARR_ARR(MatMulTT, matmulTT)
 
-ARRAYFIRE_SYNC_METHOD_ARR_BOOL(Transpose, transpose, false)
-ARRAYFIRE_SYNC_METHOD_VOID_ARR_BOOL(TransposeInPlace, transposeInPlace, false)
+AF_SM_ARR_BOOL(Transpose, transpose, false)
+AF_SM_VOID_ARR_BOOL(TransposeInPlace, transposeInPlace, false)
 
 NAN_METHOD(Solve)
 {
