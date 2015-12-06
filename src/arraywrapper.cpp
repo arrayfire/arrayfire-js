@@ -1,3 +1,4 @@
+
 /*
 Copyright (c) 2014-2015, ArrayFire
 Copyright (c) 2015 Gábor Mező aka unbornchikken (gabor.mezo@outlook.com)
@@ -277,8 +278,6 @@ af::array* ArrayWrapper::TryGetArrayAt(const Nan::FunctionCallbackInfo<v8::Value
 
 void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
 {
-
-
     try
     {
         ArrayWrapper* instance = nullptr;
@@ -299,8 +298,17 @@ void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
             else
             {
                 Guard guard;
-                auto dimAndType = ParseDimAndTypeArgs(info);
-                instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
+                auto arr = TryGetArrayAt(info, 0);
+                if (arr)
+                {
+                    auto dims = ToDim4(info[1]);
+                    instance = new ArrayWrapper(new af::array(*arr, dims));
+                }
+                else
+                {
+                    auto dimAndType = ParseDimAndTypeArgs(info);
+                    instance = new ArrayWrapper(new af::array(dimAndType.first, dimAndType.second));
+                }
             }
         }
         catch (...)

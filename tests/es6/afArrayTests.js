@@ -37,6 +37,7 @@ let ref = require("ref");
 let Bluebird = require("bluebird");
 let async = Bluebird.coroutine;
 let testExec = require("./testExec");
+let float = ref.types.float;
 
 describe("AFArray class and methods", function() {
     testExec.run(function(af) {
@@ -329,6 +330,23 @@ describe("AFArray class and methods", function() {
 
             v = array2.at(af.end - 1).scalarSync();
             assert(v === 8.0 * 8.0);
+        });
+        
+        it("should be created of a part of another with new dimensions", function (done) {
+            async(function* () {
+                let arr = new af.AFArray(10, af.dType.f32);
+                arr.set(new af.Col(0), 0);
+                arr.set(3, 1);
+                arr.set(4, 2);
+
+                let sub = arr.at(new af.Seq(3, 6));
+                let sub2 = new af.AFArray(sub, new af.Dim4(2, 2));
+
+                let buff = yield sub2.hostAsync();
+
+                assert(float.get(buff, 0 * float.size) === 1);
+                assert(float.get(buff, 1 * float.size) === 2);
+            })().nodeify(done);
         });
     });
 });

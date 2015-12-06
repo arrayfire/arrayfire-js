@@ -1,3 +1,7 @@
+# 0.17.4 (2015-12-06)
+
+- Missing AFArray constructor added
+
 # 0.17.3 (2015-11-26)
 
 - Math function fixes
