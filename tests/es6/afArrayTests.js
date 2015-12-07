@@ -346,7 +346,88 @@ describe("AFArray class and methods", function() {
 
                 assert(float.get(buff, 0 * float.size) === 1);
                 assert(float.get(buff, 1 * float.size) === 2);
+
+                arr.set(3, 2);
+                arr.set(4, 3);
+
+                buff = yield sub2.hostAsync();
+
+                assert(float.get(buff, 0 * float.size) === 1);
+                assert(float.get(buff, 1 * float.size) === 2);
             })().nodeify(done);
+        });
+
+        describe("RAII", function() {
+            describe("tmp", function() {
+                it("should exported as a function", function () {
+                    assert(_.isFunction(af.tmp));
+                });
+
+                it("should support RAII interface", function () {
+                    assert(_.isFunction(af.tmp.begin));
+                    assert(_.isFunction(af.tmp.end));
+                    assert(_.isFunction(af.tmp.result));
+                });
+            });
+
+            it("should destroy temporaries (sync)", function() {
+                let arr, sub;
+                af.tmp(function() {
+                    arr = new af.AFArray(10, af.dType.f32);
+                    arr.set(new af.Col(0), 0);
+                    arr.set(3, 1);
+                    arr.set(4, 2);
+
+                    sub = arr.at(new af.Seq(3, 6));
+
+                    this.result(arr);
+                });
+
+                arr.set(3, 2);
+
+                try {
+                    sub.set(0, 2);
+                    assert(false);
+                }
+                catch (e) {
+                    if (!/free\(\)/.test(e.message)) {
+                        throw e;
+                    }
+                }
+            });
+
+            it("should destroy temporaries (async)", function(done) {
+                async(function*() {
+                    let arr, sub;
+                    yield af.tmp(async(function* () {
+                        arr = new af.AFArray(10, af.dType.f32);
+                        arr.set(new af.Col(0), 0);
+                        arr.set(3, 1);
+                        arr.set(4, 2);
+
+                        sub = arr.at(new af.Seq(3, 6));
+
+                        let buff = yield sub.hostAsync();
+
+                        assert(float.get(buff, 0 * float.size) === 1);
+                        assert(float.get(buff, 1 * float.size) === 2);
+
+                        this.result(sub);
+                    }));
+
+                    try {
+                        arr.set(3, 2);
+                        assert(false);
+                    }
+                    catch (e) {
+                        if (!/free\(\)/.test(e.message)) {
+                            throw e;
+                        }
+                    }
+
+                    sub.set(0, 2);
+                })().asCallback(done);
+            });
         });
     });
 });

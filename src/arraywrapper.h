@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 struct ArrayWrapper : public node::ObjectWrap
 {
     ArrayWrapper(const ArrayWrapper&) = delete;
+    void Free();
     ~ArrayWrapper();
 
     static NAN_MODULE_INIT(Init);
@@ -55,6 +56,9 @@ struct ArrayWrapper : public node::ObjectWrap
     static af::array* GetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index);
     static af::array* TryGetArrayAt(const Nan::FunctionCallbackInfo<v8::Value>& info, int index);
 
+    static void RegisterInTmp(v8::Local<v8::Object> instance);
+
+    static NAN_METHOD(V8Free);
     static NAN_METHOD(Create);
     static NAN_METHOD(Elements);
     static NAN_METHOD(Host);

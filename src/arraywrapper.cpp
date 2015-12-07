@@ -51,7 +51,7 @@ int GetMemSize(const af::array* array)
     // so we won't triggrer out of memory errors.
     // TODO: If ArrayFire's CUDA error handling gets fixed,
     // TODO: then we should only report memory usage for CPU based devices.
-    return static_cast<int>(sizeof(af::array)) + array->elements() + 200;
+    return static_cast<int>(sizeof(af::array)) + static_cast<int>(sizeof(ArrayWrapper)) + static_cast<int>(array->bytes());
 }
 
 ArrayWrapper::ArrayWrapper(af::array* array) :
@@ -63,8 +63,17 @@ ArrayWrapper::ArrayWrapper(af::array* array) :
 
 ArrayWrapper::~ArrayWrapper()
 {
-    Nan::AdjustExternalMemory(-GetMemSize(_array));
-    delete _array;
+    Free();
+}
+
+void ArrayWrapper::Free()
+{
+    if (_array)
+    {
+        Nan::AdjustExternalMemory(-GetMemSize(_array));
+        delete _array;
+        _array = nullptr;
+    }
 }
 
 NAN_MODULE_INIT(ArrayWrapper::Init)
@@ -76,6 +85,7 @@ NAN_MODULE_INIT(ArrayWrapper::Init)
 
     int noOfMethods = 21;
     tmpl->InstanceTemplate()->SetInternalFieldCount(noOfMethods);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("free").ToLocalChecked(), Nan::New<FunctionTemplate>(V8Free), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("elements").ToLocalChecked(), Nan::New<FunctionTemplate>(Elements), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("host").ToLocalChecked(), Nan::New<FunctionTemplate>(Host), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("copyToHost").ToLocalChecked(), Nan::New<FunctionTemplate>(Host), v8::None);
@@ -215,7 +225,7 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Value> value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
-    ARRAYFIRE_THROW("Argument is not an AFArray instance.");
+    ARRAYFIRE_THROW("Argument is not an AFArray instance or wrapped array has been destroyed by calling its free() method.");
 }
 
 af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Value> value)
@@ -242,7 +252,7 @@ af::array* ArrayWrapper::GetArray(v8::Local<v8::Object> value)
 {
     auto array = TryGetArray(value);
     if (array) return array;
-    ARRAYFIRE_THROW("Argument is not an AFArray instance.");
+    ARRAYFIRE_THROW("Argument is not an AFArray instance or wrapped array has been destroyed by calling its free() method.");
 }
 
 af::array* ArrayWrapper::TryGetArray(v8::Local<v8::Object> value)
@@ -323,6 +333,7 @@ void ArrayWrapper::New(const Nan::FunctionCallbackInfo<v8::Value>& info)
         }
 
         instance->Wrap(info.Holder());
+        RegisterInTmp(info.Holder());
         info.GetReturnValue().Set(info.Holder());
     }
     ARRAYFIRE_CATCH
@@ -333,6 +344,13 @@ af::array* ArrayWrapper::CreateArray(void* ptr, af_source src, const af::dim4& d
 {
     Guard guard;
     return new af::array(dim4, (T*)ptr, src);
+}
+
+NAN_METHOD(ArrayWrapper::V8Free)
+{
+    auto self = ObjectWrap::Unwrap<ArrayWrapper>(info.This());
+    self->Free();
+    info.GetReturnValue().SetUndefined();
 }
 
 NAN_METHOD(ArrayWrapper::Create)
@@ -420,6 +438,15 @@ NAN_METHOD(ArrayWrapper::Create)
         info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
+}
+
+void ArrayWrapper::RegisterInTmp(v8::Local<v8::Object> instance)
+{
+    Local<Value> args[] = { instance };
+    auto tmp = Nan::New(constructor)->Get(Nan::New("tmp").ToLocalChecked()).As<Object>();
+    auto reg = tmp->Get(Nan::New("register").ToLocalChecked());
+    auto regF = reg.As<Object>().As<Function>();
+    regF->Call(tmp, 1, args);
 }
 
 NAN_METHOD(ArrayWrapper::Elements)
