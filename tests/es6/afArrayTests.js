@@ -373,6 +373,7 @@ describe("AFArray class and methods", function() {
             it("should destroy temporaries (sync)", function() {
                 let arr, sub;
                 af.tmp(function() {
+                    assert(this === af.tmp);
                     arr = new af.AFArray(10, af.dType.f32);
                     arr.set(new af.Col(0), 0);
                     arr.set(3, 1);
@@ -400,6 +401,7 @@ describe("AFArray class and methods", function() {
                 async(function*() {
                     let arr, sub;
                     yield af.tmp(async(function* () {
+                        assert(this === af.tmp);
                         arr = new af.AFArray(10, af.dType.f32);
                         arr.set(new af.Col(0), 0);
                         arr.set(3, 1);
