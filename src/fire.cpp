@@ -44,6 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "imageprocessing.h"
 #include "linearalgebra.h"
 #include "signalprocessing.h"
+#include "errors.h"
 
 using namespace v8;
 using namespace std;
@@ -67,7 +68,11 @@ NAN_METHOD(GC)
 
     unsigned ms = info.Length() ? info[0]->Uint32Value() : 1000;
     Nan::IdleNotification(ms);
-    af::sync();
+    try
+    {
+        af::sync();
+    }
+    ARRAYFIRE_CATCH
     info.GetReturnValue().SetUndefined();
 }
 

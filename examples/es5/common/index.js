@@ -218,6 +218,7 @@ var runOnAllPlatforms = async($traceurRuntime.initGeneratorFunction(function $__
 var runOnBestDevice = async($traceurRuntime.initGeneratorFunction(function $__10(f, name) {
   var platfroms,
       order,
+      onCPU,
       e;
   return $traceurRuntime.createGeneratorInstance(function($ctx) {
     while (true)
@@ -226,14 +227,15 @@ var runOnBestDevice = async($traceurRuntime.initGeneratorFunction(function $__10
           platfroms = af.supportedPlatforms();
           order = ["CUDA", "OpenCL", "CPU"];
           console.log(("Running " + name + " on best available device.\n"));
-          $ctx.state = 25;
+          onCPU = false;
+          $ctx.state = 32;
           break;
-        case 25:
-          $ctx.pushTry(15, null);
-          $ctx.state = 18;
+        case 32:
+          $ctx.pushTry(24, null);
+          $ctx.state = 27;
           break;
-        case 18:
-          $ctx.state = (_(platfroms).contains(order[0])) ? 1 : 13;
+        case 27:
+          $ctx.state = (_(platfroms).contains(order[0])) ? 1 : 15;
           break;
         case 1:
           $ctx.state = 2;
@@ -242,8 +244,8 @@ var runOnBestDevice = async($traceurRuntime.initGeneratorFunction(function $__10
           $ctx.maybeThrow();
           $ctx.state = 4;
           break;
-        case 13:
-          $ctx.state = (_(platfroms).contains(order[1])) ? 5 : 9;
+        case 15:
+          $ctx.state = (_(platfroms).contains(order[1])) ? 5 : 13;
           break;
         case 5:
           $ctx.state = 6;
@@ -252,7 +254,11 @@ var runOnBestDevice = async($traceurRuntime.initGeneratorFunction(function $__10
           $ctx.maybeThrow();
           $ctx.state = 4;
           break;
-        case 9:
+        case 13:
+          onCPU = true;
+          $ctx.state = 14;
+          break;
+        case 14:
           $ctx.state = 10;
           return runOnDevices(order[2], f, 0);
         case 10:
@@ -263,14 +269,24 @@ var runOnBestDevice = async($traceurRuntime.initGeneratorFunction(function $__10
           $ctx.popTry();
           $ctx.state = -2;
           break;
-        case 15:
+        case 24:
           $ctx.popTry();
           $ctx.maybeUncatchable();
           e = $ctx.storedException;
-          $ctx.state = 21;
+          $ctx.state = 23;
+          break;
+        case 23:
+          $ctx.state = (onCPU) ? 21 : 17;
           break;
         case 21:
           console.error(e.stack);
+          $ctx.state = -2;
+          break;
+        case 17:
+          $ctx.state = 18;
+          return runOnDevices(order[2], f, 0);
+        case 18:
+          $ctx.maybeThrow();
           $ctx.state = -2;
           break;
         default:

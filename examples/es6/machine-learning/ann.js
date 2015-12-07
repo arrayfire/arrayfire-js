@@ -39,36 +39,44 @@ proto._calculateError = async(function*(out, pred) {
 proto.forwardPropagate = function (input) {
     this.signal[0].set(input);
     for (let i = 0; i < this.numLayers - 1; i++) {
-        let inVec = this.addBias(this.signal[i]);
-        let outVec = this.af.matMul(inVec, this.weights[i]);
-        this.signal[i + 1].set(this.af.sigmoid(outVec));
+        let self = this;
+        this.af.scope(function() {
+            let inVec = self.addBias(self.signal[i]);
+            let outVec = self.af.matMul(inVec, self.weights[i]);
+            self.signal[i + 1].set(self.af.sigmoid(outVec));
+        });
     }
 };
 
 proto.backPropagate = function (target, alpha) {
-    let af = this.af;
-    let Seq = this.af.Seq;
+    let self = this;
+    let af = self.af;
+    let Seq = self.af.Seq;
 
     // Get error for output layer
-    let outVec = this.signal[this.numLayers - 1];
-    let err = outVec.sub(target);
-    let m = target.dims(0);
+    af.scope(function() {
+        let outVec = self.signal[self.numLayers - 1];
+        let err = outVec.sub(target);
+        let m = target.dims(0);
 
-    for (let i = this.numLayers - 2; i >= 0; i--) {
-        let inVec = this.addBias(this.signal[i]);
-        let delta = af.transpose(this.deriv(outVec).mul(err));
+        for (let i = self.numLayers - 2; i >= 0; i--) {
+            af.scope(function() {
+                let inVec = self.addBias(self.signal[i]);
+                let delta = af.transpose(self.deriv(outVec).mul(err));
 
-        // Adjust weights
-        let grad = af.matMul(delta, inVec).mul(alpha).neg().div(m);
-        this.weights[i].addAssign(af.transpose(grad));
+                // Adjust weights
+                let grad = af.matMul(delta, inVec).mul(alpha).neg().div(m);
+                self.weights[i].addAssign(af.transpose(grad));
 
-        // Input to current layer is output of previous
-        outVec = this.signal[i];
-        err.set(this.af.matMulTT(delta, this.weights[i]));
+                // Input to current layer is output of previous
+                outVec = self.signal[i];
+                err.set(self.af.matMulTT(delta, self.weights[i]));
 
-        // Remove the error of bias and propagate backward
-        err.set(err.at(af.span, new Seq(1, outVec.dims(1))));
-    }
+                // Remove the error of bias and propagate backward
+                err.set(err.at(af.span, new Seq(1, outVec.dims(1))));
+            });
+        }
+    });
 };
 
 proto.predict = function (input) {
@@ -77,8 +85,9 @@ proto.predict = function (input) {
 };
 
 proto.train = async(function*(input, target, options) {
-    let af = this.af;
-    let Seq = this.af.Seq;
+    let self = this;
+    let af = self.af;
+    let Seq = self.af.Seq;
 
     let numSamples = input.dims(0);
     let numBatches = numSamples / options.batchSize;
@@ -88,23 +97,27 @@ proto.train = async(function*(input, target, options) {
     for (let i = 0; i < options.maxEpochs; i++) {
         const start = now();
         for (let j = 0; j < numBatches - 1; j++) {
-            let startPos = j * options.batchSize;
-            let endPos = startPos + options.batchSize - 1;
+            af.scope(function() {
+                let startPos = j * options.batchSize;
+                let endPos = startPos + options.batchSize - 1;
 
-            let x = input.at(new Seq(startPos, endPos), af.span);
-            let y = target.at(new Seq(startPos, endPos), af.span);
+                let x = input.at(new Seq(startPos, endPos), af.span);
+                let y = target.at(new Seq(startPos, endPos), af.span);
 
-            this.forwardPropagate(x);
-            this.backPropagate(y, options.alpha);
+                self.forwardPropagate(x);
+                self.backPropagate(y, options.alpha);
+            });
         }
 
-        // Validate with last batch
-        let startPos = (numBatches - 1) * options.batchSize;
-        let endPos = numSamples - 1;
-        let outVec = this.predict(input.at(new Seq(startPos, endPos), af.span));
-        err = yield this._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
-        const end = now();
+        yield af.scope(async(function*() {
+            // Validate with last batch
+            let startPos = (numBatches - 1) * options.batchSize;
+            let endPos = numSamples - 1;
+            let outVec = self.predict(input.at(new Seq(startPos, endPos), af.span));
+            err = yield self._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
+        }));
 
+        const end = now();
         console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(4)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
 
         // Check if convergence criteria has been met

@@ -5,6 +5,7 @@ var ref = require("ref");
 var Bluebird = require("bluebird");
 var async = Bluebird.coroutine;
 var testExec = require("./testExec");
+var float = ref.types.float;
 describe("AFArray class and methods", function() {
   testExec.run(function(af) {
     var AFArray = af.AFArray;
@@ -359,6 +360,153 @@ describe("AFArray class and methods", function() {
       assert(v === 9.0 * 9.0);
       v = array2.at(af.end - 1).scalarSync();
       assert(v === 8.0 * 8.0);
+    });
+    it("should be created of a part of another with new dimensions", function(done) {
+      async($traceurRuntime.initGeneratorFunction(function $__11() {
+        var arr,
+            sub,
+            sub2,
+            buff;
+        return $traceurRuntime.createGeneratorInstance(function($ctx) {
+          while (true)
+            switch ($ctx.state) {
+              case 0:
+                arr = new af.AFArray(10, af.dType.f32);
+                arr.set(new af.Col(0), 0);
+                arr.set(3, 1);
+                arr.set(4, 2);
+                sub = arr.at(new af.Seq(3, 6));
+                sub2 = new af.AFArray(sub, new af.Dim4(2, 2));
+                $ctx.state = 10;
+                break;
+              case 10:
+                $ctx.state = 2;
+                return sub2.hostAsync();
+              case 2:
+                buff = $ctx.sent;
+                $ctx.state = 4;
+                break;
+              case 4:
+                assert(float.get(buff, 0 * float.size) === 1);
+                assert(float.get(buff, 1 * float.size) === 2);
+                arr.set(3, 2);
+                arr.set(4, 3);
+                $ctx.state = 12;
+                break;
+              case 12:
+                $ctx.state = 6;
+                return sub2.hostAsync();
+              case 6:
+                buff = $ctx.sent;
+                $ctx.state = 8;
+                break;
+              case 8:
+                assert(float.get(buff, 0 * float.size) === 1);
+                assert(float.get(buff, 1 * float.size) === 2);
+                $ctx.state = -2;
+                break;
+              default:
+                return $ctx.end();
+            }
+        }, $__11, this);
+      }))().nodeify(done);
+    });
+    describe("RAII", function() {
+      describe("scope", function() {
+        it("should exported as a function", function() {
+          assert(_.isFunction(af.scope));
+        });
+        it("should support RAII interface", function() {
+          assert(_.isFunction(af.scope.begin));
+          assert(_.isFunction(af.scope.end));
+          assert(_.isFunction(af.scope.result));
+        });
+      });
+      it("should destroy temporaries (sync)", function() {
+        var arr,
+            sub;
+        af.scope(function() {
+          assert(this === af.scope);
+          arr = new af.AFArray(10, af.dType.f32);
+          arr.set(new af.Col(0), 0);
+          arr.set(3, 1);
+          arr.set(4, 2);
+          sub = arr.at(new af.Seq(3, 6));
+          this.result(arr);
+        });
+        arr.set(3, 2);
+        try {
+          sub.set(0, 2);
+          assert(false);
+        } catch (e) {
+          if (!/free\(\)/.test(e.message)) {
+            throw e;
+          }
+        }
+      });
+      it("should destroy temporaries (async)", function(done) {
+        async($traceurRuntime.initGeneratorFunction(function $__11() {
+          var arr,
+              sub;
+          return $traceurRuntime.createGeneratorInstance(function($ctx) {
+            while (true)
+              switch ($ctx.state) {
+                case 0:
+                  $ctx.state = 2;
+                  return af.scope(async($traceurRuntime.initGeneratorFunction(function $__12() {
+                    var buff;
+                    return $traceurRuntime.createGeneratorInstance(function($ctx) {
+                      while (true)
+                        switch ($ctx.state) {
+                          case 0:
+                            assert(this === af.scope);
+                            arr = new af.AFArray(10, af.dType.f32);
+                            arr.set(new af.Col(0), 0);
+                            arr.set(3, 1);
+                            arr.set(4, 2);
+                            sub = arr.at(new af.Seq(3, 6));
+                            $ctx.state = 6;
+                            break;
+                          case 6:
+                            $ctx.state = 2;
+                            return sub.hostAsync();
+                          case 2:
+                            buff = $ctx.sent;
+                            $ctx.state = 4;
+                            break;
+                          case 4:
+                            assert(float.get(buff, 0 * float.size) === 1);
+                            assert(float.get(buff, 1 * float.size) === 2);
+                            this.result(sub);
+                            $ctx.state = -2;
+                            break;
+                          default:
+                            return $ctx.end();
+                        }
+                    }, $__12, this);
+                  })));
+                case 2:
+                  $ctx.maybeThrow();
+                  $ctx.state = 4;
+                  break;
+                case 4:
+                  try {
+                    arr.set(3, 2);
+                    assert(false);
+                  } catch (e) {
+                    if (!/free\(\)/.test(e.message)) {
+                      throw e;
+                    }
+                  }
+                  sub.set(0, 2);
+                  $ctx.state = -2;
+                  break;
+                default:
+                  return $ctx.end();
+              }
+          }, $__11, this);
+        }))().asCallback(done);
+      });
     });
   });
 });

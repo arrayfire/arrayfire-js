@@ -1,3 +1,7 @@
+# 0.18.0 (2015-12-07)
+
+- RAII support by scope
+
 # 0.17.4 (2015-12-06)
 
 - Missing AFArray constructor added

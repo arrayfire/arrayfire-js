@@ -358,22 +358,22 @@ describe("AFArray class and methods", function() {
         });
 
         describe("RAII", function() {
-            describe("tmp", function() {
+            describe("scope", function() {
                 it("should exported as a function", function () {
-                    assert(_.isFunction(af.tmp));
+                    assert(_.isFunction(af.scope));
                 });
 
                 it("should support RAII interface", function () {
-                    assert(_.isFunction(af.tmp.begin));
-                    assert(_.isFunction(af.tmp.end));
-                    assert(_.isFunction(af.tmp.result));
+                    assert(_.isFunction(af.scope.begin));
+                    assert(_.isFunction(af.scope.end));
+                    assert(_.isFunction(af.scope.result));
                 });
             });
 
             it("should destroy temporaries (sync)", function() {
                 let arr, sub;
-                af.tmp(function() {
-                    assert(this === af.tmp);
+                af.scope(function() {
+                    assert(this === af.scope);
                     arr = new af.AFArray(10, af.dType.f32);
                     arr.set(new af.Col(0), 0);
                     arr.set(3, 1);
@@ -400,8 +400,8 @@ describe("AFArray class and methods", function() {
             it("should destroy temporaries (async)", function(done) {
                 async(function*() {
                     let arr, sub;
-                    yield af.tmp(async(function* () {
-                        assert(this === af.tmp);
+                    yield af.scope(async(function* () {
+                        assert(this === af.scope);
                         arr = new af.AFArray(10, af.dType.f32);
                         arr.set(new af.Col(0), 0);
                         arr.set(3, 1);

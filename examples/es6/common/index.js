@@ -67,6 +67,7 @@ let runOnBestDevice = async(function*(f, name) {
     let platfroms = af.supportedPlatforms();
     let order = ["CUDA", "OpenCL", "CPU"];
     console.log(`Running ${name} on best available device.\n`);
+    let onCPU = false;
     try {
         if (_(platfroms).contains(order[0])) {
             yield runOnDevices(order[0], f, 0);
@@ -75,11 +76,17 @@ let runOnBestDevice = async(function*(f, name) {
             yield runOnDevices(order[1], f, 0);
         }
         else {
+            onCPU = true;
             yield runOnDevices(order[2], f, 0);
         }
     }
     catch (e) {
-        console.error(e.stack);
+        if (onCPU) {
+            console.error(e.stack);
+        }
+        else {
+            yield runOnDevices(order[2], f, 0);
+        }
     }
 });
 

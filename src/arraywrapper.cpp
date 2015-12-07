@@ -443,10 +443,10 @@ NAN_METHOD(ArrayWrapper::Create)
 void ArrayWrapper::RegisterInTmp(v8::Local<v8::Object> instance)
 {
     Local<Value> args[] = { instance };
-    auto tmp = Nan::New(constructor)->Get(Nan::New("tmp").ToLocalChecked()).As<Object>();
-    auto reg = tmp->Get(Nan::New("register").ToLocalChecked());
+    auto scope = Nan::New(constructor)->Get(Nan::New("scope").ToLocalChecked()).As<Object>();
+    auto reg = scope->Get(Nan::New("register").ToLocalChecked());
     auto regF = reg.As<Object>().As<Function>();
-    regF->Call(tmp, 1, args);
+    regF->Call(scope, 1, args);
 }
 
 NAN_METHOD(ArrayWrapper::Elements)
