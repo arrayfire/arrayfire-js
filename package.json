@@ -1,6 +1,6 @@
 {
   "name": "arrayfire-js",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "repository": {
@@ -8,28 +8,32 @@
     "url": "https://github.com/arrayfire/arrayfire-js.git"
   },
   "dependencies": {
+    "babel-polyfill": "^6.2.0",
+    "bluebird": "^3.0.5",
+    "lodash": "^3.10.1",
     "bindings": "*",
     "cmake-js": "3",
-    "lodash": "*",
     "nan": "^2.1.0",
-    "traceur": "*",
     "better-assert": "*"
   },
   "scripts": {
     "install": "cmake-js compile",
-    "test": "mocha tests"
+    "test": "mocha tests",
+    "test-es5": "mocha tests --old"
   },
   "main": "lib/",
   "devDependencies": {
-    "bluebird": "*",
+    "babel": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.0",
+    "gulp-sequence": "^0.4.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "mocha": "^2.3.4",
+    "yargs": "^3.30.0",
     "debug": "*",
     "fs-extra": "*",
-    "gulp": "*",
-    "gulp-sequence": "*",
-    "gulp-sourcemaps": "*",
-    "gulp-traceur": "*",
     "merge2": "*",
-    "mocha": "*",
     "performance-now": "*",
     "ref": "*"
   }

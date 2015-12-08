@@ -122,7 +122,7 @@ add_library(${PROJECT_NAME}_OpenCL SHARED "${TRAN_SOURCE_FILES};src/init/init_Op
 
 set_target_properties(${PROJECT_NAME}_OpenCL PROPERTIES PREFIX "" SUFFIX ".node")
 
-target_link_libraries(${PROJECT_NAME}_OpenCL "${CMAKE_JS_LIB};${ArrayFire_OpenCL_LIBRARIES};${PROJECT_NAME}_Common")
+target_link_libraries(${PROJECT_NAME}_OpenCL "${CMAKE_JS_LIB};${ArrayFire_OpenCL_LIBRARIES};${PROJECT_NAME}_Common;${OpenCL}")
 
 # CUDA
 

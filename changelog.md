@@ -1,3 +1,8 @@
+# 0.19.0 (2015-12-08)
+
+- scope.register exposed as public API (unit test added)
+- core ES6 support changed to Node 5 feature matrix, legacy support switched to Babel
+
 # 0.18.0 (2015-12-07)
 
 - RAII support by scope

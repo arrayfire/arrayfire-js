@@ -29,19 +29,32 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-"use strict";
+var yargs = require("yargs")
+    .options({
+        old: {
+            demand: false,
+            type: "boolean"
+        }
+    });
+var argv = yargs.argv;
 
-var es6 = true;
-try {
-    eval("(function *(){})");
-} catch(err) {
+var es6;
+
+if (argv.old) {
     es6 = false;
 }
-
-if (es6) {
-    module.exports = require("./es6");
-}
 else {
-    require("traceur/bin/traceur-runtime");
-    module.exports = require("./es5");
+    es6 = true;
+    try {
+        eval("(() => {})()");
+    } catch (err) {
+        es6 = false;
+    }
 }
+
+if (!es6) {
+    console.log("Testing in ES5 mode ...");
+    require("babel-polyfill");
+}
+
+require(es6 ? "./es6" : "./es5");
