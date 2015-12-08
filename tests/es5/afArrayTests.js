@@ -447,7 +447,7 @@ describe("AFArray class and methods", function () {
                 it("should destroy temporaries (sync)", function () {
                     var arr = undefined,
                         sub = undefined;
-                    af.scope(function () {
+                    var x = af.scope(function () {
                         assert(this === af.scope);
                         arr = new af.AFArray(10, af.dType.f32);
                         arr.set(new af.Col(0), 0);
@@ -457,7 +457,11 @@ describe("AFArray class and methods", function () {
                         sub = arr.at(new af.Seq(3, 6));
 
                         this.result(arr);
+
+                        return 1;
                     });
+
+                    assert(x === 1);
 
                     arr.set(3, 2);
 
@@ -473,7 +477,7 @@ describe("AFArray class and methods", function () {
 
                 it("should destroy temporaries (async)", function (done) {
                     async(regeneratorRuntime.mark(function _callee4() {
-                        var arr, sub;
+                        var arr, sub, x;
                         return regeneratorRuntime.wrap(function _callee4$(_context4) {
                             while (1) {
                                 switch (_context4.prev = _context4.next) {
@@ -505,7 +509,9 @@ describe("AFArray class and methods", function () {
 
                                                             this.result(sub);
 
-                                                        case 12:
+                                                            return _context3.abrupt("return", 1);
+
+                                                        case 13:
                                                         case "end":
                                                             return _context3.stop();
                                                     }
@@ -514,34 +520,38 @@ describe("AFArray class and methods", function () {
                                         })));
 
                                     case 3:
-                                        _context4.prev = 3;
+                                        x = _context4.sent;
+
+                                        assert(x === 1);
+
+                                        _context4.prev = 5;
 
                                         arr.set(3, 2);
                                         assert(false);
-                                        _context4.next = 12;
+                                        _context4.next = 14;
                                         break;
 
-                                    case 8:
-                                        _context4.prev = 8;
-                                        _context4.t0 = _context4["catch"](3);
+                                    case 10:
+                                        _context4.prev = 10;
+                                        _context4.t0 = _context4["catch"](5);
 
                                         if (/free\(\)/.test(_context4.t0.message)) {
-                                            _context4.next = 12;
+                                            _context4.next = 14;
                                             break;
                                         }
 
                                         throw _context4.t0;
 
-                                    case 12:
+                                    case 14:
 
                                         sub.set(0, 2);
 
-                                    case 13:
+                                    case 15:
                                     case "end":
                                         return _context4.stop();
                                 }
                             }
-                        }, _callee4, this, [[3, 8]]);
+                        }, _callee4, this, [[5, 10]]);
                     }))().asCallback(done);
                 });
 

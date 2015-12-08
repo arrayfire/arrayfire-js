@@ -1,3 +1,7 @@
+# 0.19.1 (2015-12-08)
+
+- FIX: scope returns correct value
+
 # 0.19.0 (2015-12-08)
 
 - scope.register exposed as public API (unit test added)

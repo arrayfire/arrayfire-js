@@ -372,7 +372,7 @@ describe("AFArray class and methods", function() {
 
                 it("should destroy temporaries (sync)", function() {
                     let arr, sub;
-                    af.scope(function() {
+                    let x = af.scope(function() {
                         assert(this === af.scope);
                         arr = new af.AFArray(10, af.dType.f32);
                         arr.set(new af.Col(0), 0);
@@ -382,7 +382,11 @@ describe("AFArray class and methods", function() {
                         sub = arr.at(new af.Seq(3, 6));
 
                         this.result(arr);
+
+                        return 1;
                     });
+
+                    assert(x === 1);
 
                     arr.set(3, 2);
 
@@ -400,7 +404,7 @@ describe("AFArray class and methods", function() {
                 it("should destroy temporaries (async)", function(done) {
                     async(function*() {
                         let arr, sub;
-                        yield af.scope(async(function* () {
+                        let x = yield af.scope(async(function* () {
                             assert(this === af.scope);
                             arr = new af.AFArray(10, af.dType.f32);
                             arr.set(new af.Col(0), 0);
@@ -415,7 +419,11 @@ describe("AFArray class and methods", function() {
                             assert(float.get(buff, 1 * float.size) === 2);
 
                             this.result(sub);
+
+                            return 1;
                         }));
+
+                        assert(x === 1);
 
                         try {
                             arr.set(3, 2);
