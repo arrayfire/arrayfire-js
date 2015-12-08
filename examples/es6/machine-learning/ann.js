@@ -97,7 +97,7 @@ proto.train = async(function*(input, target, options) {
     for (let i = 0; i < options.maxEpochs; i++) {
         const start = now();
         for (let j = 0; j < numBatches - 1; j++) {
-            af.scope(function() {
+            af.scope(() => {
                 let startPos = j * options.batchSize;
                 let endPos = startPos + options.batchSize - 1;
 
