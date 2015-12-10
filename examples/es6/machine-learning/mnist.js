@@ -12,7 +12,7 @@ let assert = require("better-assert");
 let path = require("path");
 
 let readData = async(function*(f, data) {
-    let bytesRead = (yield fs.readAsync(f, data, 0, data.length, null))[0];
+    let bytesRead = yield fs.readAsync(f, data, 0, data.length, null);
     if (bytesRead !== data.length) {
         throw new Error("File reading error!");
     }
@@ -64,7 +64,7 @@ let readIdx = async(function*(path, type) {
 let mnist = {
     setup: async(function*(af, expandLabels, frac) {
         frac = Math.min(frac || 1.0, 0.8);
-        let dataRoot = "../../ml_lab/data/mnist";
+        let dataRoot =  path.resolve(path.join(__dirname, "../../ml_lab/data/mnist"));
         let AFArray = af.AFArray;
         let Dim4 = af.Dim4;
 
