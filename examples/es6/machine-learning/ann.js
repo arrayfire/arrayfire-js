@@ -34,7 +34,8 @@ proto.addBias = function (input) {
 proto._calculateError = async(function*(out, pred) {
     let dif = out.sub(pred);
     let sq = dif.mul(dif);
-    return Math.sqrt(yield this.af.sumAsync(sq));
+    yield this.af.syncAsync();
+    return Math.sqrt(yield this.af.sumAsync(sq)) / sq.elements();
 });
 
 proto.forwardPropagate = function (input) {
@@ -119,7 +120,7 @@ proto.train = async(function*(input, target, options) {
         }));
 
         const end = now();
-        console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(4)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
+        console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(6)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
 
         // Check if convergence criteria has been met
         if (err < options.maxError) {

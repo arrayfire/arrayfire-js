@@ -41,7 +41,7 @@ let annDemo = async(function*(af, deviceInfo) {
             alpha: 1.0,
             maxEpochs: 300,
             batchSize: 100,
-            maxError: 1.0
+            maxError: 0.0001
         }
     );
     yield af.waitAsync();
