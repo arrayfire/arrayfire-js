@@ -29,9 +29,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-"use strict"
+"use strict";
 /* global describe,it */
-;
+
 var assert = require("better-assert");
 var _ = require("lodash");
 var ref = require("ref");
@@ -475,86 +475,6 @@ describe("AFArray class and methods", function () {
                     }
                 });
 
-                it("should destroy temporaries (async)", function (done) {
-                    async(regeneratorRuntime.mark(function _callee4() {
-                        var arr, sub, x;
-                        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                            while (1) {
-                                switch (_context4.prev = _context4.next) {
-                                    case 0:
-                                        arr = undefined, sub = undefined;
-                                        _context4.next = 3;
-                                        return af.scope(async(regeneratorRuntime.mark(function _callee3() {
-                                            var buff;
-                                            return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                                                while (1) {
-                                                    switch (_context3.prev = _context3.next) {
-                                                        case 0:
-                                                            assert(this === af.scope);
-                                                            arr = new af.AFArray(10, af.dType.f32);
-                                                            arr.set(new af.Col(0), 0);
-                                                            arr.set(3, 1);
-                                                            arr.set(4, 2);
-
-                                                            sub = arr.at(new af.Seq(3, 6));
-
-                                                            _context3.next = 8;
-                                                            return sub.hostAsync();
-
-                                                        case 8:
-                                                            buff = _context3.sent;
-
-                                                            assert(float.get(buff, 0 * float.size) === 1);
-                                                            assert(float.get(buff, 1 * float.size) === 2);
-
-                                                            this.result(sub);
-
-                                                            return _context3.abrupt("return", 1);
-
-                                                        case 13:
-                                                        case "end":
-                                                            return _context3.stop();
-                                                    }
-                                                }
-                                            }, _callee3, this);
-                                        })));
-
-                                    case 3:
-                                        x = _context4.sent;
-
-                                        assert(x === 1);
-
-                                        _context4.prev = 5;
-
-                                        arr.set(3, 2);
-                                        assert(false);
-                                        _context4.next = 14;
-                                        break;
-
-                                    case 10:
-                                        _context4.prev = 10;
-                                        _context4.t0 = _context4["catch"](5);
-
-                                        if (/free\(\)/.test(_context4.t0.message)) {
-                                            _context4.next = 14;
-                                            break;
-                                        }
-
-                                        throw _context4.t0;
-
-                                    case 14:
-
-                                        sub.set(0, 2);
-
-                                    case 15:
-                                    case "end":
-                                        return _context4.stop();
-                                }
-                            }
-                        }, _callee4, this, [[5, 10]]);
-                    }))().asCallback(done);
-                });
-
                 it("should destroy registered arrays", function () {
                     var arr = new af.AFArray(10, af.dType.f32);
                     arr.set(new af.Col(0), 0);
@@ -568,7 +488,7 @@ describe("AFArray class and methods", function () {
 
                         sub.set(0, 0);
 
-                        // PArt of the scope, hence will be destroyed.
+                        // Part of the scope, hence will be destroyed.
                         this.register(sub);
                     });
 

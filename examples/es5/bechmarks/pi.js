@@ -38,35 +38,35 @@ var common = require("../common");
 var numberOfPoints = 20000000;
 
 var pi = async(regeneratorRuntime.mark(function _callee(af, deviceInfo) {
-  var AFArray, x, y, dist, numInside, piVal;
-  return regeneratorRuntime.wrap(function _callee$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          AFArray = af.AFArray;
+    var AFArray, x, y, dist, numInside, piVal;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+            switch (_context.prev = _context.next) {
+                case 0:
+                    AFArray = af.AFArray;
 
-          console.log("Calculating pi on device:\n");
-          common.printDeviceInfo(deviceInfo);
-          console.log("");
+                    console.log("Calculating pi on device:\n");
+                    common.printDeviceInfo(deviceInfo);
+                    console.log("");
 
-          x = af.randu(numberOfPoints, af.dtype.f32);
-          y = af.randu(numberOfPoints, af.dtype.f32);
-          dist = af.sqrt(x.mul(x).add(y.mul(y)));
-          _context.next = 9;
-          return af.sumAsync(dist.lt(1));
+                    x = af.randu(numberOfPoints, af.dtype.f32);
+                    y = af.randu(numberOfPoints, af.dtype.f32);
+                    dist = af.sqrt(x.mul(x).add(y.mul(y)));
+                    _context.next = 9;
+                    return af.sumAsync(dist.lt(1));
 
-        case 9:
-          numInside = _context.sent;
-          piVal = 4.0 * numInside / numberOfPoints;
+                case 9:
+                    numInside = _context.sent;
+                    piVal = 4.0 * numInside / numberOfPoints;
 
-          console.log("PI = " + piVal);
+                    console.log("PI = " + piVal);
 
-        case 12:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, _callee, this);
+                case 12:
+                case "end":
+                    return _context.stop();
+            }
+        }
+    }, _callee, this);
 }));
 
 common.runOnAllPlatforms(pi, "pi example");

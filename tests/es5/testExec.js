@@ -34,40 +34,40 @@
 var af = require("../..");
 
 function runOn(id, f) {
-    describe(id + " platform", function () {
-        var afID = af(id);
-        f(afID);
-    });
+  describe(id + " platform", function () {
+    var afID = af(id);
+    f(afID);
+  });
 }
 
 var testExec = {
-    run: function run(f) {
-        var platfroms = af.supportedPlatforms();
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+  run: function run(f) {
+    var platfroms = af.supportedPlatforms();
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
 
-        try {
-            for (var _iterator = platfroms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var pl = _step.value;
+    try {
+      for (var _iterator = platfroms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var pl = _step.value;
 
-                runOn(pl, f);
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
+        runOn(pl, f);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
         }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
     }
+  }
 };
 
 module.exports = testExec;

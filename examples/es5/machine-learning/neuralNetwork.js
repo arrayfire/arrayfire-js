@@ -74,7 +74,7 @@ var annDemo = async(regeneratorRuntime.mark(function _callee2(af, deviceInfo) {
                         alpha: 1.0,
                         maxEpochs: 300,
                         batchSize: 100,
-                        maxError: 1.0
+                        maxError: 0.0001
                     });
 
                 case 16:

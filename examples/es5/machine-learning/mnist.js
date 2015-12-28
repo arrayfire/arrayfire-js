@@ -21,7 +21,7 @@ var readData = async(regeneratorRuntime.mark(function _callee(f, data) {
                     return fs.readAsync(f, data, 0, data.length, null);
 
                 case 2:
-                    bytesRead = _context.sent[0];
+                    bytesRead = _context.sent;
 
                     if (!(bytesRead !== data.length)) {
                         _context.next = 5;
@@ -138,7 +138,7 @@ var mnist = {
                 switch (_context3.prev = _context3.next) {
                     case 0:
                         frac = Math.min(frac || 1.0, 0.8);
-                        dataRoot = "../../ml_lab/data/mnist";
+                        dataRoot = path.resolve(path.join(__dirname, "../../ml_lab/data/mnist"));
                         AFArray = af.AFArray;
                         Dim4 = af.Dim4;
                         _context3.next = 6;

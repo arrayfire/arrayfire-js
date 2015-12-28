@@ -29,9 +29,9 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict"
+"use strict";
 /* global describe,it */
-;
+
 var assert = require("better-assert");
 var _ = require("lodash");
 var ref = require("ref");

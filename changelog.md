@@ -1,3 +1,7 @@
+# 0.19.2 (2015-12-28)
+
+- Removed (mis)feature: scope cannot be async
+
 # 0.19.1 (2015-12-08)
 
 - FIX: scope returns correct value

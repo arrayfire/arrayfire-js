@@ -32,21 +32,28 @@ proto.addBias = function (input) {
 };
 
 proto._calculateError = async(regeneratorRuntime.mark(function _callee(out, pred) {
-    var dif;
+    var dif, sq;
     return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
             switch (_context.prev = _context.next) {
                 case 0:
                     dif = out.sub(pred);
-                    _context.t0 = Math;
+                    sq = dif.mul(dif);
                     _context.next = 4;
-                    return this.af.sumAsync(dif.mul(dif));
+                    return this.af.syncAsync();
 
                 case 4:
-                    _context.t1 = _context.sent;
-                    return _context.abrupt("return", _context.t0.sqrt.call(_context.t0, _context.t1));
+                    _context.t0 = Math;
+                    _context.next = 7;
+                    return this.af.sumAsync(sq);
 
-                case 6:
+                case 7:
+                    _context.t1 = _context.sent;
+                    _context.t2 = _context.t0.sqrt.call(_context.t0, _context.t1);
+                    _context.t3 = sq.elements();
+                    return _context.abrupt("return", _context.t2 / _context.t3);
+
+                case 11:
                 case "end":
                     return _context.stop();
             }
@@ -181,7 +188,7 @@ proto.train = async(regeneratorRuntime.mark(function _callee3(input, target, opt
                 case 13:
                     end = now();
 
-                    console.log("Epoch: " + (i + 1) + ", Error: " + err.toFixed(4) + ", Duration: " + ((end - start) / 1000).toFixed(4) + " seconds");
+                    console.log("Epoch: " + (i + 1) + ", Error: " + err.toFixed(6) + ", Duration: " + ((end - start) / 1000).toFixed(4) + " seconds");
 
                     // Check if convergence criteria has been met
 
@@ -190,7 +197,7 @@ proto.train = async(regeneratorRuntime.mark(function _callee3(input, target, opt
                         break;
                     }
 
-                    console.log("Converged on Epoc: " + (i + 1));
+                    console.log("Converged on Epoch: " + (i + 1));
                     return _context3.abrupt("break", 21);
 
                 case 18:

@@ -207,7 +207,7 @@ var runOnAllPlatforms = async(regeneratorRuntime.mark(function _callee2(f, name)
 }));
 
 var runOnBestDevice = async(regeneratorRuntime.mark(function _callee3(f, name) {
-    var platfroms, order, onCPU;
+    var platfroms, order;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
             switch (_context3.prev = _context3.next) {
@@ -216,66 +216,53 @@ var runOnBestDevice = async(regeneratorRuntime.mark(function _callee3(f, name) {
                     order = ["CUDA", "OpenCL", "CPU"];
 
                     console.log("Running " + name + " on best available device.\n");
-                    onCPU = false;
-                    _context3.prev = 4;
+                    _context3.prev = 3;
 
                     if (!_(platfroms).contains(order[0])) {
-                        _context3.next = 10;
+                        _context3.next = 9;
                         break;
                     }
 
-                    _context3.next = 8;
+                    _context3.next = 7;
                     return runOnDevices(order[0], f, 0);
 
-                case 8:
-                    _context3.next = 18;
+                case 7:
+                    _context3.next = 16;
                     break;
 
-                case 10:
+                case 9:
                     if (!_(platfroms).contains(order[1])) {
-                        _context3.next = 15;
+                        _context3.next = 14;
                         break;
                     }
 
-                    _context3.next = 13;
+                    _context3.next = 12;
                     return runOnDevices(order[1], f, 0);
 
-                case 13:
-                    _context3.next = 18;
+                case 12:
+                    _context3.next = 16;
                     break;
 
-                case 15:
-                    onCPU = true;
-                    _context3.next = 18;
+                case 14:
+                    _context3.next = 16;
                     return runOnDevices(order[2], f, 0);
+
+                case 16:
+                    _context3.next = 21;
+                    break;
 
                 case 18:
-                    _context3.next = 28;
-                    break;
-
-                case 20:
-                    _context3.prev = 20;
-                    _context3.t0 = _context3["catch"](4);
-
-                    if (!onCPU) {
-                        _context3.next = 26;
-                        break;
-                    }
+                    _context3.prev = 18;
+                    _context3.t0 = _context3["catch"](3);
 
                     console.error(_context3.t0.stack);
-                    _context3.next = 28;
-                    break;
 
-                case 26:
-                    _context3.next = 28;
-                    return runOnDevices(order[2], f, 0);
-
-                case 28:
+                case 21:
                 case "end":
                     return _context3.stop();
             }
         }
-    }, _callee3, this, [[4, 20]]);
+    }, _callee3, this, [[3, 18]]);
 }));
 
 var printDeviceInfo = function printDeviceInfo(deviceInfo) {
