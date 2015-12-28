@@ -1,6 +1,6 @@
 {
   "name": "arrayfire-js",
-  "version": "0.19.2",
+  "version": "0.20.0",
   "description": "ArrayFire.js - ArrayFire for Node.js platform",
   "license": "BSD-3-Clause",
   "repository": {
@@ -25,16 +25,16 @@
   "devDependencies": {
     "babel": "^6.1.18",
     "babel-preset-es2015": "^6.1.18",
+    "debug": "*",
+    "fs-extra": "*",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.0",
     "gulp-sequence": "^0.4.1",
     "gulp-sourcemaps": "^1.6.0",
-    "mocha": "^2.3.4",
-    "yargs": "^3.30.0",
-    "debug": "*",
-    "fs-extra": "*",
     "merge2": "*",
+    "mocha": "^2.3.4",
     "performance-now": "*",
-    "ref": "*"
+    "ref": "*",
+    "yargs": "^3.31.0"
   }
 }

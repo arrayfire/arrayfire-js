@@ -34,3 +34,4 @@ require("./afArrayTests");
 require("./createArrayFunctionTests");
 require("./mathFunctionTests");
 require("./moveAndReorderArrayTests");
+require("./gfor");

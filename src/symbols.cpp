@@ -96,7 +96,7 @@ void Symbols::Init()
     Begin.Reset(Nan::New("begin").ToLocalChecked());
     End.Reset(Nan::New("end").ToLocalChecked());
     Step.Reset(Nan::New("step").ToLocalChecked());
-    IsGFor.Reset(Nan::New("IsGFor").ToLocalChecked());
+    IsGFor.Reset(Nan::New("isGFor").ToLocalChecked());
     Imag.Reset(Nan::New("imag").ToLocalChecked());
     Real.Reset(Nan::New("real").ToLocalChecked());
     Elements.Reset(Nan::New("elements").ToLocalChecked());

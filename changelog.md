@@ -1,3 +1,8 @@
+# 0.20.0 (2015-12-28)
+
+- FIX: gfor actually works
+- gfor unit test added
+
 # 0.19.2 (2015-12-28)
 
 - Removed (mis)feature: scope cannot be async

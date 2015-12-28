@@ -30,27 +30,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 "use strict";
-
-let _ = require("lodash");
+/* global describe,it */
 let assert = require("better-assert");
+let _ = require("lodash");
+let ref = require("ref");
+let Bluebird = require("bluebird");
+let async = Bluebird.coroutine;
+let testExec = require("./testExec");
+let float = ref.types.float;
 
-function Seq(begin, end, step) {
-    assert(_.isNumber(begin));
-    if (_.isUndefined(end)) {
-        end = begin - 1;
-        begin = 0;
-    }
-    else {
-        assert(_.isNumber(end));
-    }
-    step = step || 1;
-    assert(_.isNumber(step));
-
-    this.begin = begin;
-    this.end = end;
-    this.step = step;
-
-    this.isGFor = false;
-}
-
-module.exports = Seq;
+describe("gfor", function () {
+    testExec.run(function (af) {
+        it("should work", function (done) {
+            async(function*() {
+                const count = 20;
+                let arr = af.constant(0.0, count, 10, af.dType.f32);
+                let val = af.range(new af.Dim4(1, 10), 1, af.dType.f32);
+                af.gfor(count, function (seq) {
+                    assert(seq instanceof af.Seq);
+                    assert(seq.begin === 0);
+                    assert(seq.end === 19);
+                    assert(seq.isGFor);
+                    arr.assign(seq, af.span, val);
+                });
+                for (let idx = 0; idx < count; idx++) {
+                    let sum = yield af.sumAsync(arr.at(idx, af.span));
+                    assert(sum === (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9));
+                }
+            })().asCallback(done);
+        });
+    });
+});
