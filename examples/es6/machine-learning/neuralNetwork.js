@@ -39,7 +39,7 @@ let annDemo = async(function*(af, deviceInfo) {
         trainTarget,
         {
             alpha: 1.0,
-            maxEpochs: 300,
+            maxEpochs: 5000,
             batchSize: 100,
             maxError: 0.0001
         }

@@ -57,6 +57,7 @@ NAN_METHOD(LoadImage)
         ArrayWrapper::NewAsync(
                 info,
                 [=](){ Guard guard; return new af::array(af::loadImage(fn.c_str(), isColor)); });
+        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH;
 }
@@ -97,10 +98,10 @@ NAN_METHOD(ColorSpace)
     ARRAYFIRE_CATCH;
 }
 
-AF_SM_ARR_FLOAT_FLOAT_FLOAT(Gray2RGB, gray2rgb, 1.0f, 1.0f, 1.0f)
-AF_SM_ARR_FLOAT_FLOAT_FLOAT(RGB2Gray, rgb2gray, 0.2126f, 0.7152f, 0.0722f)
-AF_SM_ARR(HSV2RGB, hsv2rgb)
-AF_SM_ARR(RGB2HSV, rgb2hsv)
+AF_ARR_FLOAT_FLOAT_FLOAT(Gray2RGB, gray2rgb, 1.0f, 1.0f, 1.0f)
+AF_ARR_FLOAT_FLOAT_FLOAT(RGB2Gray, rgb2gray, 0.2126f, 0.7152f, 0.0722f)
+AF_ARR(HSV2RGB, hsv2rgb)
+AF_ARR(RGB2HSV, rgb2hsv)
 
 NAN_METHOD(Regions)
 {
@@ -199,7 +200,7 @@ NAN_METHOD(Sobel)
     ARRAYFIRE_CATCH;
 }
 
-AF_SM_ARR_ARR(HistEqual, histEqual)
+AF_ARR_ARR(HistEqual, histEqual)
 
 NAN_METHOD(Histogram)
 {
@@ -364,10 +365,10 @@ NAN_METHOD(Translate)
     ARRAYFIRE_CATCH;
 }
 
-AF_SM_ARR_ARR(Dilate, dilate)
-AF_SM_ARR_ARR(Dilate3, dilate3)
-AF_SM_ARR_ARR(Erode, erode)
-AF_SM_ARR_ARR(Erode3, erode3)
+AF_ARR_ARR(Dilate, dilate)
+AF_ARR_ARR(Dilate3, dilate3)
+AF_ARR_ARR(Erode, erode)
+AF_ARR_ARR(Erode3, erode3)
 
 NAN_METHOD(GaussianKernel)
 {

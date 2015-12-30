@@ -35,7 +35,7 @@ proto._calculateError = async(function*(out, pred) {
     let dif = out.sub(pred);
     let sq = dif.mul(dif);
     yield this.af.syncAsync();
-    return Math.sqrt(yield this.af.sumAsync(sq)) / sq.elements();
+    return 5;//Math.sqrt(yield this.af.sumAsync(sq)) / sq.elements();
 });
 
 proto.forwardPropagate = function (input) {

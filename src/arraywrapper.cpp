@@ -526,143 +526,43 @@ NAN_METHOD(ArrayWrapper::Scalar)
     try
     {
         ARGS_LEN(1)
-
+        Guard guard;
         auto pArray = GetArray(info.This());
-        af::array array(*pArray);
-        switch (array.type())
+        switch (pArray->type())
         {
             case f32:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<float>();
-                    };
-                    auto worker = new Worker<float>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<float>()));
                 break;
             case f64:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<double>();
-                    };
-                    auto worker = new Worker<double>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<double>()));
                 break;
             case s32:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<int>();
-                    };
-                    auto worker = new Worker<int>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<int>()));
                 break;
             case u32:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<unsigned>();
-                    };
-                    auto worker = new Worker<unsigned>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<unsigned>()));
                 break;
             case u8:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<unsigned char>();
-                    };
-                    auto worker = new Worker<unsigned char>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<unsigned char>()));
                 break;
             case b8:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<char>();
-                    };
-                    auto worker = new Worker<char>(GetCallback(info), move(exec));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(pArray->scalar<char>()));
                 break;
             case c32:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<af::cfloat>();
-                    };
-                    auto conv = [=](Worker<af::cfloat>* w, af::cfloat data)
-                    {
-                        return ToV8Complex(data);
-                    };
-                    auto worker = new Worker<af::cfloat>(GetCallback(info), move(exec), move(conv));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(ToV8Complex(pArray->scalar<af::cfloat>()));
                 break;
             case c64:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<af::cdouble>();
-                    };
-                    auto conv = [=](Worker<af::cdouble>* w, af::cdouble data)
-                    {
-                        return ToV8Complex(data);
-                    };
-                    auto worker = new Worker<af::cdouble>(GetCallback(info), move(exec), move(conv));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(ToV8Complex(pArray->scalar<af::cdouble>()));
                 break;
             case s64:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<long long>();
-                    };
-                    auto conv = [=](Worker<long long>* w, long long data)
-                    {
-                        Nan::EscapableHandleScope scope;
-                        return scope.Escape(Nan::New(to_string(data).c_str()).ToLocalChecked());
-                    };
-                    auto worker = new Worker<long long>(GetCallback(info), move(exec), move(conv));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(to_string(pArray->scalar<long long>()).c_str()).ToLocalChecked());
                 break;
             case u64:
-                {
-                    auto exec = [=]()
-                    {
-                        Guard guard;
-                        return array.scalar<unsigned long long>();
-                    };
-                    auto conv = [=](Worker<unsigned long long>* w, unsigned long long data)
-                    {
-                        Nan::EscapableHandleScope scope;
-                        return scope.Escape(Nan::New(to_string(data).c_str()).ToLocalChecked());
-                    };
-                    auto worker = new Worker<unsigned long long>(GetCallback(info), move(exec), move(conv));
-                    Nan::AsyncQueueWorker(worker);
-                }
+                info.GetReturnValue().Set(Nan::New(to_string(pArray->scalar<unsigned long long>()).c_str()).ToLocalChecked());
                 break;
             default:
-                assert(false);
+                NAN_THROW_INVALID_ARGS();
         }
-        info.GetReturnValue().SetUndefined();
     }
     ARRAYFIRE_CATCH
 }

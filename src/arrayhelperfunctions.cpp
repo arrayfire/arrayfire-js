@@ -40,9 +40,9 @@ using namespace v8;
 using namespace std;
 using namespace node;
 
-AF_SM_ARR(IsZero, iszero)
-AF_SM_ARR(IsInf, isInf)
-AF_SM_ARR(IsNaN, isNaN)
+AF_ARR(IsZero, iszero)
+AF_ARR(IsInf, isInf)
+AF_ARR(IsNaN, isNaN)
 
 NAN_METHOD(Print)
 {
