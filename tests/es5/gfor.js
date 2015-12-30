@@ -42,52 +42,23 @@ var float = ref.types.float;
 
 describe("gfor", function () {
     testExec.run(function (af) {
-        it("should work", function (done) {
-            async(regeneratorRuntime.mark(function _callee() {
-                var count, arr, val, idx, sum;
-                return regeneratorRuntime.wrap(function _callee$(_context) {
-                    while (1) {
-                        switch (_context.prev = _context.next) {
-                            case 0:
-                                count = 20;
-                                arr = af.constant(0.0, count, 10, af.dType.f32);
-                                val = af.range(new af.Dim4(1, 10), 1, af.dType.f32);
-
-                                af.gfor(count, function (seq) {
-                                    assert(seq instanceof af.Seq);
-                                    assert(seq.begin === 0);
-                                    assert(seq.end === 19);
-                                    assert(seq.isGFor);
-                                    arr.assign(seq, af.span, val);
-                                });
-                                idx = 0;
-
-                            case 5:
-                                if (!(idx < count)) {
-                                    _context.next = 13;
-                                    break;
-                                }
-
-                                _context.next = 8;
-                                return af.sumAsync(arr.at(idx, af.span));
-
-                            case 8:
-                                sum = _context.sent;
-
-                                assert(sum === 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9);
-
-                            case 10:
-                                idx++;
-                                _context.next = 5;
-                                break;
-
-                            case 13:
-                            case "end":
-                                return _context.stop();
-                        }
-                    }
-                }, _callee, this);
-            }))().asCallback(done);
+        it("should work", function () {
+            af.scope(function () {
+                var count = 20;
+                var arr = af.constant(0.0, count, 10, af.dType.f32);
+                var val = af.range(new af.Dim4(1, 10), 1, af.dType.f32);
+                af.gfor(count, function (seq) {
+                    assert(seq instanceof af.Seq);
+                    assert(seq.begin === 0);
+                    assert(seq.end === 19);
+                    assert(seq.isGFor);
+                    arr.assign(seq, af.span, val);
+                });
+                for (var idx = 0; idx < count; idx++) {
+                    var sum = af.sum(arr.at(idx, af.span));
+                    assert(sum === 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9);
+                }
+            });
         });
     });
 });

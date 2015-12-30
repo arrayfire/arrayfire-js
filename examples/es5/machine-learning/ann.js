@@ -31,35 +31,11 @@ proto.addBias = function (input) {
     return this.af.join(1, this.af.constant(1, input.dims(0), this.af.dType.f32), input);
 };
 
-proto._calculateError = async(regeneratorRuntime.mark(function _callee(out, pred) {
-    var dif, sq;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-            switch (_context.prev = _context.next) {
-                case 0:
-                    dif = out.sub(pred);
-                    sq = dif.mul(dif);
-                    _context.next = 4;
-                    return this.af.syncAsync();
-
-                case 4:
-                    _context.t0 = Math;
-                    _context.next = 7;
-                    return this.af.sumAsync(sq);
-
-                case 7:
-                    _context.t1 = _context.sent;
-                    _context.t2 = _context.t0.sqrt.call(_context.t0, _context.t1);
-                    _context.t3 = sq.elements();
-                    return _context.abrupt("return", _context.t2 / _context.t3);
-
-                case 11:
-                case "end":
-                    return _context.stop();
-            }
-        }
-    }, _callee, this);
-}));
+proto._calculateError = function (out, pred) {
+    var dif = out.sub(pred);
+    var sq = dif.mul(dif);
+    return Math.sqrt(this.af.sum(sq)) / sq.elements();
+};
 
 proto.forwardPropagate = function (input) {
     var _this = this;
@@ -120,101 +96,56 @@ proto.predict = function (input) {
     return this.signal[this.numLayers - 1].copy();
 };
 
-proto.train = async(regeneratorRuntime.mark(function _callee3(input, target, options) {
-    var self, af, Seq, numSamples, numBatches, err, i, start, _loop3, j, end;
+proto.train = function (input, target, options) {
+    var self = this;
+    var af = self.af;
+    var Seq = self.af.Seq;
 
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-            switch (_context3.prev = _context3.next) {
-                case 0:
-                    self = this;
-                    af = self.af;
-                    Seq = self.af.Seq;
-                    numSamples = input.dims(0);
-                    numBatches = numSamples / options.batchSize;
-                    err = 0;
-                    i = 0;
+    var numSamples = input.dims(0);
+    var numBatches = numSamples / options.batchSize;
 
-                case 7:
-                    if (!(i < options.maxEpochs)) {
-                        _context3.next = 21;
-                        break;
-                    }
+    var err = 0;
 
-                    start = now();
+    for (var i = 0; i < options.maxEpochs; i++) {
+        var start = now();
 
-                    _loop3 = function _loop3(j) {
-                        af.scope(function () {
-                            var startPos = j * options.batchSize;
-                            var endPos = startPos + options.batchSize - 1;
+        var _loop3 = function _loop3(j) {
+            af.scope(function () {
+                var startPos = j * options.batchSize;
+                var endPos = startPos + options.batchSize - 1;
 
-                            var x = input.at(new Seq(startPos, endPos), af.span);
-                            var y = target.at(new Seq(startPos, endPos), af.span);
+                var x = input.at(new Seq(startPos, endPos), af.span);
+                var y = target.at(new Seq(startPos, endPos), af.span);
 
-                            self.forwardPropagate(x);
-                            self.backPropagate(y, options.alpha);
-                        });
-                    };
+                self.forwardPropagate(x);
+                self.backPropagate(y, options.alpha);
+            });
+        };
 
-                    for (j = 0; j < numBatches - 1; j++) {
-                        _loop3(j);
-                    }
-
-                    _context3.next = 13;
-                    return af.scope(async(regeneratorRuntime.mark(function _callee2() {
-                        var startPos, endPos, outVec;
-                        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                            while (1) {
-                                switch (_context2.prev = _context2.next) {
-                                    case 0:
-                                        // Validate with last batch
-                                        startPos = (numBatches - 1) * options.batchSize;
-                                        endPos = numSamples - 1;
-                                        outVec = self.predict(input.at(new Seq(startPos, endPos), af.span));
-                                        _context2.next = 5;
-                                        return self._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
-
-                                    case 5:
-                                        err = _context2.sent;
-
-                                    case 6:
-                                    case "end":
-                                        return _context2.stop();
-                                }
-                            }
-                        }, _callee2, this);
-                    })));
-
-                case 13:
-                    end = now();
-
-                    console.log("Epoch: " + (i + 1) + ", Error: " + err.toFixed(6) + ", Duration: " + ((end - start) / 1000).toFixed(4) + " seconds");
-
-                    // Check if convergence criteria has been met
-
-                    if (!(err < options.maxError)) {
-                        _context3.next = 18;
-                        break;
-                    }
-
-                    console.log("Converged on Epoch: " + (i + 1));
-                    return _context3.abrupt("break", 21);
-
-                case 18:
-                    i++;
-                    _context3.next = 7;
-                    break;
-
-                case 21:
-                    return _context3.abrupt("return", err);
-
-                case 22:
-                case "end":
-                    return _context3.stop();
-            }
+        for (var j = 0; j < numBatches - 1; j++) {
+            _loop3(j);
         }
-    }, _callee3, this);
-}));
+
+        af.scope(function () {
+            // Validate with last batch
+            var startPos = (numBatches - 1) * options.batchSize;
+            var endPos = numSamples - 1;
+            var outVec = self.predict(input.at(new Seq(startPos, endPos), af.span));
+            err = self._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
+        });
+
+        var end = now();
+        console.log("Epoch: " + (i + 1) + ", Error: " + err.toFixed(6) + ", Duration: " + ((end - start) / 1000).toFixed(4) + " seconds");
+
+        // Check if convergence criteria has been met
+        if (err < options.maxError) {
+            console.log("Converged on Epoch: " + (i + 1));
+            break;
+        }
+    }
+
+    return err;
+};
 
 module.exports = ANN;
 //# sourceMappingURL=ann.js.map

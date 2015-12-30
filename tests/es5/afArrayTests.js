@@ -282,47 +282,23 @@ describe("AFArray class and methods", function () {
                                 }
 
                                 // Let's do some indexing:
-                                _context.next = 26;
-                                return array2.valueAsync();
-
-                            case 26:
-                                v = _context.sent;
+                                v = array2.value();
 
                                 assert(v === 0.0);
 
-                                _context.next = 30;
-                                return array2.at(1).valueAsync();
-
-                            case 30:
-                                v = _context.sent;
-
+                                v = array2.at(1).value();
                                 assert(v === 1.0);
 
-                                _context.next = 34;
-                                return array2.at(2).scalarAsync();
-
-                            case 34:
-                                v = _context.sent;
-
+                                v = array2.at(2).scalar();
                                 assert(v === 4.0);
 
-                                _context.next = 38;
-                                return array2.at("end").scalarAsync();
-
-                            case 38:
-                                v = _context.sent;
-
+                                v = array2.at("end").scalar();
                                 assert(v === 9.0 * 9.0);
 
-                                _context.next = 42;
-                                return array2.at(af.end - 1).scalarAsync();
-
-                            case 42:
-                                v = _context.sent;
-
+                                v = array2.at(af.end - 1).scalar();
                                 assert(v === 8.0 * 8.0);
 
-                            case 44:
+                            case 34:
                             case "end":
                                 return _context.stop();
                         }
@@ -370,19 +346,19 @@ describe("AFArray class and methods", function () {
             }
 
             // Let's do some indexing:
-            var v = array2.valueSync();
+            var v = array2.value();
             assert(v === 0.0);
 
-            v = array.at(1).valueSync();
+            v = array.at(1).value();
             assert(v === 1.0);
 
-            v = array2.at(2).scalarSync();
+            v = array2.at(2).scalar();
             assert(v === 4.0);
 
-            v = array2.at("end").scalarSync();
+            v = array2.at("end").scalar();
             assert(v === 9.0 * 9.0);
 
-            v = array2.at(af.end - 1).scalarSync();
+            v = array2.at(af.end - 1).scalar();
             assert(v === 8.0 * 8.0);
         });
 
