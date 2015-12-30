@@ -182,8 +182,8 @@ NAN_MODULE_INIT(ArrayWrapper::Init)
     Nan::SetPrototypeTemplate(tmpl, Nan::New("neg").ToLocalChecked(), Nan::New<FunctionTemplate>(Neg), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("not").ToLocalChecked(), Nan::New<FunctionTemplate>(Not), v8::None);
 
-    Nan::SetPrototypeTemplate(tmpl, Nan::New("T").ToLocalChecked(), Nan::New<FunctionTemplate>(T), v8::None);
-    Nan::SetPrototypeTemplate(tmpl, Nan::New("S").ToLocalChecked(), Nan::New<FunctionTemplate>(H), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("T").ToLocalChecked(), Nan::New<FunctionTemplate>(AFT), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("S").ToLocalChecked(), Nan::New<FunctionTemplate>(AFH), v8::None);
 
     auto f = tmpl->GetFunction();
     f->Set(Nan::New("create").ToLocalChecked(), Nan::New<FunctionTemplate>(Create)->GetFunction());
@@ -1699,19 +1699,21 @@ AFARRAY_IMPL_UNOP(Neg, -)
 AFARRAY_IMPL_UNOP(Not, !)
 #undef AFARRAY_IMPL_UNOP
 
-NAN_METHOD(ArrayWrapper::T)
+NAN_METHOD(ArrayWrapper::AFT)
 {
     try
     {
+        Guard guard;
         info.GetReturnValue().Set(New(GetArray(info.This())->T()));
     }
     ARRAYFIRE_CATCH
 }
 
-NAN_METHOD(ArrayWrapper::H)
+NAN_METHOD(ArrayWrapper::AFH)
 {
     try
     {
+        Guard guard;
         info.GetReturnValue().Set(New(GetArray(info.This())->H()));
     }
     ARRAYFIRE_CATCH
