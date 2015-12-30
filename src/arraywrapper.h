@@ -137,6 +137,9 @@ struct ArrayWrapper : public node::ObjectWrap
     static NAN_METHOD(Not);
     static NAN_METHOD(Neg);
 
+    static NAN_METHOD(T);
+    static NAN_METHOD(H);
+
 private:
     explicit ArrayWrapper(af::array* array);
 
