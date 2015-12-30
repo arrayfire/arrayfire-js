@@ -1,4 +1,4 @@
-# 0.21.1 (2015-12-30)
+# 0.21.2 (2015-12-30)
 
 - All calculation methods synchronous
 - T/H method added to AFArray
