@@ -41,8 +41,8 @@ let float = ref.types.float;
 
 describe("gfor", function () {
     testExec.run(function (af) {
-        it("should work", function (done) {
-            async(function*() {
+        it("should work", function () {
+            af.scope(() => {
                 const count = 20;
                 let arr = af.constant(0.0, count, 10, af.dType.f32);
                 let val = af.range(new af.Dim4(1, 10), 1, af.dType.f32);
@@ -54,10 +54,10 @@ describe("gfor", function () {
                     arr.assign(seq, af.span, val);
                 });
                 for (let idx = 0; idx < count; idx++) {
-                    let sum = yield af.sumAsync(arr.at(idx, af.span));
+                    let sum = af.sum(arr.at(idx, af.span));
                     assert(sum === (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9));
                 }
-            })().asCallback(done);
+            });
         });
     });
 });

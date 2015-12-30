@@ -31,12 +31,11 @@ proto.addBias = function (input) {
     return this.af.join(1, this.af.constant(1, input.dims(0), this.af.dType.f32), input);
 };
 
-proto._calculateError = async(function*(out, pred) {
+proto._calculateError = function(out, pred) {
     let dif = out.sub(pred);
     let sq = dif.mul(dif);
-    yield this.af.syncAsync();
-    return 5;//Math.sqrt(yield this.af.sumAsync(sq)) / sq.elements();
-});
+    return Math.sqrt(this.af.sum(sq)) / sq.elements();
+};
 
 proto.forwardPropagate = function (input) {
     this.signal[0].set(input);
@@ -86,7 +85,7 @@ proto.predict = function (input) {
     return this.signal[this.numLayers - 1].copy();
 };
 
-proto.train = async(function*(input, target, options) {
+proto.train = function(input, target, options) {
     let self = this;
     let af = self.af;
     let Seq = self.af.Seq;
@@ -111,13 +110,13 @@ proto.train = async(function*(input, target, options) {
             });
         }
 
-        yield af.scope(async(function*() {
+        af.scope(() => {
             // Validate with last batch
             let startPos = (numBatches - 1) * options.batchSize;
             let endPos = numSamples - 1;
             let outVec = self.predict(input.at(new Seq(startPos, endPos), af.span));
-            err = yield self._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
-        }));
+            err = self._calculateError(outVec, target.at(new Seq(startPos, endPos), af.span));
+        });
 
         const end = now();
         console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(6)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
@@ -130,6 +129,6 @@ proto.train = async(function*(input, target, options) {
     }
 
     return err;
-});
+};
 
 module.exports = ANN;

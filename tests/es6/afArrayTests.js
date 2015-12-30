@@ -260,19 +260,19 @@ describe("AFArray class and methods", function() {
                 }
 
                 // Let's do some indexing:
-                let v = yield array2.valueAsync();
+                let v = array2.value();
                 assert(v === 0.0);
 
-                v = yield array2.at(1).valueAsync();
+                v = array2.at(1).value();
                 assert(v === 1.0);
 
-                v = yield array2.at(2).scalarAsync();
+                v = array2.at(2).scalar();
                 assert(v === 4.0);
 
-                v = yield array2.at("end").scalarAsync();
+                v = array2.at("end").scalar();
                 assert(v === 9.0 * 9.0);
 
-                v = yield array2.at(af.end - 1).scalarAsync();
+                v = array2.at(af.end - 1).scalar();
                 assert(v === 8.0 * 8.0);
             });
             f().nodeify(done);
@@ -316,19 +316,19 @@ describe("AFArray class and methods", function() {
             }
 
             // Let's do some indexing:
-            let v = array2.valueSync();
+            let v = array2.value();
             assert(v === 0.0);
 
-            v = array.at(1).valueSync();
+            v = array.at(1).value();
             assert(v === 1.0);
 
-            v = array2.at(2).scalarSync();
+            v = array2.at(2).scalar();
             assert(v === 4.0);
 
-            v = array2.at("end").scalarSync();
+            v = array2.at("end").scalar();
             assert(v === 9.0 * 9.0);
 
-            v = array2.at(af.end - 1).scalarSync();
+            v = array2.at(af.end - 1).scalar();
             assert(v === 8.0 * 8.0);
         });
         

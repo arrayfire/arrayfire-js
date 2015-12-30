@@ -49,8 +49,6 @@ int GetMemSize(const af::array* array)
     // Make GC aware of device memory.
     // Event it's VRAM this should keep the usage on low (few hundred megabytes),
     // so we won't triggrer out of memory errors.
-    // TODO: If ArrayFire's CUDA error handling gets fixed,
-    // TODO: then we should only report memory usage for CPU based devices.
     return static_cast<int>(sizeof(af::array)) + static_cast<int>(sizeof(ArrayWrapper)) + static_cast<int>(array->bytes());
 }
 
@@ -124,7 +122,7 @@ NAN_MODULE_INIT(ArrayWrapper::Init)
     Nan::SetPrototypeTemplate(tmpl, Nan::New("isInteger").ToLocalChecked(), Nan::New<FunctionTemplate>(IsInteger), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("isbool").ToLocalChecked(), Nan::New<FunctionTemplate>(IsBool), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("isBool").ToLocalChecked(), Nan::New<FunctionTemplate>(IsBool), v8::None);
-    Nan::SetPrototypeTemplate(tmpl, Nan::New("eval").ToLocalChecked(), Nan::New<FunctionTemplate>(Eval), v8::None);
+    Nan::SetPrototypeTemplate(tmpl, Nan::New("afEval").ToLocalChecked(), Nan::New<FunctionTemplate>(Eval), v8::None);
 
     Nan::SetPrototypeTemplate(tmpl, Nan::New("at").ToLocalChecked(), Nan::New<FunctionTemplate>(At), v8::None);
     Nan::SetPrototypeTemplate(tmpl, Nan::New("row").ToLocalChecked(), Nan::New<FunctionTemplate>(Row), v8::None);
@@ -525,7 +523,6 @@ NAN_METHOD(ArrayWrapper::Scalar)
 {
     try
     {
-        ARGS_LEN(1)
         Guard guard;
         auto pArray = GetArray(info.This());
         switch (pArray->type())

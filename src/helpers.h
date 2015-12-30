@@ -315,9 +315,9 @@ NAN_METHOD(F)\
         else\
         {\
             if (NeedsDouble(*pArray))\
-				info.GetReturnValue().Set(ArrayWrapper::New(af::f<double>(*pArray)));\
+				info.GetReturnValue().Set(af::f<double>(*pArray));\
             else\
-				info.GetReturnValue().Set(ArrayWrapper::New(af::f<float>(*pArray)));\
+				info.GetReturnValue().Set(af::f<float>(*pArray));\
         }\
     }\
     ARRAYFIRE_CATCH\
@@ -391,11 +391,11 @@ NAN_METHOD(F)\
         {\
             if (NeedsDouble(*pArray1))\
             {\
-                info.GetReturnValue().Set(ArrayWrapper::New(af::f<double>(*pArray1, *pArray2)));\
+                info.GetReturnValue().Set(af::f<double>(*pArray1, *pArray2));\
             }\
             else\
             {\
-                info.GetReturnValue().Set(ArrayWrapper::New(af::f<float>(*pArray1, *pArray2)));\
+                info.GetReturnValue().Set(af::f<float>(*pArray1, *pArray2));\
             }\
         }\
     }\
