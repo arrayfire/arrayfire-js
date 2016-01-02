@@ -39,15 +39,15 @@ let async = Bluebird.coroutine;
 let testExec = require("./testExec");
 let float = ref.types.float;
 
-describe("AFArray class and methods", function() {
-    testExec.run(function(af) {
+describe("AFArray class and methods", function () {
+    testExec.run(function (af) {
         let AFArray = af.AFArray;
 
-        it("should export AFArray constructor", function() {
+        it("should export AFArray constructor", function () {
             assert(_.isFunction(AFArray));
         });
 
-        it("should create empty", function() {
+        it("should create empty", function () {
             let array = new AFArray();
             assert(_.isObject(array));
             assert(array.bytes() === 0);
@@ -62,7 +62,7 @@ describe("AFArray class and methods", function() {
             assert(_.isUndefined(array.hostAsyncSync));
         });
 
-        it("should fail with one number argument", function() {
+        it("should fail with one number argument", function () {
             try {
                 let array = new AFArray(1);
                 assert(false);
@@ -71,7 +71,7 @@ describe("AFArray class and methods", function() {
             }
         });
 
-        it("should create new one dimensional", function() {
+        it("should create new one dimensional", function () {
             let array = new AFArray(10, af.dType.s32);
             assert(_.isObject(array));
             assert(array.bytes() === 10 * 4);
@@ -105,7 +105,7 @@ describe("AFArray class and methods", function() {
             assert(array.isbool() === false);
         });
 
-        it("should create new two dimensional", function() {
+        it("should create new two dimensional", function () {
             let array = new AFArray(10, 20, af.dType.f32);
             assert(_.isObject(array));
             assert(array.bytes() === 10 * 20 * 4);
@@ -139,7 +139,7 @@ describe("AFArray class and methods", function() {
             assert(array.isbool() === false);
         });
 
-        it("should create new three dimensional", function() {
+        it("should create new three dimensional", function () {
             let array = new AFArray(10, 20, 30, af.dType.f32);
             assert(_.isObject(array));
             assert(array.bytes() === 10 * 20 * 30 * 4);
@@ -206,22 +206,22 @@ describe("AFArray class and methods", function() {
             assert(array.isbool() === false);
         }
 
-        it("should create new four dimensional", function() {
+        it("should create new four dimensional", function () {
             let array = new AFArray(10, 20, 30, 40, af.dType.f32);
             verify4(array);
         });
 
-        it("should create new four dimensional from dim4", function() {
-            let array = new AFArray({ values: [10, 20, 30, 40] }, af.dType.f32);
+        it("should create new four dimensional from dim4", function () {
+            let array = new AFArray({values: [10, 20, 30, 40]}, af.dType.f32);
             verify4(array);
         });
 
-        it("should create new four dimensional from dim4 array", function() {
+        it("should create new four dimensional from dim4 array", function () {
             let array = new AFArray([10, 20, 30, 40], af.dType.f32);
             verify4(array);
         });
 
-        it("should initialize from buffer, copyable, and readable - asynchronously w/ generators", function(done) {
+        it("should initialize from buffer, copyable, and readable - asynchronously w/ generators", function (done) {
             let f = async(function*() {
                 let int = ref.types.int;
                 const count = 10;
@@ -278,7 +278,7 @@ describe("AFArray class and methods", function() {
             f().nodeify(done);
         });
 
-        it("should initialize from buffer, copyable, and readable - synchronously (blocking)", function() {
+        it("should initialize from buffer, copyable, and readable - synchronously (blocking)", function () {
             let int = ref.types.int;
             const count = 10;
             let buff = new Buffer(int.size * count);
@@ -331,7 +331,7 @@ describe("AFArray class and methods", function() {
             v = array2.at(af.end - 1).scalar();
             assert(v === 8.0 * 8.0);
         });
-        
+
         it("should be created of a part of another with new dimensions", function (done) {
             async(function* () {
                 let arr = new af.AFArray(10, af.dType.f32);
@@ -357,8 +357,21 @@ describe("AFArray class and methods", function() {
             })().nodeify(done);
         });
 
-        describe("RAII", function() {
-            describe("scope", function() {
+        it("should be multiplied by scalar", function (done) {
+            async(function* () {
+                let arr = af.constant(2.0, 10, 10, af.dType.f32);
+                assert(!arr.isScalar());
+                let result = yield arr.mul(2).hostAsync();
+                assert(result.length === float.size * 10 * 10);
+                for (let offset = 0; offset < result.length; offset += float.size) {
+                    let value = float.get(result, offset);
+                    assert(value === 4);
+                }
+            })().nodeify(done);
+        });
+
+        describe("RAII", function () {
+            describe("scope", function () {
                 it("should exported as a function", function () {
                     assert(_.isFunction(af.scope));
                 });
@@ -370,9 +383,9 @@ describe("AFArray class and methods", function() {
                     assert(_.isFunction(af.scope.register));
                 });
 
-                it("should destroy temporaries (sync)", function() {
+                it("should destroy temporaries (sync)", function () {
                     let arr, sub;
-                    let x = af.scope(function() {
+                    let x = af.scope(function () {
                         assert(this === af.scope);
                         arr = new af.AFArray(10, af.dType.f32);
                         arr.set(new af.Col(0), 0);
@@ -401,7 +414,7 @@ describe("AFArray class and methods", function() {
                     }
                 });
 
-                it("should destroy registered arrays", function() {
+                it("should destroy registered arrays", function () {
                     let arr = new af.AFArray(10, af.dType.f32);
                     arr.set(new af.Col(0), 0);
                     arr.set(3, 1);
@@ -409,7 +422,7 @@ describe("AFArray class and methods", function() {
 
                     let sub = arr.at(new af.Seq(3, 6));
 
-                    af.scope(function() {
+                    af.scope(function () {
                         assert(this === af.scope);
 
                         sub.set(0, 0);
