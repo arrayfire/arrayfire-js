@@ -1,3 +1,7 @@
+# 0.21.4 (2016-03-04)
+
+- AFArray constructor speed optimization.
+
 # 0.21.3 (2015-12-30)
 
 - All calculation methods synchronous

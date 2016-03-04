@@ -407,6 +407,38 @@ describe("AFArray class and methods", function () {
             }))().nodeify(done);
         });
 
+        it("should be multiplied by scalar", function (done) {
+            async(regeneratorRuntime.mark(function _callee3() {
+                var arr, result, offset, value;
+                return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    while (1) {
+                        switch (_context3.prev = _context3.next) {
+                            case 0:
+                                arr = af.constant(2.0, 10, 10, af.dType.f32);
+
+                                assert(!arr.isScalar());
+                                _context3.next = 4;
+                                return arr.mul(2).hostAsync();
+
+                            case 4:
+                                result = _context3.sent;
+
+                                assert(result.length === float.size * 10 * 10);
+                                for (offset = 0; offset < result.length; offset += float.size) {
+                                    value = float.get(result, offset);
+
+                                    assert(value === 4);
+                                }
+
+                            case 7:
+                            case "end":
+                                return _context3.stop();
+                        }
+                    }
+                }, _callee3, this);
+            }))().nodeify(done);
+        });
+
         describe("RAII", function () {
             describe("scope", function () {
                 it("should exported as a function", function () {
