@@ -94,6 +94,7 @@ proto.train = function(input, target, options) {
     let numBatches = numSamples / options.batchSize;
 
     let err = 0;
+    let allTime = 0;
 
     for (let i = 0; i < options.maxEpochs; i++) {
         const start = now();
@@ -119,7 +120,12 @@ proto.train = function(input, target, options) {
         });
 
         const end = now();
-        console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(6)}, Duration: ${((end - start) / 1000).toFixed(4)} seconds`);
+        allTime += (end - start) / 1000;
+
+        if ((i + 1) % 10 === 0) {
+            console.log(`Epoch: ${i + 1}, Error: ${err.toFixed(6)}, Duration: ${(allTime / 10).toFixed(6)} seconds`);
+            allTime = 0;
+        }
 
         // Check if convergence criteria has been met
         if (err < options.maxError) {
