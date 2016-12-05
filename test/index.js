@@ -46,10 +46,9 @@ else {
     }
 }
 
-var es = es6 ? "es6" : "es5";
-
 if (!es6) {
+    console.log("Testing in ES5 mode ...");
     require("babel-polyfill");
 }
 
-module.exports = require("./" + es);
+require(es6 ? "./es6" : "./es5");
