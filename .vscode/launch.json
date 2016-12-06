@@ -2,27 +2,51 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
-			"type": "node",
-			"request": "launch",
-			"program": "./node_modules/mocha/bin/_mocha",
-			"stopOnEntry": false,
-			"args": [
-				"tests",
-				"--timeout=10000"
-			],
-			"cwd": ".",
-			"runtimeExecutable": null,
-			"runtimeArgs": [
-				"--nolazy"
-			],
-			"env": {
-				"NODE_ENV": "development"
-			},
-			"externalConsole": false,
-			"sourceMaps": false,
-			"outDir": null
-		},
+            "name": "test",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "--timeout=10000"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy",
+                "--expose-gc"
+            ],
+            "env": {
+                "NODE_ENV": "development",
+                "DEBUG": "fastcall:*"
+            },
+            "console": "integratedTerminal",
+            "sourceMaps": false
+        },
+        {
+            "name": "test-es5",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "--timeout=10000"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "babel",
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "env": {
+                "NODE_ENV": "development",
+                "DEBUG": "fastcall:*"
+            },
+            "console": "integratedTerminal",
+            "sourceMaps": true,
+            "outDir": "${workspaceRoot}/es5"
+        },
 		{
 			"name": "Attach",
 			"type": "node",
