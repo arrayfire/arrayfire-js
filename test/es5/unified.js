@@ -1,13 +1,14 @@
 'use strict';
-const Promise = require('bluebird');
-const assert = require('assert');
-const _ = require('lodash');
-const async = Promise.coroutine;
-const arrayFire = require('../..');
-const ArrayFire = arrayFire.ArrayFire;
+
+var Promise = require('bluebird');
+var assert = require('assert');
+var _ = require('lodash');
+var async = Promise.coroutine;
+var arrayFire = require('../..');
+var ArrayFire = arrayFire.ArrayFire;
 
 describe('unified backend functions', function () {
-    let af = null;
+    var af = null;
 
     beforeEach(function () {
         af = new ArrayFire();
@@ -24,17 +25,17 @@ describe('unified backend functions', function () {
         assert(_.isObject(af.backend));
         assert(_.isFunction(af.getAvailableBackends));
 
-        const cpu = af.getAvailableBackends() & af.backend.CPU;
-        const cuda = af.getAvailableBackends() & af.backend.CUDA;
-        const ocl = af.getAvailableBackends() & af.backend.OPENCL;
+        var cpu = af.getAvailableBackends() & af.backend.CPU;
+        var cuda = af.getAvailableBackends() & af.backend.CUDA;
+        var ocl = af.getAvailableBackends() & af.backend.OPENCL;
 
         assert(cpu && (cuda || ocl));
         assert.equal(af.getBackendCount(), (cpu && 1) + (cuda && 1) + (ocl && 1));
     });
 
     it('should switch to other backends', function () {
-        const cuda = af.getAvailableBackends() & af.backend.CUDA;
-        const ocl = af.getAvailableBackends() & af.backend.OPENCL;
+        var cuda = af.getAvailableBackends() & af.backend.CUDA;
+        var ocl = af.getAvailableBackends() & af.backend.OPENCL;
 
         cuda && tryBackend(af.backend.CUDA);
         ocl && tryBackend(af.backend.OPENCL);
@@ -44,20 +45,20 @@ describe('unified backend functions', function () {
             try {
                 af.setBackend(backend);
                 assert.strictEqual(af.getActiveBackend(), backend);
-            }
-            catch (e) {
+            } catch (e) {
                 if (e.code === 501) {
                     return;
                 }
                 if (e.code) {
-                    throw Error(`Error with backend ${ af.enumToString(af.backend, backend) }, code: ${ e.code }, message: ${ e.message }`);
+                    throw Error('Error with backend ' + af.enumToString(af.backend, backend) + ', code: ' + e.code + ', message: ' + e.message);
                 }
                 throw e;
             }
         }
     });
 
-    it.skip(`should give back array's backend and device information`, function () {
+    it.skip('should give back array\'s backend and device information', function () {
         assert(false, 'TODO');
     });
 });
+//# sourceMappingURL=unified.js.map

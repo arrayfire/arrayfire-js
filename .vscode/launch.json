@@ -19,7 +19,7 @@
             ],
             "env": {
                 "NODE_ENV": "development",
-                "DEBUG": "fastcall:*"
+                "DEBUG": "arrayfire-js:*"
             },
             "console": "integratedTerminal",
             "sourceMaps": false
@@ -37,11 +37,12 @@
             "preLaunchTask": "babel",
             "runtimeExecutable": null,
             "runtimeArgs": [
-                "--nolazy"
+                "--nolazy",
+                "--expose-gc"
             ],
             "env": {
                 "NODE_ENV": "development",
-                "DEBUG": "fastcall:*"
+                "DEBUG": "arrayfire-js:*"
             },
             "console": "integratedTerminal",
             "sourceMaps": true,
