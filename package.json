@@ -12,7 +12,7 @@
     "bindings": "1",
     "bluebird": "3",
     "debug": "^2.2.0",
-    "fastcall": "^0.2.0",
+    "fastcall": "~0.2.1",
     "lodash": "4",
     "minimist": "^1.2.0",
     "nan": "^2.4.0"

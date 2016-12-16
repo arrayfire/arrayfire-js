@@ -3,8 +3,8 @@ const Promise = require('bluebird');
 const assert = require('assert');
 const _ = require('lodash');
 const async = Promise.coroutine;
-const arrayFire = require('../..');
-const ArrayFire = arrayFire.ArrayFire;
+const arrayFireJs = require('../..');
+const ArrayFire = arrayFireJs.ArrayFire;
 
 describe('device functions', function () {
     let af = null;
