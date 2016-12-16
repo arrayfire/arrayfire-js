@@ -21,7 +21,7 @@ describe('array', function () {
     });
 
     describe('construct', function () {
-        describe('sync', function () {
+        it('should work synchronously', function () {
             let arr = [1, 2];
             let afArr = af.array(arr);
             let dims = afArr.dims();
@@ -88,7 +88,7 @@ describe('array', function () {
             */
         });
 
-        describe('async', function () {
-        });
+        it.skip('should work asynchronously', async(function* () {
+        }));
     });
 });

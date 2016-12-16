@@ -2,3 +2,4 @@
 
 require('./device');
 require('./unified');
+require('./array');
