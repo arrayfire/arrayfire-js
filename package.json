@@ -18,7 +18,7 @@
     "nan": "^2.4.0"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -gc -t 20000",
     "test-es5": "mocha --old",
     "babel": "babel lib/es6 -d lib/es5 --source-maps&&babel test/es6 -d test/es5 --source-maps"
   },

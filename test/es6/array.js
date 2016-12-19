@@ -31,10 +31,10 @@ describe('array', function () {
             assert.strictEqual(dims[3], 1);
             assert.strictEqual(dims.elements, 2);
             assert.strictEqual(dims.ndims, 1);
-            assert.strictEqual(af.dims(0), 2);
-            assert.strictEqual(af.dims(1), 1);
-            assert.strictEqual(af.dims(2), 1);
-            assert.strictEqual(af.dims(3), 1);
+            assert.strictEqual(afArr.dims(0), 2);
+            assert.strictEqual(afArr.dims(1), 1);
+            assert.strictEqual(afArr.dims(2), 1);
+            assert.strictEqual(afArr.dims(3), 1);
             /*
             arr = [1.0f0, 2.0f0]
             afArr = array(af, arr)
