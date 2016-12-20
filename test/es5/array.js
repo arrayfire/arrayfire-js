@@ -1,18 +1,19 @@
 'use strict';
-const Promise = require('bluebird');
-const assert = require('assert');
-const _ = require('lodash');
-const async = Promise.coroutine;
-const arrayFireJs = require('../..');
-const ArrayFire = arrayFireJs.ArrayFire;
-const fastcall = require('fastcall');
-const ArrayType = fastcall.ArrayType;
-const FloatArray = new ArrayType('float');
-const IntArray = new ArrayType('int32');
-const ref = fastcall.ref;
+
+var Promise = require('bluebird');
+var assert = require('assert');
+var _ = require('lodash');
+var async = Promise.coroutine;
+var arrayFireJs = require('../..');
+var ArrayFire = arrayFireJs.ArrayFire;
+var fastcall = require('fastcall');
+var ArrayType = fastcall.ArrayType;
+var FloatArray = new ArrayType('float');
+var IntArray = new ArrayType('int32');
+var ref = fastcall.ref;
 
 describe('array', function () {
-    let af = null;
+    var af = null;
 
     beforeEach(function () {
         af = new ArrayFire();
@@ -29,11 +30,11 @@ describe('array', function () {
 
     describe.only('construct', function () {
         it('should work synchronously', function () {
-            let arr;
-            let afArr;
-            let dims;
-            let buff;
-            let refArr;
+            var arr = void 0;
+            var afArr = void 0;
+            var dims = void 0;
+            var buff = void 0;
+            var refArr = void 0;
 
             arr = [1, 2];
             afArr = af.array(arr);
@@ -142,7 +143,17 @@ describe('array', function () {
             */
         });
 
-        it.skip('should work asynchronously', async(function* () {
-        }));
+        it.skip('should work asynchronously', async(regeneratorRuntime.mark(function _callee() {
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                        case 'end':
+                            return _context.stop();
+                    }
+                }
+            }, _callee, this);
+        })));
     });
 });
+//# sourceMappingURL=array.js.map

@@ -15,7 +15,8 @@
     "fastcall": "~0.2.2",
     "lodash": "4",
     "minimist": "^1.2.0",
-    "nan": "^2.4.0"
+    "nan": "^2.4.0",
+    "semver": "^5.3.0"
   },
   "scripts": {
     "test": "mocha -gc -t 20000",

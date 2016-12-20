@@ -46,7 +46,10 @@
             },
             "console": "integratedTerminal",
             "sourceMaps": true,
-            "outDir": "${workspaceRoot}/es5"
+            "outFiles": [
+                "${workspaceRoot}/lib/es5/**/*.*",
+                "${workspaceRoot}/test/es5/**/*.*"
+            ]
         },
 		{
 			"name": "Attach",

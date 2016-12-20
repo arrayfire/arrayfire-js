@@ -4,8 +4,8 @@ var Promise = require('bluebird');
 var assert = require('assert');
 var _ = require('lodash');
 var async = Promise.coroutine;
-var arrayFire = require('../..');
-var ArrayFire = arrayFire.ArrayFire;
+var arrayFireJs = require('../..');
+var ArrayFire = arrayFireJs.ArrayFire;
 
 describe('unified backend functions', function () {
     var af = null;

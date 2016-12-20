@@ -1,5 +1,8 @@
 {
   "globalDevDependencies": {
     "mocha": "registry:dt/mocha#2.2.5+20161119044246"
+  },
+  "globalDependencies": {
+    "semver": "registry:dt/semver#5.3.0+20160803221903"
   }
 }
