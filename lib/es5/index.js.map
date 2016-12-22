@@ -1,1 +1,1 @@
-{"version":3,"sources":["../es6/index.js"],"names":["exports","ArrayFire","require"],"mappings":"AAAA;;AAEAA,QAAQC,SAAR,GAAoBC,QAAQ,aAAR,CAApB","file":"index.js","sourcesContent":["'use strict';\n\nexports.ArrayFire = require('./ArrayFire'); "]}
+{"version":3,"sources":["../es6/index.js"],"names":["exports","ArrayFire","require"],"mappings":"AAAA;;AAEAA,QAAQC,SAAR,GAAoBC,QAAQ,aAAR,CAApB","file":"index.js","sourcesContent":["'use strict';\n\nexports.ArrayFire = require('./ArrayFire');"]}

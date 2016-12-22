@@ -131,6 +131,82 @@ describe('AFArray', function () {
             assert.equal(refArr.get(2), 3);
             assert.equal(refArr.get(3), 4);
         });
+
+        it.only('should support .index() for various parameter types', function () {
+            let afArr;
+            let indexed;
+            let arr;
+            let dims;
+
+            afArr = af.array([1, 2, 3, 4, 5]);
+            dims = afArr.dims();
+            assert.strictEqual(dims[0], 5);
+            assert.strictEqual(dims[1], 1);
+            assert.strictEqual(dims[2], 1);
+            assert.strictEqual(dims[3], 1);
+            assert.strictEqual(afArr.elements(), 5);
+            assert.strictEqual(afArr.numdims(), 1);
+
+            indexed = afArr.index(af.seq(1));
+            assert.deepEqual(indexed.toArray(), [2]);
+
+            indexed = afArr.index(2);
+            assert.deepEqual(indexed.toArray(), [3]);
+
+            indexed = afArr.index(af.seq(1, 3));
+            assert.deepEqual(indexed.toArray(), [2, 3, 4]);
+
+            afArr = af.array(af.dim4(4, 4),
+                 [1,  2,  3,  4,
+                  5,  6,  7,  8,
+                  9, 10, 11, 12,
+                 13, 14, 15, 16]);
+
+            assert.strictEqual(afArr.elements(), 16);
+            assert.strictEqual(afArr.numdims(), 2);
+            assert.strictEqual(afArr.dims(0), 4);
+            assert.strictEqual(afArr.dims(1), 4);
+
+            indexed = afArr.index(af.seq(2, 4));
+            assert.deepEqual(indexed.toArray(), [3, 4, 5]);
+
+            indexed = afArr.index(af.idx(af.seq(0, 2), af.seq(1, 2)));
+            assert.deepEqual(indexed.toArray(), [5, 6, 7, 9, 10, 11]);
+
+            indexed = afArr.index(af.idx(af.end, af.seq(2, 3)));
+            assert.deepEqual(indexed.toArray(), [12, 16]);
+
+            indexed = afArr.index(af.span);
+            assert.deepEqual(indexed.toArray(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+
+            indexed = afArr.index(af.idx(1, af.span));
+            assert.deepEqual(indexed.toArray(), [2, 6, 10, 14]);
+
+            /*
+            afArr = array(af, [1, 2, 3, 4, 5])
+            afIdx = array(af, [1.0f0, 0.0f0, 2.0f0])
+            indexed = afArr[afIdx]
+            @test host(indexed) == [2, 1, 3]
+
+            afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
+            afIdx = array(af, [[1.0f0, 0.0f0, 2.0f0] [5.0f0, 10.0f0, 2.0f0]])
+            indexed = afArr[afIdx]
+            @test host(indexed) == [2,1,3,6,11,3]
+
+            # Col, Row
+            afArr = array(af, [[0,1,2] [3,4,5] [6,7,8]])
+
+            @test host(afArr[row(af, 0)]) == [0 3 6]
+            @test host(afArr[row(af, 2)]) == [2 5 8]
+
+            @test host(afArr[rows(af, 0, 1)]) == [[0,1] [3,4] [6,7]]
+
+            @test host(afArr[col(af, 0)]) == [0,1,2]
+            @test host(afArr[col(af, 2)]) == [6,7,8]
+
+            @test host(afArr[cols(af, 1,2)]) == [[3,4,5] [6,7,8]]
+            */
+        });
     });
 
     describe('async', function () {
@@ -143,9 +219,7 @@ describe('AFArray', function () {
 
         afterEach(async(function* () {
             if (af) {
-                af.scope.end();
-                // FIXME: fastcall should supports asynchronous dispose + scope ending
-                yield Promise.delay(100);
+                yield af.scope.end();
                 af.release();
                 af = null;
             }
