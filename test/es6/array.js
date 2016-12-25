@@ -134,6 +134,7 @@ describe('AFArray', function () {
 
         it.only('should support .index() for various parameter types', function () {
             let afArr;
+            let afIdx;
             let indexed;
             let arr;
             let dims;
@@ -182,30 +183,44 @@ describe('AFArray', function () {
             indexed = afArr.index(af.idx(1, af.span));
             assert.deepEqual(indexed.toArray(), [2, 6, 10, 14]);
 
-            /*
-            afArr = array(af, [1, 2, 3, 4, 5])
-            afIdx = array(af, [1.0f0, 0.0f0, 2.0f0])
-            indexed = afArr[afIdx]
-            @test host(indexed) == [2, 1, 3]
+            afArr = af.array([1, 2, 3, 4, 5]);
+            afIdx = af.array([1, 0, 2]);
+            indexed = afArr.index(afIdx);
+            assert.deepEqual(indexed.toArray(), [2, 1, 3]);
 
-            afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
-            afIdx = array(af, [[1.0f0, 0.0f0, 2.0f0] [5.0f0, 10.0f0, 2.0f0]])
-            indexed = afArr[afIdx]
-            @test host(indexed) == [2,1,3,6,11,3]
+            afArr = af.array(af.dim4(4, 4),
+                 [1,  2,  3,  4,
+                  5,  6,  7,  8,
+                  9, 10, 11, 12,
+                 13, 14, 15, 16]);
 
-            # Col, Row
-            afArr = array(af, [[0,1,2] [3,4,5] [6,7,8]])
+            afIdx = af.array(af.dim4(3, 2),
+                [1,  0, 2,
+                 5, 10, 2]);
 
-            @test host(afArr[row(af, 0)]) == [0 3 6]
-            @test host(afArr[row(af, 2)]) == [2 5 8]
+            indexed = afArr.index(afIdx);
+            assert.deepEqual(indexed.toArray(), [2, 1, 3, 6, 11, 3]);
 
-            @test host(afArr[rows(af, 0, 1)]) == [[0,1] [3,4] [6,7]]
+            // Col, Row
+            afArr = af.array(af.dim4(3, 3), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
-            @test host(afArr[col(af, 0)]) == [0,1,2]
-            @test host(afArr[col(af, 2)]) == [6,7,8]
+            indexed = afArr.index(af.row(0));
+            assert.deepEqual(indexed.toArray(), [0, 3, 6]);
 
-            @test host(afArr[cols(af, 1,2)]) == [[3,4,5] [6,7,8]]
-            */
+            indexed = afArr.index(af.row(2));
+            assert.deepEqual(indexed.toArray(), [2, 5, 8]);
+
+            indexed = afArr.index(af.rows(0, 1));
+            assert.deepEqual(indexed.toArray(), [0, 1, 3, 4, 6, 7]);
+
+            indexed = afArr.index(af.col(0));
+            assert.deepEqual(indexed.toArray(), [0, 1, 2]);
+
+            indexed = afArr.index(af.col(2));
+            assert.deepEqual(indexed.toArray(), [6, 7, 8]);
+
+            indexed = afArr.index(af.cols(1, 2));
+            assert.deepEqual(indexed.toArray(), [3, 4, 5, 6, 7, 8]);
         });
     });
 
