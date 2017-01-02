@@ -223,7 +223,7 @@ describe('AFArray', function () {
             assert.deepEqual(indexed.toArray(), [3, 4, 5, 6, 7, 8]);
         });
 
-        it.only('should support .assign() for various parameter types', function () {
+        it('should support .assign() for various parameter types', function () {
             let afArr;
 
             afArr = af.array([1, 2, 3, 4]);

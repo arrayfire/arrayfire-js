@@ -35,10 +35,10 @@ describe('unified backend functions', function () {
     it('should switch to other backends', function () {
         const cuda = af.getAvailableBackends() & af.backend.CUDA;
         const ocl = af.getAvailableBackends() & af.backend.OPENCL;
-
-        cuda && tryBackend(af.backend.CUDA);
-        ocl && tryBackend(af.backend.OPENCL);
+        
         tryBackend(af.backend.CPU);
+        ocl && tryBackend(af.backend.OPENCL);
+        cuda && tryBackend(af.backend.CUDA);
 
         function tryBackend(backend) {
             try {
