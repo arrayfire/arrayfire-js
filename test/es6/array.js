@@ -17,6 +17,7 @@ describe('AFArray', function () {
 
         beforeEach(function () {
             af = new ArrayFire();
+            af.setBackend(af.backend.CPU);
             af.scope.begin();
         });
 
@@ -230,9 +231,9 @@ describe('AFArray', function () {
             afArr.assign(af.span, 5);
             assert.deepEqual(afArr.toArray(), [5, 5, 5, 5]);
 
-            // afArr = af.array([1, 2, 3, 4]);
-            // afArr.assign(af.seq(1, 2), 5.5);
-            // assert.deepEqual(afArr.toArray(), [1, 5.5, 5.5, 4]);
+            afArr = af.array([1, 2, 3, 4]);
+            afArr.assign(af.seq(1, 2), 5.5);
+            assert.deepEqual(afArr.toArray(), [1, 5.5, 5.5, 4]);
             /*
 
             afArr = array(af, [1,2,3,4])
