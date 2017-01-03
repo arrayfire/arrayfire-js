@@ -5,6 +5,7 @@ const _ = require('lodash');
 const async = Promise.coroutine;
 const arrayFireJs = require('../..');
 const ArrayFire = arrayFireJs.ArrayFire;
+const AFError = arrayFireJs.AFError;
 const fastcall = require('fastcall');
 const ArrayType = fastcall.ArrayType;
 const FloatArray = new ArrayType('float');
@@ -17,7 +18,6 @@ describe('AFArray', function () {
 
         beforeEach(function () {
             af = new ArrayFire();
-            af.setBackend(af.backend.CPU);
             af.scope.begin();
         });
 
@@ -224,7 +224,7 @@ describe('AFArray', function () {
             assert.deepEqual(indexed.toArray(), [3, 4, 5, 6, 7, 8]);
         });
 
-        it('should support .assign() for various parameter types', function () {
+        it.only('should support .assign() for various parameter types', function () {
             let afArr;
 
             afArr = af.array([1, 2, 3, 4]);
@@ -234,18 +234,23 @@ describe('AFArray', function () {
             afArr = af.array([1, 2, 3, 4]);
             afArr.assign(af.seq(1, 2), 5.5);
             assert.deepEqual(afArr.toArray(), [1, 5.5, 5.5, 4]);
+
+            afArr = af.array([1, 2, 3, 4]);
+            afArr.assign(af.seq(0, 1), af.array([10.5, 11.5]));
+            assert.deepEqual(afArr.toArray(), [10.5, 11.5, 3, 4]);
+
+            afArr.assign(af.seq(0, 1), af.array([10, 11]));
+            assert.deepEqual(afArr.toArray(), [10, 11, 3, 4]);4
+
+            try {
+                afArr.assign(af.seq(0, 1), af.array([10.5, 11.5, 12.5]));
+                assert(false);
+            }
+            catch (e) {
+                assert(e instanceof AFError);
+            }
+
             /*
-
-            afArr = array(af, [1,2,3,4])
-            afArr[2:3] = 5.5f0
-            @test host(afArr) == [1,5,5,4]
-
-            afArr = array(af, [1,2,3,4])
-            afArr[1:2] = array(af, [10.1f0, 11.1f0])
-            @test host(afArr) == [10,11,3,4]
-
-            @test_throws AFErrorException afArr[1:2] = array(af, [10.1f0, 11.1f0, 12.2f0])
-
             afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
             afArr[:, 3:4] = array(af, [[1,2,3,4] [5,6,7,8]])
             @test host(afArr) == [[1,2,3,4] [5,6,7,8] [1,2,3,4] [5,6,7,8]]
