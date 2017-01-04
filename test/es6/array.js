@@ -250,26 +250,31 @@ describe('AFArray', function () {
                 assert(e instanceof AFError);
             }
 
-            /*
-            afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
-            afArr[:, 3:4] = array(af, [[1,2,3,4] [5,6,7,8]])
-            @test host(afArr) == [[1,2,3,4] [5,6,7,8] [1,2,3,4] [5,6,7,8]]
+            afArr = af.array(af.dim4(4, 4), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], af.dtype.s32);
+            afArr.assign(af.idx(af.span, af.seq(2, 3)), af.array(af.dim4(4, 2), [1, 2, 3, 4, 5, 6, 7, 8]));
+            assert.deepEqual(afArr.toArray(), [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8]);
 
-            afArr[3:4, :] = 1.1f0
-            @test host(afArr) == [[1,2,1,1] [5,6,1,1] [1,2,1,1] [5,6,1,1]]
+            afArr.assign(af.idx(af.seq(2, 3), af.span), 1.1);
+            assert.deepEqual(afArr.toArray(), [1, 2, 1, 1, 5, 6, 1, 1, 1, 2, 1, 1, 5, 6, 1, 1]);
 
-            afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
-            afArr[array(af, [10, 11, 12, 13, 14, 15])] = array(af, [55, 66, 77, 88, 99, 100])
-            @test host(afArr) == [[1,2,3,4] [5,6,7,8] [9,10,55,66] [77, 88, 99, 100]]
-            afArr[array(af, [[1, 2, 3] [4, 5, 6]])] = array(af, [55, 66, 77, 88, 99, 100])
-            @test host(afArr) == [[1,55,66,77] [88,99,100,8] [9,10,55,66] [77, 88, 99, 100]]
+            afArr = af.array(af.dim4(4, 4), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+            afArr.assign(af.array([10, 11, 12, 13, 14, 15]), af.array([55, 66, 77, 88, 99, 100]));
+            assert.deepEqual(afArr.toArray(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 55, 66, 77, 88, 99, 100]);
 
-            @test_throws AFErrorException afArr[array(af, [[1, 2, 3] [4, 5, 6]])] = array(af, [[55, 66, 77] [88, 99, 100]])
+            afArr.assign(af.array(af.dim4(3, 2), [1, 2, 3, 4, 5, 6]), af.array([55, 66, 77, 88, 99, 100]));
+            assert.deepEqual(afArr.toArray(), [1, 55, 66, 77, 88, 99, 100, 8, 9, 10, 55, 66, 77, 88, 99, 100]);
 
-            afArr = array(af, [[1,2,3,4] [5,6,7,8] [9,10,11,12] [13, 14, 15, 16]])
-            afArr[array(af, [[1, 2, 3] [4, 5, 6]])] = -1
-            @test host(afArr) == [[1,-1,-1,-1] [-1,-1,-1,8] [9,10,11,12] [13, 14, 15, 16]]
-            */
+            try {
+                afArr.assign(af.array(af.dim4(3, 2), [1, 2, 3, 4, 5, 6]), af.array(af.dim4(3, 2), [55, 66, 77, 88, 99, 100]));
+                assert(false);
+            }
+            catch (e) {
+                assert(e instanceof AFError);
+            }
+
+            afArr = af.array(af.dim4(4, 4), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+            afArr.assign(af.array(af.dim4(3, 2), [1, 2, 3, 4, 5, 6]), -1);
+            assert.deepEqual(afArr.toArray(), [1, -1, -1, -1, -1, -1, -1, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
         });
 
         it('should support copy-on-write', function () {
